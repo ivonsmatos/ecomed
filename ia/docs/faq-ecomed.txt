@@ -1,0 +1,164 @@
+PERGUNTAS FREQUENTES (FAQ) — DESCARTE DE MEDICAMENTOS NO BRASIL
+Base de conhecimento do chatbot EcoMed
+
+===================================================================
+SOBRE O DESCARTE GERAL
+===================================================================
+
+P: O que devo fazer com medicamentos vencidos?
+R: Medicamentos vencidos devem ser levados a um ponto de coleta: farmácias, drogarias ou Unidades Básicas de Saúde (UBS). Pelo Decreto 10.388/2020, farmácias e drogarias são OBRIGADAS a receber medicamentos vencidos ou em desuso de forma gratuita. Use o mapa do EcoMed para encontrar o ponto mais próximo de você.
+
+P: Posso jogar medicamentos no lixo doméstico?
+R: NÃO. Medicamentos são classificados como resíduos perigosos pela Lei 12.305/2010. Descartá-los no lixo doméstico é ilegal e causa contaminação do solo e dos lençóis freáticos. Leve sempre a um ponto de coleta.
+
+P: Posso jogar medicamentos na pia, vaso sanitário ou ralo?
+R: NÃO. Esta prática é proibida pelo Art. 47 da Lei 12.305/2010 e causa contaminação gravíssima de rios, lagos e represas. As estações de tratamento de esgoto não removem princípios ativos farmacêuticos, que chegam aos corpos d'água intactos. Hormônios, antibióticos e outros fármacos já foram detectados em rios que abastecem grandes cidades brasileiras.
+
+P: Posso queimar medicamentos em casa?
+R: NÃO. A queima de medicamentos gera gases tóxicos (dioxinas e furanos) e é crime ambiental (Lei 12.305/2010, Art. 47, inciso III). Apenas incineradores industriais licenciados e controlados são autorizados a incinerar medicamentos.
+
+P: Posso enterrar os medicamentos no quintal?
+R: NÃO. O solo não degrada a maioria dos princípios ativos. Os medicamentos lixiviam para o lençol freático e podem contaminar poços e rios. Também representam risco para animais que escavem o local.
+
+P: Como devo preparar os medicamentos para descartar?
+R: O ideal é manter os medicamentos nas embalagens originais. Para medicamentos líquidos, feche bem o frasco. Não é necessário retirar os comprimidos das cartelas (blisters). Coloque em um saco plástico se tiver risco de vazamento.
+
+===================================================================
+SOBRE OS PONTOS DE COLETA
+===================================================================
+
+P: Onde posso descartar medicamentos perto de mim?
+R: Você pode usar o mapa do EcoMed (ecomed.eco.br) para encontrar o ponto de coleta mais próximo. No mapa, aparecem farmácias, drogarias e UBS que participam do sistema de logística reversa. Você também pode perguntar diretamente em qualquer farmácia da sua cidade.
+
+P: Todas as farmácias são obrigadas a receber medicamentos?
+R: Sim. Pelo Decreto 10.388/2020:
+   - Municípios com mais de 100.000 habitantes: obrigatório 1 dispensador contentor a cada 10.000 habitantes
+   - Municípios entre 50.000 e 100.000 habitantes: ao menos 1 dispensador por estabelecimento
+   - Municípios com menos de 50.000 habitantes: ao menos 1 dispensador por município
+Todas as farmácias e drogarias são parte do sistema, mesmo que nem todas tenham dispensador contentor individual.
+
+P: A farmácia pode cobrar pelo descarte?
+R: NÃO. O descarte de medicamentos em pontos de coleta é TOTALMENTE GRATUITO para o consumidor. Se uma farmácia tentar cobrar, isso é ilegal.
+
+P: A farmácia se recusou a aceitar meus medicamentos. O que faço?
+R: Se uma farmácia se recusar a receber medicamentos para descarte:
+   1. Informe que é obrigação legal (Decreto 10.388/2020)
+   2. Anote a data, hora e nome do estabelecimento
+   3. Denuncie à Vigilância Sanitária do município (e-SANI: e-sani.saude.gov.br)
+   4. Registre o problema no EcoMed usando a função "Reportar"
+   A farmácia pode levar multa e ter atividades suspensas.
+
+P: As UBS também recebem medicamentos?
+R: Sim. Unidades Básicas de Saúde (UBS) e postos de saúde também podem ser pontos de coleta de medicamentos domiciliares. Consulte o EcoMed ou entre em contato com a sua UBS para confirmar.
+
+P: Posso entregar medicamentos de outra pessoa (familiar)?
+R: Sim. Qualquer pessoa pode entregar medicamentos de terceiros no ponto de coleta. Não é necessária identificação nem receita para descartar.
+
+P: Preciso da receita do medicamento para descartar?
+R: NÃO. Não é necessária nenhuma documentação para descartar medicamentos — nem receita, nem nota fiscal, nem identificação. É uma doação ao sistema de descarte seguro.
+
+===================================================================
+SOBRE TIPOS DE MEDICAMENTOS
+===================================================================
+
+P: Posso descartar medicamentos controlados (com receita especial)?
+R: Sim. Medicamentos controlados (benzodiazepínicos, opioides, anabolizantes controlados, psicofármacos em geral) podem e devem ser descartados normalmente no ponto de coleta. Não é necessária a receita para descartar.
+
+P: Como descartar agulhas de insulina ou de aplicação domiciliar?
+R: Agulhas e lancetas SÃO PERFUROCORTANTES e NÃO devem ir no dispensador contentor de medicamentos. O correto é:
+   1. Coloque as agulhas usadas em um coletor de perfurocortantes (caixa rígida amarela)
+   2. O SUS distribui coletores GRATUITAMENTE nas UBS para pacientes em tratamento domiciliar
+   3. Quando o coletor atingir 3/4 da capacidade, leve à UBS para descarte correto
+   4. Nunca coloque agulhas em garrafas PET — não é seguro e não é aceito em todos os municípios
+
+P: Posso descartar medicamentos veterinários junto com os humanos?
+R: NÃO. O Decreto 10.388/2020 aplica-se apenas a medicamentos humanos de uso domiciliar. Para medicamentos veterinários, consulte sua clínica veterinária ou farmácia veterinária — muitas possuem sistemas próprios de coleta.
+
+P: O que fazer com termômetros de mercúrio quebrados?
+R: Termômetros de mercúrio quebrados são resíduos perigosos que exigem manejo especial:
+   1. Ventile o ambiente (abra janelas)
+   2. Não respire os vapores — saia do ambiente por alguns minutos
+   3. Recolha o mercúrio (as bolinhas prateadas) com papel cartão — nunca com aspirador de pó
+   4. Coloque em recipiente fechado com água fria
+   5. Leve ao serviço de saúde ou laboratório clínico municipal para descarte
+
+P: Como descartar injetáveis de uso domiciliar (como insulina em ampola)?
+R: As ampolas e frascos-ampola (sem a agulha) vão no dispensador contentor. A seringa descartável (sem a agulha) também vai no dispensador. A agulha vai no coletor de perfurocortantes.
+
+P: O que fazer com os patches (adesivos transdérmicos) usados?
+R: Adesivos transdérmicos usados ainda contêm princípios ativos e são resíduos perigosos. Dobre o adesivo sobre si mesmo (parte adesiva para dentro), coloque em saco plástico fechado e leve ao dispensador contentor da farmácia.
+
+===================================================================
+SOBRE A LEGISLAÇÃO
+===================================================================
+
+P: Qual lei obriga as farmácias a receber medicamentos?
+R: O Decreto nº 10.388, de 5 de junho de 2020, regulamenta o § 1º do art. 33 da Lei nº 12.305/2010 (Política Nacional de Resíduos Sólidos — PNRS) e institui o sistema de logística reversa de medicamentos domiciliares. Por este decreto, farmácias e drogarias são obrigadas a disponibilizar e manter dispensadores contentores para recebimento de medicamentos vencidos ou em desuso.
+
+P: É crime descartar medicamentos no lixo?
+R: Sim. O descarte inadequado de resíduos perigosos (categoria que inclui medicamentos) é infração ambiental punida pelo Decreto 6.514/2008 (multa de R$ 500 a R$ 10.000.000) e pode configurar crime ambiental pela Lei 9.605/1998 (detenção de 1 a 4 anos). Além disso, a Lei 12.305/2010 estabelece responsabilidade civil pelo dano ambiental causado.
+
+P: O que é a PNRS?
+R: PNRS é a Política Nacional de Resíduos Sólidos, instituída pela Lei 12.305/2010. Ela estabelece os princípios, objetivos e instrumentos para a gestão ambientalmente adequada dos resíduos sólidos no Brasil, incluindo o conceito de responsabilidade compartilhada e a obrigação de implementar logística reversa para produtos perigosos como medicamentos.
+
+P: O que é logística reversa de medicamentos?
+R: Logística reversa é um conjunto de ações e meios para coletar os medicamentos descartados pelo consumidor e encaminhá-los para destinação final ambientalmente adequada (incineração industrial, principalmente). O custo é suportado pelos fabricantes e importadores de medicamentos, não pelo consumidor.
+
+P: Qual órgão fiscaliza o descarte de medicamentos?
+R: A fiscalização é feita por:
+   - ANVISA (Agência Nacional de Vigilância Sanitária): fiscaliza farmácias em nível federal
+   - Vigilâncias Sanitárias estaduais: fiscalizam farmácias em nível estadual
+   - Vigilâncias Sanitárias municipais: fiscalização local e mais próxima do cidadão
+   - IBAMA e órgãos ambientais estaduais: fiscalizam impactos ambientais
+
+===================================================================
+SOBRE O ECOMED
+===================================================================
+
+P: O que é o EcoMed?
+R: O EcoMed é uma plataforma digital gratuita (PWA — Progressive Web App) que mapa os pontos de coleta de medicamentos no Brasil. Permite encontrar farmácias, drogarias e UBS que recebem medicamentos para descarte correto. Também possui chatbot com inteligência artificial para responder dúvidas sobre descarte, legislação e pontos de coleta.
+
+P: Como funciona o chat do EcoMed?
+R: O chat do EcoMed utiliza inteligência artificial com base em documentos oficiais sobre descarte de medicamentos (legislação, guias, normas da ANVISA e Ministério da Saúde). Você pode perguntar sobre:
+   - Como descartar tipos específicos de medicamentos
+   - Onde encontrar o ponto de coleta mais próximo
+   - O que diz a lei sobre descarte
+   - Impacto ambiental do descarte inadequado
+   O chatbot não substitui orientação médica ou farmacêutica para dúvidas clínicas.
+
+P: Como cadastrar um novo ponto de coleta no EcoMed?
+R: Para cadastrar um ponto de coleta:
+   1. Acesse ecomed.eco.br e crie uma conta como Parceiro
+   2. Preencha os dados: razão social, CNPJ, endereço completo, horário de funcionamento
+   3. Aguarde a aprovação do time EcoMed (até 5 dias úteis)
+   4. Após aprovado, o ponto aparece no mapa
+
+P: Como reportar um problema em um ponto de coleta?
+R: Use a função "Reportar" disponível na página de cada ponto no mapa do EcoMed. Você pode reportar:
+   - Farmácia que se recusa a aceitar medicamentos
+   - Endereço ou horário desatualizado
+   - Ponto desativado ou fechado
+   - Qualquer outro problema
+
+P: O EcoMed salva meus dados pessoais?
+R: O EcoMed armazena apenas os dados necessários para o funcionamento do serviço (email, localização quando autorizada, histórico de favoritos e reportes). Os dados não são compartilhados com terceiros. Consulte a Política de Privacidade em ecomed.eco.br/privacidade.
+
+===================================================================
+SOBRE SAÚDE E SEGURANÇA
+===================================================================
+
+P: Meu filho/animal ingeriu medicamento acidentalmente. O que faço?
+R: EMERGÊNCIA. Ligue imediatamente para:
+   - Centro de Informação Toxicológica (CIT): 0800 722 6001 (24h, gratuito)
+   - SAMU: 192
+   - Bombeiros: 193
+   Leve a embalagem do medicamento para que os profissionais possam identificar a substância e a quantidade ingerida. NÃO induza vômito sem orientação profissional.
+
+P: Qual o contato do SAMU e Bombeiros para emergências?
+R: SAMU: 192 | Bombeiros: 193 | Polícia Militar: 190 | Centro de Toxicologia: 0800 722 6001
+
+P: Como saber se um medicamento está vencido?
+R: Verifique a data impressa na embalagem, geralmente indicada como "Val.", "Validade", "Exp." ou "Use antes de". O formato é geralmente MM/AAAA (o medicamento expira no último dia do mês indicado). Sinais de deterioração (cor alterada, textura diferente, odor anormal) também indicam que o medicamento não deve ser usado e deve ser descartado.
+
+P: Posso tomar um medicamento vencido há pouco tempo (dias ou semanas)?
+R: NÃO recomendado. A data de validade é o período garantido pelo fabricante para eficácia e segurança do medicamento. Após o vencimento, a substância ativa pode degradar (perda de eficácia) ou decompor-se em produtos com toxicidade desconhecida. Consulte sempre um farmacêutico ou médico antes de usar medicamento vencido. O medicamento vencido deve ser descartado no ponto de coleta.

@@ -1,0 +1,151 @@
+DECRETO Nº 10.388, DE 5 DE JUNHO DE 2020
+Regulamenta o § 1º do art. 33 da Lei nº 12.305, de 2 de agosto de 2010, e institui o sistema de logística reversa de medicamentos domiciliares vencidos ou em desuso e suas embalagens após o descarte pelos consumidores.
+
+FONTE: Presidência da República — Diário Oficial da União, 8 de junho de 2020.
+
+===================================================================
+OBJETIVO E ALCANCE
+===================================================================
+
+O Decreto 10.388/2020 institui o sistema de logística reversa de medicamentos domiciliares vencidos ou em desuso e suas embalagens após o descarte pelos consumidores, em atendimento ao § 1º do art. 33 da Lei nº 12.305/2010 (Política Nacional de Resíduos Sólidos).
+
+Aplica-se exclusivamente a medicamentos de uso humano adquiridos por consumidores finais para uso domiciliar, incluindo:
+- Medicamentos vencidos
+- Medicamentos com prazo de validade próximo ao vencimento
+- Medicamentos danificados, deteriorados ou inutilizados
+- Sobras de medicamentos após tratamento concluído
+
+NÃO se aplica a:
+- Medicamentos veterinários
+- Medicamentos utilizados em estabelecimentos de saúde (hospitais, clínicas, consultórios)
+- Medicamentos usados em serviços de saúde profissional
+- Recipientes e embalagens de medicamentos utilizados nos serviços de saúde
+- Resíduos de medicamentos gerados nos serviços de saúde (regidos pela RDC ANVISA 222/2018)
+
+===================================================================
+DEFINIÇÕES IMPORTANTES (Art. 2º)
+===================================================================
+
+DISPENSADOR CONTENTOR: Equipamento instalado em farmácias e UBS para recebimento de medicamentos domiciliares vencidos ou em desuso. É o ponto físico onde o cidadão entrega os medicamentos.
+
+PONTO FIXO DE RECEBIMENTO: Local onde o dispensador contentor está instalado. Pode ser em:
+- Farmácias comerciais (drogarias e farmácias)
+- Unidades Básicas de Saúde (UBS)
+- Postos de saúde
+
+ARMAZENAMENTO PRIMÁRIO: Armazenamento dos medicamentos recebidos no ponto fixo de recebimento, antes do encaminhamento ao operador de coleta.
+
+LOGÍSTICA REVERSA: Conjunto de ações, procedimentos e meios para viabilizar a coleta e a restituição dos resíduos sólidos ao setor empresarial para destinação final ambientalmente adequada.
+
+===================================================================
+OBRIGAÇÕES DAS FARMÁCIAS E DROGARIAS (Art. 10)
+===================================================================
+
+As farmácias e drogarias são obrigadas a:
+
+1. ADQUIRIR E MANTER dispensadores contentores nos estabelecimentos
+   - Municípios com mais de 100.000 habitantes: 1 dispensador por 10.000 habitantes
+   - Municípios entre 50.000 e 100.000 habitantes: ao menos 1 dispensador por estabelecimento
+   - Municípios com menos de 50.000 habitantes: ao menos 1 dispensador por município (compartilhado entre estabelecimentos)
+
+2. RECEBER os medicamentos domiciliares vencidos ou em desuso trazidos pelos consumidores, sem custos para o consumidor, independentemente da marca ou fabricante.
+
+3. ARMAZENAR os medicamentos recebidos de forma segura até o encaminhamento ao operador de coleta, respeitando as normas de armazenamento de resíduos perigosos.
+
+4. ENCAMINHAR os medicamentos coletados ao operador de coleta habilitado para destinação final ambientalmente adequada.
+
+5. INFORMAR aos consumidores sobre o sistema de logística reversa, os tipos de medicamentos aceitos e a localização dos pontos de recebimento.
+
+6. MANTER REGISTROS de todas as movimentações de medicamentos recebidos.
+
+===================================================================
+OBRIGAÇÕES DOS CONSUMIDORES (Art. 9)
+===================================================================
+
+Os consumidores são obrigados a:
+- Devolver medicamentos vencidos ou em desuso ao ponto de recebimento mais próximo (farmácia ou UBS participante)
+- Manter os medicamentos em suas embalagens originais, quando possível
+- NÃO jogar medicamentos no lixo doméstico
+- NÃO lançar medicamentos em corpos d'água (rios, lagos, pias, vasos sanitários)
+- NÃO queimar medicamentos
+
+===================================================================
+CADEIA DE RESPONSABILIDADE (Art. 3º a 8º)
+===================================================================
+
+1. CONSUMIDOR → entrega medicamentos no dispensador contentor da farmácia/UBS
+
+2. FARMÁCIA/DROGARIA (armazenamento primário):
+   - Recebe e armazena em dispensador contentor
+   - Registra a coleta
+   - Chama o operador de coleta quando o contentor atinge 80% da capacidade
+
+3. OPERADOR DE COLETA (transportador habilitado):
+   - Coleta os contentores cheios
+   - Transporta para instalação de tratamento
+   - Emite Manifesto de Transporte de Resíduos (MTR)
+
+4. FABRICANTE/IMPORTADOR/DISTRIBUIDOR:
+   - Financia todo o sistema
+   - Contrata operadores habilitados
+   - Garantem a destinação final ambientalmente adequada
+
+5. DESTINAÇÃO FINAL (por ordem de prioridade):
+   a) Incineração (preferencial — elimina completamente)
+   b) Coprocessamento em cimenteiras
+   c) Aterro sanitário Classe I (apenas para resíduos não passíveis de incineração)
+
+===================================================================
+PENALIDADES (Art. 14)
+===================================================================
+
+O descumprimento das obrigações sujeita os infratores às sanções previstas:
+- Lei nº 9.605/1998 (Crimes Ambientais): multas, embargo, suspensão de atividades, responsabilização criminal
+- Lei nº 6.437/1977 (Sanções Sanitárias): advertência, multa, interdição, cancelamento do alvará
+- Decreto nº 6.514/2008: multas de R$ 500 a R$ 10.000.000 por infração ambiental
+
+Farmácias que recusam medicamentos para descarte podem ser autuadas pela Vigilância Sanitária municipal e estadual.
+
+===================================================================
+IMPLEMENTAÇÃO E METAS
+===================================================================
+
+O sistema deve atingir as seguintes metas progressivas:
+- Ano 1 (2020-2021): estruturação do sistema, cadastro de pontos
+- Ano 2 (2021-2022): 30% dos municípios com mais de 100.000 habitantes
+- Ano 3 (2022-2023): 50% dos municípios com mais de 50.000 habitantes
+- Ano 5 (2024-2025): 100% de cobertura nacional
+
+Coordenação: Ministério do Meio Ambiente e Mudança do Clima (MMA) em articulação com ANVISA, Ministério da Saúde e estados/municípios.
+
+===================================================================
+COMO ENCONTRAR UM PONTO DE COLETA
+===================================================================
+
+Os pontos de coleta (dispensadores contentores) podem ser encontrados:
+1. No EcoMed (ecomed.eco.br) — mapa com todos os pontos cadastrados
+2. No site do Sistema de Logística Reversa de Medicamentos
+3. Perguntando diretamente em farmácias e drogarias da sua cidade
+4. Na Unidade Básica de Saúde (UBS) do seu bairro
+
+===================================================================
+PERGUNTAS FREQUENTES
+===================================================================
+
+P: Posso jogar medicamentos vencidos no lixo comum?
+R: NÃO. Medicamentos são resíduos perigosos e não podem ser descartados no lixo doméstico.
+
+P: A farmácia pode cobrar pelo descarte?
+R: NÃO. O descarte em dispensadores contentores é gratuito para o consumidor.
+
+P: Posso jogar medicamentos na pia ou no vaso sanitário?
+R: NÃO. Isso contamina rios, lagos e lençóis freáticos.
+
+P: Que tipos de medicamentos posso descartar?
+R: Comprimidos, cápsulas, ampolas, frascos, pomadas, cremes, xaropes, colírios, sprays nasais e suas embalagens.
+
+P: Preciso retirar o medicamento da embalagem antes de descartar?
+R: Não é necessário. Pode descartar com a embalagem. Se for retirar, envolva bem os comprimidos para evitar contato.
+
+P: E as bulas e caixas de papel?
+R: As bulas e caixas (material de papel/papelão) podem ser descartadas no lixo reciclável, separadas do medicamento.

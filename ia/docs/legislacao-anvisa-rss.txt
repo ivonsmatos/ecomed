@@ -1,0 +1,191 @@
+LEGISLAÇÃO ANVISA — RESÍDUOS DE SERVIÇOS DE SAÚDE (RSS)
+RDC nº 222, de 28 de março de 2018 — Regulamento Técnico para o Gerenciamento de Resíduos de Serviços de Saúde
+CONAMA Resolução nº 358, de 29 de abril de 2005
+
+===================================================================
+VISÃO GERAL
+===================================================================
+
+A RDC ANVISA 222/2018 é a principal norma técnica que regulamenta o gerenciamento de Resíduos de Serviços de Saúde (RSS) no Brasil. Ela se aplica a estabelecimentos de saúde, não aos consumidores domiciliares.
+
+DIFERENÇA FUNDAMENTAL:
+- Medicamentos que o PACIENTE TEM EM CASA → Decreto 10.388/2020 → entrega na farmácia
+- Medicamentos gerados em SERVIÇOS DE SAÚDE (hospitais, clínicas, farmácias durante atendimento) → RDC 222/2018 → descarte feito pelo estabelecimento
+
+A RDC 222/2018 revogou e substituiu a antiga RDC 306/2004.
+
+===================================================================
+ESTABELECIMENTOS SUJEITOS À RDC 222/2018
+===================================================================
+
+Todos os geradores de RSS devem seguir esta norma:
+- Hospitais, clínicas e consultórios médicos
+- Prontos-socorros e UPAs
+- Unidades Básicas de Saúde (UBS) durante atividades de atendimento
+- Farmácias e drogarias (apenas os resíduos gerados no atendimento — não os trazidos por clientes)
+- Laboratórios clínicos e anatomopatológicos
+- Serviços odontológicos
+- Serviços de hemodiálise
+- Clínicas veterinárias
+- Serviços de medicina nuclear
+- Serviços de hemoterapia e banco de sangue
+- Serviços de pesquisa científica com material biológico
+- Funerárias e serviços de embalsamamento
+
+===================================================================
+CLASSIFICAÇÃO DOS RSS (Art. 5º da RDC 222/2018)
+===================================================================
+
+GRUPO A — RESÍDUOS BIOLÓGICOS (Risco Infeccioso):
+A1: Culturas e estoques de micro-organismos, resíduos de laboratórios, vacinas vencidas
+A2: Resíduos de animais de experimentação infectados
+A3: Peças anatômicas (órgãos, tecidos, partes do corpo)
+A4: Kits de diálise, filtros, bolsas de sangue, luvas contaminadas com sangue ou outro líquido corporal
+A5: Órgãos, tecidos, fluidos orgânicos, materiais perfurocortantes de pacientes com patógenos de alta transmissibilidade (HIV, Hepatite viral, Prion)
+
+GRUPO B — RESÍDUOS QUÍMICOS:
+→ MEDICAMENTOS: todos os medicamentos e suas sobras gerados nos serviços de saúde
+→ Saneantes, desinfetantes e antisépticos
+→ Metais pesados (mercúrio de termômetros, amálgama dentário)
+→ Reagentes e soluções para diagnóstico
+→ Resíduos contaminados por substâncias químicas perigosas
+→ Subfração B3: Medicamentos antineoplásicos (quimioterápicos) — requisitos mais rigorosos
+
+GRUPO C — REJEITOS RADIOATIVOS:
+→ Resíduos de medicina nuclear e radioterapia
+→ Regulamentados pela Comissão Nacional de Energia Nuclear (CNEN)
+→ Armazenados em blindagem até atingir níveis seguros de radiação
+
+GRUPO D — RESÍDUOS COMUNS NÃO PERIGOSOS:
+→ Papel, papelão, embalagens plásticas não contaminadas
+→ Sobras de alimentos (não de pacientes isolados)
+→ Podem ser reciclados ou encaminhados ao lixo urbano
+
+GRUPO E — PERFUROCORTANTES:
+→ Agulhas, lancetas, bisturis, ampolas de vidro quebradas, escalpes
+→ Risco de perfuração e corte
+→ Acondicionados em caixas rígidas resistentes (cor amarela)
+→ NUNCA reencape agulhas após uso
+
+===================================================================
+ACONDICIONAMENTO (Art. 20-30 da RDC 222/2018)
+===================================================================
+
+GRUPO A (infeccioso):
+→ Saco plástico branco leitoso com símbolo de risco biológico
+→ Resistente à punctura, rasgos e vazamentos
+→ Preferencialmente em recipiente rígido identificado
+
+GRUPO B (químico — incluindo medicamentos em serviços de saúde):
+→ Recipiente compatível com as características físico-químicas do resíduo
+→ Identificado com o símbolo de risco químico (losango laranja)
+→ Medicamentos líquidos: frascos originais com tampa bem vedada
+→ Medicamentos sólidos: recipiente rígido com tampa
+
+GRUPO E (perfurocortantes):
+→ Caixa de papelão rígida com revestimento interno impermeável (caixa amarela/coletor descartável)
+→ Resistente à punctura, não deve ser comprimida
+→ Preenchimento máximo 3/4 da capacidade
+→ NUNCA reutilizar coletores de perfurocortante
+
+===================================================================
+DESTINAÇÃO FINAL POR GRUPO
+===================================================================
+
+GRUPO A:
+→ A1: autoclave (esterilização a vapor) + aterro sanitário; ou incineração
+→ A3: sepultamento em cemitério; ou incineração
+→ A4: incineração ou aterro sanitário após tratamento
+
+GRUPO B (medicamentos e químicos):
+→ Incineração industrial (preferencial — destrói completamente)
+→ Coprocessamento em fornos de cimento (para medicamentos sólidos sem antineoplásicos)
+→ NUNCA em aterro sanitário comum ou lixão
+→ Antineoplásicos: exclusivamente incineração em temperatura ≥1200°C
+
+GRUPO C (radioativo):
+→ Armazenamento em local blindado por período de decaimento da radioatividade
+→ Após decaimento: segregar por grupo correspondente e dar destinação adequada
+
+GRUPO D:
+→ Coleta seletiva (recicláveis)
+→ Coleta de resíduos urbanos (não recicláveis)
+
+GRUPO E:
+→ Caixa de perfurocortante CHEIA (3/4) → incineração ou aterro classe I
+→ Nunca abrir, compactar, enrolar ou retirar manualmente objetos das caixas
+
+===================================================================
+PLANO DE GERENCIAMENTO DE RSS (PGRSS)
+===================================================================
+
+Todo estabelecimento gerador de RSS é obrigado a elaborar e implementar o PGRSS, que deve conter:
+- Descrição das ações de manejo dos RSS
+- Identificação e localização dos abrigos e pontos de geração
+- Identificação de responsáveis técnicos (RT)
+- Roteiro de coleta interna e externa
+- Capacitação dos profissionais
+- Monitoramento e avaliação das ações
+
+O PGRSS deve ser aprovado pela Vigilância Sanitária municipal e disponibilizado para consulta.
+
+===================================================================
+FARMÁCIAS E O DUPLO PAPEL
+===================================================================
+
+As farmácias desempenham dois papéis distintos em relação a medicamentos:
+
+PAPEL 1 — PONTO DE COLETA (Decreto 10.388/2020):
+- Recebem medicamentos TRAZIDOS PELOS CLIENTES (domiciliares)
+- Estes medicamentos chegam prontos para ser encaminhados ao operador de coleta
+- São acondicionados no dispensador contentor
+
+PAPEL 2 — GERADOR DE RSS (RDC 222/2018):
+- Medicamentos vencidos OU danificados que estavam no seu PRÓPRIO ESTOQUE
+- Amostras grátis vencidas
+- Medicamentos devolvidos por clientes que apresentem risco (embalagem aberta contaminada, etc.)
+- Estes resíduos seguem as regras da RDC 222/2018 e são coletados por empresa licenciada
+
+===================================================================
+COLETOR DE PERFUROCORTANTES PARA USO DOMICILIAR
+===================================================================
+
+Embora a RDC 222/2018 seja voltada para serviços de saúde, o SISTEMA PÚBLICO DE SAÚDE (SUS) oferece suporte para o descarte domiciliar de perfurocortantes:
+
+PARA PACIENTES EM TRATAMENTO DOMICILIAR (diabéticos, hemodiálise em casa, etc.):
+1. Solicite um coletor de perfurocortantes gratuito na sua UBS
+2. Use apenas para agulhas, lancetas e canetas de insulina usadas
+3. Quando 3/4 cheio, leve à UBS para descarte seguro
+4. A UBS fornece sempre um novo coletor quando você entrega o cheio
+5. É um serviço GRATUITO do SUS para todos os pacientes em uso domiciliar regular
+
+MARCAS/MODELOS DE COLETORES:
+- Caixas amarelas rígidas com tampa — distribuídas pelas UBS
+- Caixas Descarpack, Descarpak ou similares — vendidas em farmácias se precisar de urgência
+- NÃO use garrafa PET, pote de plástico ou qualquer outro recipiente improvisado
+
+===================================================================
+CONTATOS ÚTEIS PARA DENÚNCIAS
+===================================================================
+
+Descarte inadequado de RSS ou recusa de farmácia em receber medicamentos:
+
+ANVISA — Ouvidoria:
+→ Telefone: 0800-642-9782 (segunda a sexta, 8h-20h)
+→ Site: www.gov.br/anvisa/pt-br/canais_atendimento/ouvidoria
+
+e-SANI (Sistema de Notificação e Investigação em Vigilância Sanitária):
+→ Site: e-sani.saude.gov.br
+→ Para notificar farmácias que recusam descarte de medicamentos ou outros problemas sanitários
+
+Vigilância Sanitária Municipal:
+→ Consulte o número no site da prefeitura da sua cidade
+→ Mais ágil para problemas locais
+
+IBAMA — Infrações Ambientais:
+→ Telefone: 0800 618 080
+→ Para descarte ilegal em volumes maiores ou dano ambiental
+
+Procon do seu Estado:
+→ Para questões relacionadas à relação de consumo (recusa da farmácia)
+→ Procon Nacional: consumidor.gov.br

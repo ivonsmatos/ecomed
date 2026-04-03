@@ -1,0 +1,138 @@
+LEI Nº 12.305, DE 2 DE AGOSTO DE 2010
+Institui a Política Nacional de Resíduos Sólidos (PNRS)
+FONTE: Presidência da República — www.planalto.gov.br
+
+===================================================================
+VISÃO GERAL
+===================================================================
+
+A Lei 12.305/2010, conhecida como Política Nacional de Resíduos Sólidos (PNRS), é o marco legal que regula o gerenciamento de todos os resíduos sólidos no Brasil, incluindo os resíduos farmacêuticos e de saúde.
+
+Esta lei estabelece os princípios de responsabilidade compartilhada pelo ciclo de vida dos produtos, obrigando fabricantes, importadores, distribuidores, comerciantes e consumidores a participar da gestão adequada dos resíduos que geram.
+
+===================================================================
+PRINCÍPIOS FUNDAMENTAIS (Art. 6º)
+===================================================================
+
+I — prevenção e precaução
+II — poluidor-pagador e protetor-recebedor
+III — visão sistêmica (ambiental, social, cultural, econômica, tecnológica e de saúde pública)
+IV — desenvolvimento sustentável
+V — ecoeficiência
+VI — cooperação entre esferas do poder público, setor empresarial e sociedade
+VII — responsabilidade compartilhada pelo ciclo de vida dos produtos
+VIII — resíduo reutilizável e reciclável como bem econômico e de valor social
+IX — respeito às diversidades locais e regionais
+X — direito da sociedade à informação e ao controle social
+XI — razoabilidade e proporcionalidade
+
+===================================================================
+OBJETIVOS (Art. 7º)
+===================================================================
+
+I — proteção da saúde pública e da qualidade ambiental
+II — não geração, redução, reutilização, reciclagem e tratamento dos resíduos sólidos, bem como disposição final ambientalmente adequada dos rejeitos (hierarquia de gestão)
+III — estímulo à adoção de padrões sustentáveis de produção e consumo
+IV — adoção, desenvolvimento e aprimoramento de tecnologias limpas
+V — redução do volume e da periculosidade dos resíduos perigosos
+VI — incentivo à indústria da reciclagem
+
+===================================================================
+HIERARQUIA DE GESTÃO DE RESÍDUOS (Art. 9º)
+===================================================================
+
+Na gestão de resíduos sólidos, DEVE ser observada a seguinte ordem de prioridade:
+
+1. NÃO GERAÇÃO (melhor opção — não gerar o resíduo)
+2. REDUÇÃO (reduzir a quantidade gerada)
+3. REUTILIZAÇÃO (reutilizar antes de descartar)
+4. RECICLAGEM (transformar em novo produto)
+5. TRATAMENTO (incineração, coprocessamento)
+6. DISPOSIÇÃO FINAL AMBIENTALMENTE ADEQUADA (aterro sanitário — última opção para rejeitos)
+
+Para medicamentos, a hierarquia implica: usar o medicamento completamente antes de vencer > se expirado, entregar no ponto de coleta para tratamento adequado.
+
+===================================================================
+CLASSIFICAÇÃO DOS RESÍDUOS (Art. 13)
+===================================================================
+
+Quanto à origem:
+- Resíduos domiciliares: originários de atividades domésticas em residências urbanas
+- Resíduos de serviços de saúde: gerados em hospitais, UBS, farmácias, laboratórios (Art. 13, I, g)
+
+Quanto à periculosidade:
+- RESÍDUOS PERIGOSOS: aqueles com características de inflamabilidade, corrosividade, reatividade, TOXICIDADE, patogenicidade, carcinogenicidade, teratogenicidade e mutagenicidade — apresentam risco significativo à saúde pública e ao meio ambiente.
+- Resíduos não perigosos: demais resíduos.
+
+MEDICAMENTOS SÃO CLASSIFICADOS COMO RESÍDUOS PERIGOSOS devido à toxicidade. Não podem ser descartados como resíduos domésticos comuns.
+
+===================================================================
+LOGÍSTICA REVERSA (Art. 33)
+===================================================================
+
+São obrigados a estruturar e implementar sistemas de logística reversa mediante retorno dos produtos após o uso pelo consumidor:
+- fabricantes, importadores, distribuidores e comerciantes de agrotóxicos, pilhas e baterias, pneus, óleos lubrificantes, lâmpadas fluorescentes, produtos eletroeletrônicos.
+
+O § 1º do Art. 33 permite a extensão da logística reversa a outros produtos, incluindo MEDICAMENTOS DOMICILIARES — regulamentado pelo Decreto 10.388/2020.
+
+===================================================================
+RESPONSABILIDADE COMPARTILHADA (Art. 30 a 36)
+===================================================================
+
+A responsabilidade pelo ciclo de vida dos produtos é COMPARTILHADA entre:
+- Fabricantes e importadores: investir em produtos com menor geração de resíduos, financiar o sistema de logística reversa
+- Distribuidores e comerciantes (farmácias): disponibilizar pontos de recebimento, orientar consumidores
+- CONSUMIDORES: devolver os produtos ao sistema de logística reversa após o uso
+- Poder público: organizar e fiscalizar o sistema
+
+OBRIGAÇÃO DO CONSUMIDOR (Art. 35):
+O consumidor é OBRIGADO a acondicionar adequadamente os resíduos e disponibilizá-los para coleta ou devolução ao sistema de logística reversa.
+
+===================================================================
+PROIBIÇÕES (Art. 47)
+===================================================================
+
+São PROIBIDAS as seguintes formas de destinação ou disposição final de resíduos sólidos:
+
+I — lançamento em praias, no mar ou em QUAISQUER CORPOS HÍDRICOS (inclui rios, lagos, represas)
+II — lançamento in natura a céu aberto (lixões)
+III — queima a céu aberto ou em recipientes não licenciados
+IV — outras formas vedadas pelo poder público
+
+Jogar medicamentos na PIA ou VASO SANITÁRIO é ilegal por esta lei, pois contamina os corpos d'água.
+
+===================================================================
+RESÍDUOS DE SERVIÇOS DE SAÚDE (RSS)
+===================================================================
+
+Os resíduos gerados em estabelecimentos de saúde (hospitais, clínicas, farmácias, UBS durante atendimento) são classificados como Resíduos de Serviços de Saúde (RSS) e regulados pela:
+- RDC ANVISA 222/2018 (Resolução da Diretoria Colegiada)
+- Resolução CONAMA 358/2005
+
+RSS são resíduos perigosos que exigem manejo diferenciado: coleta em recipientes específicos (lixeiras brancas com símbolo de risco biológico), transporte por empresa licenciada, destinação em incinerador ou autoclave.
+
+DIFERENÇA IMPORTANTE:
+- Medicamentos que EU TENHO EM CASA (domiciliares) → Decreto 10.388/2020 → entrego na farmácia
+- Medicamentos usados NO HOSPITAL ou CONSULTÓRIO → RDC 222/2018 → descartados pelo estabelecimento de saúde
+
+===================================================================
+PENALIDADES POR DESCARTE INADEQUADO
+===================================================================
+
+As infrações à PNRS sujeitam os infratores a:
+- Multas administrativas (Decreto 6.514/2008): R$ 500 a R$ 10.000.000
+- Responsabilização civil: obrigação de recuperar o dano ambiental
+- Responsabilização penal (Lei 9.605/1998): detenção de 1 a 4 anos por descarte irregular de resíduos perigosos
+
+===================================================================
+INSTRUMENTOS DA PNRS
+===================================================================
+
+- Plano Nacional de Resíduos Sólidos (PLANARES)
+- Planos Estaduais de Resíduos Sólidos
+- Planos Municipais de Gestão Integrada de Resíduos Sólidos (PMGIRS)
+- Sistema Nacional de Informações sobre Gestão de Resíduos Sólidos (SINIR)
+- Coleta seletiva
+- Sistemas de logística reversa (Decreto 10.388/2020 para medicamentos)
+- Acordos setoriais
+- Educação ambiental

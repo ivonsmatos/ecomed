@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.routers import health
 from app.routers import chat as chat_router
+from app.routers import embed as embed_router
 from app.routers.chat import set_rag
 from app.services.rag import RAGService
 
@@ -37,3 +38,4 @@ app.add_middleware(
 
 app.include_router(health.router, prefix="/health", tags=["health"])
 app.include_router(chat_router.router, tags=["chat"])
+app.include_router(embed_router.router, tags=["embed"])

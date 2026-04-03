@@ -1,0 +1,184 @@
+TIPOS DE RESÍDUOS FARMACÊUTICOS: O QUE PODE E O QUE NÃO PODE SER DESCARTADO
+Classificação, manejo e destinação correta de medicamentos e correlatos
+
+===================================================================
+CLASSIFICAÇÃO DOS RESÍDUOS FARMACÊUTICOS
+===================================================================
+
+Segundo a RDC ANVISA 222/2018 e a PNRS (Lei 12.305/2010), os resíduos farmacêuticos são classificados:
+
+GRUPO B — RESÍDUOS QUÍMICOS (subgrupo que inclui medicamentos):
+Resíduos contendo substâncias químicas que podem apresentar risco à saúde pública ou ao meio ambiente, independente de suas características de inflamabilidade, corrosividade, reatividade e toxicidade.
+
+Incluem:
+- Medicamentos (exceto os pertencentes ao grupo A)
+- Saneantes, desinfetantes
+- Reagentes para laboratório
+- Resíduos contendo metais pesados
+
+===================================================================
+MEDICAMENTOS DOMICILIARES (DECRETO 10.388/2020)
+===================================================================
+
+ACEITOS no sistema de logística reversa (dispensadores contentores):
+
+FORMAS SÓLIDAS:
+→ Comprimidos (simples, revestidos, efervescentes, sublinguais)
+→ Cápsulas (gelatinosas duras e moles, de liberação prolongada)
+→ Drágeas
+→ Granulados e pós para reconstituição
+→ Pastilhas e balas medicinais
+→ Comprimidos efervescentes
+
+FORMAS LÍQUIDAS:
+→ Xaropes e elixires (em frasco com tampa bem vedada)
+→ Soluções e suspensões orais
+→ Gotas orais
+→ Colírios (soluções e suspensões oftálmicas)
+→ Gotas otológicas
+→ Sprays e aerossóis nasais
+→ Soluções para nebulização (sem o nebulizador)
+→ Ampolas para uso oral
+
+FORMAS SEMISSÓLIDAS:
+→ Pomadas
+→ Cremes
+→ Géis (incluindo géis para inalação)
+→ Pastas
+→ Emplastros e cataplasmas
+→ Adesivos transdérmicos (patches)
+
+FORMAS INJETÁVEIS (domiciliares):
+→ Ampolas de vidro completas ou parcialmente utilizadas (cuidado com vidros quebrados)
+→ Frascos-ampola com pó estéril ou solução
+→ Carpules dentários não utilizados
+→ Seringas DESCARTÁVEIS sem agulha (apenas o cilindro)
+→ Canetas de insulina e análogos — o cartucho descartado (sem agulha)
+
+FORMAS ESPECIAIS:
+→ Supositórios e óvulos
+→ Dispositivos intrauterinos (DIU hormonal) — em embalagem original
+→ Implantes subdérmicos em embalagem
+→ Nebulizadores com medicamento (separar do aparelho)
+
+EMBALAGENS PRIMÁRIAS (que tiveram contato direto com o medicamento):
+→ Blisters de alumínio/PVC (cartelas)
+→ Frascos de vidro e plástico
+→ Bisnagas de alumínio e plástico
+→ Seringas plásticas (sem agulha)
+→ Cápsulas de inalação e dispositivos descartáveis de inalação usados
+
+===================================================================
+NÃO ACEITOS no dispensador contentor — outros destinos
+===================================================================
+
+PERFUROCORTANTES (agulhas, lancetas, escalpes):
+→ Porque são: risco físico de perfuração além do risco químico
+→ Onde descartar: Coletor de perfurocortantes (caixas amarelas rígidas)
+   - SUS distribui coletores nas UBS para pacientes em uso domiciliar (diabéticos, etc.)
+   - Quando o coletor atingir 3/4 da capacidade, leve à UBS para descarte
+   - NÃO descarte agulhas no lixo comum, vaso sanitário ou lixo da farmácia
+
+TERMÔMETROS DE MERCÚRIO:
+→ Porque são: contêm mercúrio, metal pesado extremamente tóxico
+→ Onde descartar: pontos de coleta de resíduos de mercúrio (laboratórios públicos, alguns hospitais)
+→ Se quebrar: ventile o ambiente, não respire os vapores, recolha com papel sem tocar, coloque em vasilha fechada e leve ao serviço de saúde
+
+APARELHOS E EQUIPAMENTOS MÉDICOS:
+→ Nebulizadores, aparelhos de pressão arterial analógicos (mercúrio), oxímetros
+→ São resíduos eletrônicos ou de mercúrio — destino específico
+→ Consulte a prefeitura ou fabricante sobre pontos de retorno
+
+RADIOATIVOS MEDICINAIS:
+→ Medicamentos com radiofármacos (usados em medicina nuclear)
+→ Sempre administrados em serviços de saúde licenciados
+→ Nunca disponíveis para uso domiciliar
+→ Descarte feito exclusivamente pelo serviço de saúde conforme normas CNEN
+
+MEDICAMENTOS VETERINÁRIOS:
+→ Fora do escopo do Decreto 10.388/2020
+→ Consulte seu veterinário ou a clínica veterinária sobre descarte
+→ Muitas farmácias veterinárias possuem sistemas próprios de coleta
+
+===================================================================
+RESÍDUOS DE SERVIÇOS DE SAÚDE (RSS) — NÃO são do domicílio
+===================================================================
+
+Os resíduos gerados em hospitais, clínicas, consultórios, farmácias e laboratórios durante atendimento profissional são RSS (Grupo B - RDC 222/2018) e NÃO podem ser descartados no dispensador contentor da farmácia comum:
+
+→ São coletados em recipientes específicos (saco branco leitoso com símbolo de risco biológico)
+→ Transportados por empresa licenciada IBAMA/CETESB/órgão estadual
+→ Destinados a incineradores hospitalares ou instalações de tratamento especial
+→ Custo e responsabilidade do gerador (hospital/clínica)
+
+===================================================================
+COMO IDENTIFICAR MEDICAMENTOS VENCIDOS
+===================================================================
+
+VERIFICAR:
+- Data de validade impressa na embalagem (normalmente "Val.", "Validade", "Exp." ou "Use antes de")
+- Formato: MM/AAAA (mês/ano) ou DD/MM/AAAA (dia/mês/ano)
+- O medicamento expira no ÚLTIMO DIA do mês indicado
+
+SINAIS DE DETERIORAÇÃO (mesmo dentro do prazo):
+→ Comprimidos: manchas escuras, friabilidade, odor diferente, coloração alterada
+→ Cápsulas: deformação, alteração de cor, conteúdo aglomerado
+→ Líquidos: turvação (em produtos que não deveriam ser turvos), precipitação, coloração, odor
+→ Pomadas/Cremes: separação de fases, mudança de textura, odor rançoso, coloração alterada
+→ Colírios: turvação, precipitação, crystallização na tampa
+
+REGRA GERAL: se o medicamento apresenta qualquer alteração visual, olfativa ou de textura, mesmo dentro do prazo, descarte no ponto de coleta.
+
+===================================================================
+ANTIBIÓTICOS — ATENÇÃO ESPECIAL
+===================================================================
+
+Antibióticos merecem atenção especial tanto no uso quanto no descarte:
+
+USO CORRETO:
+- Tome EXATAMENTE conforme prescrito pelo médico
+- Complete o CICLO COMPLETO mesmo que os sintomas melhorem
+- NUNCA pare de tomar antibiótico no meio do tratamento sem orientação médica
+- NUNCA guarde antibiótico sobrando para usar depois sem nova prescrição
+
+DESCARTE:
+- Antibióticos são dos medicamentos com MAIOR impacto ambiental quando descartados inadequadamente
+- Favorecem o desenvolvimento de superbactérias resistentes
+- SEMPRE leve ao dispensador contentor ao terminar o tratamento se sobrar
+- Antibióticos líquidos (xaropes): tampe bem o frasco antes de descartar
+
+===================================================================
+MEDICAMENTOS CONTROLADOS (Portaria SVS 344/98)
+===================================================================
+
+Medicamentos das listas B1, B2, C1, C4:
+→ Inclui: benzodiazepínicos (diazepam, clonazepam, alprazolam), opioides (codeína, tramadol), anabolizantes, retinoides
+→ O descarte É LIVRE — não precisa de receita para descartar, só para comprar
+→ A farmácia NÃO pode recusar o recebimento de medicamento controlado para descarte
+→ Descarte no dispensador contentor normalmente
+
+Medicamentos da lista A (entorpecentes e psicotrópicos potentes):
+→ Morfina, fentanil, oxicodona, cloridrato de metadona
+→ Descarte preferencialmente na farmácia onde adquiriu ou na UBS
+→ Se tiver dificuldades, contate a Vigilância Sanitária municipal
+
+===================================================================
+TABELA RESUMO DE DESTINOS
+===================================================================
+
+| Tipo de Resíduo                    | Destino Correto                     |
+|-------------------------------------|-------------------------------------|
+| Comprimidos, cápsulas, drágeas      | Dispensador contentor (farmácia/UBS)|
+| Líquidos, xaropes, soluções         | Dispensador contentor (farmácia/UBS)|
+| Pomadas, cremes, géis               | Dispensador contentor (farmácia/UBS)|
+| Colírios, sprays nasais             | Dispensador contentor (farmácia/UBS)|
+| Ampolas e injetáveis domiciliares   | Dispensador contentor (farmácia/UBS)|
+| Adesivos transdérmicos              | Dispensador contentor (farmácia/UBS)|
+| Blisters/cartelas de alumínio/PVC   | Dispensador contentor (farmácia/UBS)|
+| Agulhas e lancetas                  | Coletor perfurocortante → UBS       |
+| Termômetro de mercúrio              | Coleta específica de mercúrio       |
+| Caixa de papelão da embalagem       | Reciclável (papel/papelão)          |
+| Bula de papel                       | Reciclável (papel)                  |
+| Aparelhos eletrônicos médicos       | Descarte de eletrônicos             |
+| Medicamentos veterinários           | Clínica/farmácia veterinária        |
+| Fraldas contaminadas c/ medicamento | Lixo infectante (saco branco)       |
