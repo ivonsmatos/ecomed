@@ -1,0 +1,57 @@
+name: Deploy App — VPS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app"
+      - ".github/workflows/deploy-app.yml"
+
+jobs:
+  deploy:
+    name: Build & Deploy Next.js
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          command_timeout: 25m
+          script: |
+            set -e
+
+            # Clonar ou atualizar a branch master em diretório dedicado
+            if [ -d /opt/ecomed-app ]; then
+              cd /opt/ecomed-app
+              git fetch origin master
+              git reset --hard origin/master
+            else
+              git clone --branch master --single-branch \
+                $(git -C /opt/ecomed remote get-url origin) /opt/ecomed-app
+            fi
+
+            # Build da imagem (usa .env.production já presente no VPS)
+            cd /opt/ecomed-app/app
+            docker build \
+              --build-arg DATABASE_URL="$(grep ^DATABASE_URL .env.production | cut -d= -f2-)" \
+              --build-arg NEXTAUTH_SECRET="$(grep ^NEXTAUTH_SECRET .env.production | cut -d= -f2-)" \
+              --build-arg NEXTAUTH_URL="$(grep ^NEXTAUTH_URL .env.production | cut -d= -f2-)" \
+              --build-arg GOOGLE_CLIENT_ID="$(grep ^GOOGLE_CLIENT_ID .env.production | cut -d= -f2-)" \
+              --build-arg GOOGLE_CLIENT_SECRET="$(grep ^GOOGLE_CLIENT_SECRET .env.production | cut -d= -f2-)" \
+              --build-arg NEXT_PUBLIC_VAPID_PUBLIC_KEY="$(grep ^NEXT_PUBLIC_VAPID_PUBLIC_KEY .env.production | cut -d= -f2-)" \
+              -t ecomed-app:latest .
+
+            # Restart do container
+            docker rm -f ecomed-app 2>/dev/null || true
+            docker run -d \
+              --name ecomed-app \
+              --restart unless-stopped \
+              -p 3010:3010 \
+              --env-file /opt/ecomed-app/app/.env.production \
+              ecomed-app:latest
+
+            echo "✅ ecomed-app rodando na porta 3010"
