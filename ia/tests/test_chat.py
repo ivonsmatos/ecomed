@@ -1,4 +1,5 @@
 """Testes básicos do microserviço EcoMed IA."""
+
 import pytest
 from httpx import AsyncClient, ASGITransport
 from unittest.mock import AsyncMock, MagicMock, patch
