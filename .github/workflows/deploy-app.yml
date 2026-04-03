@@ -25,17 +25,18 @@ jobs:
             set -e
 
             # Clonar ou atualizar a branch master em diretório dedicado
-            if [ -d /opt/ecomed-app ]; then
+            if [ -d /opt/ecomed-app/.git ]; then
               cd /opt/ecomed-app
               git fetch origin master
               git reset --hard origin/master
             else
+              rm -rf /opt/ecomed-app
               git clone --branch master --single-branch \
                 $(git -C /opt/ecomed remote get-url origin) /opt/ecomed-app
             fi
 
             # Build da imagem (usa .env.production já presente no VPS)
-            cd /opt/ecomed-app/app
+            cd /opt/ecomed-app
             docker build \
               --build-arg DATABASE_URL="$(grep ^DATABASE_URL .env.production | cut -d= -f2-)" \
               --build-arg NEXTAUTH_SECRET="$(grep ^NEXTAUTH_SECRET .env.production | cut -d= -f2-)" \
@@ -51,7 +52,7 @@ jobs:
               --name ecomed-app \
               --restart unless-stopped \
               -p 3010:3010 \
-              --env-file /opt/ecomed-app/app/.env.production \
+              --env-file /opt/ecomed-app/.env.production \
               ecomed-app:latest
 
             echo "✅ ecomed-app rodando na porta 3010"
