@@ -19,8 +19,8 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from langchain_ollama import OllamaEmbeddings
 from langchain_postgres import PGVector
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 router = APIRouter()
 security = HTTPBearer()
@@ -41,8 +41,12 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
 
 
 class DocumentInput(BaseModel):
-    content: str = Field(..., min_length=10, description="Conteúdo textual do documento")
-    metadata: dict[str, Any] = Field(default_factory=dict, description="Metadados opcionais (source, tipo, etc.)")
+    content: str = Field(
+        ..., min_length=10, description="Conteúdo textual do documento"
+    )
+    metadata: dict[str, Any] = Field(
+        default_factory=dict, description="Metadados opcionais (source, tipo, etc.)"
+    )
 
 
 class EmbedRequest(BaseModel):
@@ -74,8 +78,7 @@ async def embed(
     ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
     docs = [
-        Document(page_content=d.content, metadata=d.metadata)
-        for d in body.documents
+        Document(page_content=d.content, metadata=d.metadata) for d in body.documents
     ]
 
     splitter = RecursiveCharacterTextSplitter(

@@ -21,8 +21,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_ollama import OllamaEmbeddings
 from langchain_postgres import PGVector
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
 
 load_dotenv()
 
@@ -51,7 +51,13 @@ def carregar_documentos() -> list[Document]:
             page_content=conteudo,
             metadata={
                 "source": arquivo.name,
-                "tipo": "legislacao" if "lei" in arquivo.name or "decreto" in arquivo.name or "anvisa" in arquivo.name else "guia",
+                "tipo": (
+                    "legislacao"
+                    if "lei" in arquivo.name
+                    or "decreto" in arquivo.name
+                    or "anvisa" in arquivo.name
+                    else "guia"
+                ),
             },
         )
         docs.append(doc)

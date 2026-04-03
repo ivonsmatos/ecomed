@@ -1,8 +1,10 @@
+import asyncio
 import os
 from langchain_ollama import OllamaLLM, OllamaEmbeddings
 from langchain_postgres import PGVector
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 from app.services.guardrails import verificar_guardrails
 
@@ -50,30 +52,36 @@ class RAGService:
 
     async def initialize(self):
         base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-        model = os.getenv("OLLAMA_MODEL", "llama3:8b-instruct-q4_0")
-        db_url = os.getenv("DATABASE_URL")
+        model = os.getenv("OLLAMA_MODEL", "llama3.2:latest")
+        db_url = os.getenv("DATABASE_URL", "").strip('"')
 
         embeddings = OllamaEmbeddings(model="nomic-embed-text", base_url=base_url)
         llm = OllamaLLM(
             model=model, base_url=base_url, temperature=0.1, num_predict=512
         )
 
+        # PGVector em modo síncrono — evita incompatibilidade asyncpg+pgbouncer no Windows
         vectorstore = PGVector(
             embeddings=embeddings,
             collection_name="ecomed_docs",
             connection=db_url,
+            use_jsonb=True,
         )
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
         prompt = PromptTemplate(
             input_variables=["context", "question"],
             template=SYSTEM_PROMPT,
         )
 
-        self.chain = RetrievalQA.from_chain_type(
-            llm=llm,
-            chain_type="stuff",
-            retriever=vectorstore.as_retriever(search_kwargs={"k": 4}),
-            chain_type_kwargs={"prompt": prompt},
+        def formatar_docs(docs):
+            return "\n\n".join(doc.page_content for doc in docs)
+
+        self.chain = (
+            {"context": retriever | formatar_docs, "question": RunnablePassthrough()}
+            | prompt
+            | llm
+            | StrOutputParser()
         )
         print(f"RAG pronto — modelo: {model}")
 
@@ -83,9 +91,8 @@ class RAGService:
         if resultado.bloqueada:
             return resultado.resposta  # type: ignore[return-value]
 
-        # 2. RAG
+        # 2. RAG — roda chain síncrona em thread pool para não bloquear o event loop
         if not self.chain:
             return "Serviço iniciando. Tente em alguns instantes."
 
-        resultado_rag = await self.chain.ainvoke({"query": pergunta})
-        return resultado_rag.get("result", "Não foi possível gerar resposta.")
+        return await asyncio.to_thread(self.chain.invoke, pergunta)

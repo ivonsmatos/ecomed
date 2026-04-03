@@ -1,0 +1,29 @@
+name: Deploy IA → VPS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ia/**"
+      - ".github/workflows/deploy-ia.yml"
+
+jobs:
+  deploy:
+    name: SSH → VPS → docker compose up
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/ecomed
+            git pull --rebase origin main
+            cd ia
+            docker compose build --no-cache api
+            docker compose up -d
+            docker compose ps
