@@ -1,6 +1,17 @@
-export function EmailTemplate({ partnerName, pointName, motivo }: Record<string, string>) {
+export function EmailTemplate({
+  partnerName,
+  pointName,
+  motivo,
+}: Record<string, string>) {
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 600, margin: "0 auto", padding: 24 }}>
+    <div
+      style={{
+        fontFamily: "sans-serif",
+        maxWidth: 600,
+        margin: "0 auto",
+        padding: 24,
+      }}
+    >
       <div style={{ textAlign: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32 }}>🌿</span>
         <h1 style={{ color: "#15803d", margin: "8px 0 0" }}>EcoMed</h1>
@@ -23,16 +34,25 @@ export function EmailTemplate({ partnerName, pointName, motivo }: Record<string,
             margin: "24px 0",
           }}
         >
-          <p style={{ color: "#c2410c", margin: 0, fontSize: 14, fontWeight: "bold" }}>
+          <p
+            style={{
+              color: "#c2410c",
+              margin: 0,
+              fontSize: 14,
+              fontWeight: "bold",
+            }}
+          >
             Motivo informado pela equipe:
           </p>
-          <p style={{ color: "#555", margin: "8px 0 0", fontSize: 14 }}>{motivo}</p>
+          <p style={{ color: "#555", margin: "8px 0 0", fontSize: 14 }}>
+            {motivo}
+          </p>
         </div>
       )}
 
       <p style={{ color: "#555", lineHeight: 1.6 }}>
-        Você pode corrigir as informações e reenviar a solicitação pelo painel de parceiro.
-        Nossa equipe analisará novamente em até 48 horas úteis.
+        Você pode corrigir as informações e reenviar a solicitação pelo painel
+        de parceiro. Nossa equipe analisará novamente em até 48 horas úteis.
       </p>
 
       <div style={{ textAlign: "center", margin: "32px 0" }}>

@@ -1,6 +1,16 @@
-export function EmailTemplate({ partnerName, pointName }: Record<string, string>) {
+export function EmailTemplate({
+  partnerName,
+  pointName,
+}: Record<string, string>) {
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 600, margin: "0 auto", padding: 24 }}>
+    <div
+      style={{
+        fontFamily: "sans-serif",
+        maxWidth: 600,
+        margin: "0 auto",
+        padding: 24,
+      }}
+    >
       <div style={{ textAlign: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32 }}>🌿</span>
         <h1 style={{ color: "#15803d", margin: "8px 0 0" }}>EcoMed</h1>
@@ -8,12 +18,13 @@ export function EmailTemplate({ partnerName, pointName }: Record<string, string>
 
       <h2 style={{ color: "#1a1a1a" }}>Solicitação recebida!</h2>
       <p style={{ color: "#555", lineHeight: 1.6 }}>
-        Olá, <strong>{partnerName}</strong>! Recebemos a solicitação de cadastro do ponto{" "}
-        <strong>{pointName}</strong> e estamos analisando as informações.
+        Olá, <strong>{partnerName}</strong>! Recebemos a solicitação de cadastro
+        do ponto <strong>{pointName}</strong> e estamos analisando as
+        informações.
       </p>
       <p style={{ color: "#555", lineHeight: 1.6 }}>
-        Nossa equipe irá revisar os dados em até <strong>48 horas úteis</strong>. Você receberá
-        um e-mail assim que a análise for concluída.
+        Nossa equipe irá revisar os dados em até <strong>48 horas úteis</strong>
+        . Você receberá um e-mail assim que a análise for concluída.
       </p>
 
       <div
@@ -26,8 +37,8 @@ export function EmailTemplate({ partnerName, pointName }: Record<string, string>
         }}
       >
         <p style={{ color: "#15803d", margin: 0, fontSize: 14 }}>
-          💡 Enquanto isso, você pode acessar seu painel de parceiro e complementar as
-          informações do ponto de coleta.
+          💡 Enquanto isso, você pode acessar seu painel de parceiro e
+          complementar as informações do ponto de coleta.
         </p>
       </div>
 

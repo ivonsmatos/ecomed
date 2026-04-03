@@ -41,7 +41,7 @@ export default function ChatPage() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ pergunta: text }),
       });
 
       if (!res.ok) {
@@ -49,8 +49,8 @@ export default function ChatPage() {
         throw new Error((err as { error?: string }).error ?? "Erro ao consultar o assistente");
       }
 
-      const data = (await res.json()) as { response: string };
-      setMessages((prev) => [...prev, { role: "assistant", content: data.response }]);
+      const data = (await res.json()) as { resposta: string };
+      setMessages((prev) => [...prev, { role: "assistant", content: data.resposta }]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,

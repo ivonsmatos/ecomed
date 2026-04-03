@@ -33,6 +33,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "hono": "^4.12.10",
     "idb-keyval": "^6.2.2",
     "leaflet": "^1.9.4",

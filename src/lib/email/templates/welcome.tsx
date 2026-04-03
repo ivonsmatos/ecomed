@@ -1,6 +1,13 @@
 export function EmailTemplate({ name }: Record<string, string>) {
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 600, margin: "0 auto", padding: 24 }}>
+    <div
+      style={{
+        fontFamily: "sans-serif",
+        maxWidth: 600,
+        margin: "0 auto",
+        padding: 24,
+      }}
+    >
       <div style={{ textAlign: "center", marginBottom: 32 }}>
         <span style={{ fontSize: 32 }}>🌿</span>
         <h1 style={{ color: "#15803d", margin: "8px 0 0" }}>EcoMed</h1>

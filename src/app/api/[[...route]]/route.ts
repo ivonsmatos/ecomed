@@ -8,6 +8,7 @@ import { chatRouter } from "./routes/chat";
 import { pushRouter } from "./routes/push";
 import { adminRouter } from "./routes/admin";
 import { parceiroRouter } from "./routes/parceiro";
+import { notificacoesRouter } from "./routes/notificacoes";
 
 const app = new Hono().basePath("/api");
 
@@ -23,6 +24,7 @@ app.route("/chat", chatRouter);
 app.route("/push", pushRouter);
 app.route("/admin", adminRouter);
 app.route("/parceiro", parceiroRouter);
+app.route("/notificacoes", notificacoesRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);
