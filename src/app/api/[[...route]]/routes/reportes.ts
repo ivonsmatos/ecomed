@@ -1,8 +1,8 @@
-import { Hono } from "hono";
+﻿import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
-import { auth } from "@/../../auth";
+import { auth } from "@/../auth";
 import { checkRateLimit } from "@/lib/ratelimit";
 
 const app = new Hono();
@@ -41,3 +41,4 @@ app.post("/", zValidator("json", reportSchema), async (c) => {
 });
 
 export const reportesRouter = app;
+

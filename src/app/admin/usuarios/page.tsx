@@ -1,7 +1,7 @@
-import { requireAdmin } from "@/lib/auth/session";
+﻿import { requireAdmin } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -70,3 +70,4 @@ export default async function AdminUsuariosPage({
     </div>
   );
 }
+

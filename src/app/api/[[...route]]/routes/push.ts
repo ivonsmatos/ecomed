@@ -1,7 +1,7 @@
-import { Hono } from "hono";
+﻿import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { auth } from "@/../../auth";
+import { auth } from "@/../auth";
 import { prisma } from "@/lib/db/prisma";
 
 export const pushRouter = new Hono();
@@ -46,3 +46,4 @@ pushRouter.delete(
     return c.json({ ok: true });
   },
 );
+

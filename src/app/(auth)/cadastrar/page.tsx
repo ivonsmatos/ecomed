@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -12,6 +13,7 @@ import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
@@ -25,6 +27,12 @@ type FormData = z.infer<typeof registerSchema>;
 
 export default function CadastrarPage() {
   const router = useRouter();
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  async function handleGoogle() {
+    setGoogleLoading(true);
+    await signIn("google", { callbackUrl: "/app" });
+  }
 
   const {
     register,
@@ -66,6 +74,28 @@ export default function CadastrarPage() {
       </CardHeader>
 
       <CardContent>
+        {/* Google OAuth */}
+        <Button
+          variant="outline"
+          className="w-full mb-4"
+          onClick={handleGoogle}
+          disabled={googleLoading}
+        >
+          {googleLoading ? (
+            <Loader2 className="mr-2 size-4 animate-spin" />
+          ) : (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src="/google.svg" alt="" className="mr-2 size-4" aria-hidden />
+          )}
+          Continuar com Google
+        </Button>
+
+        <div className="flex items-center gap-3 mb-4">
+          <Separator className="flex-1" />
+          <span className="text-xs text-muted-foreground">ou crie uma conta</span>
+          <Separator className="flex-1" />
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="name">Nome completo</Label>

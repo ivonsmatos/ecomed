@@ -1,8 +1,8 @@
-import { Hono } from "hono";
+﻿import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
-import { auth } from "@/../../auth";
+import { auth } from "@/../auth";
 
 const app = new Hono();
 
@@ -171,3 +171,4 @@ app.patch("/reportes/:id/resolver", async (c) => {
 });
 
 export { app as adminRouter };
+

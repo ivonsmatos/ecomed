@@ -1,8 +1,8 @@
-import { requireAdmin } from "@/lib/auth/session";
+﻿import { requireAdmin } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import { ReviewActions } from "./ReviewActions";
 import { MapPin, Phone, Mail, Calendar } from "lucide-react";
@@ -131,3 +131,4 @@ export default async function ReviewPointPage({ params }: { params: Promise<{ id
     </div>
   );
 }
+

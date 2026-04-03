@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MapPin, Leaf, ShieldCheck, Smartphone, ArrowRight } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";

@@ -1,7 +1,7 @@
-import { Hono } from "hono";
+﻿import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { prisma } from "@/lib/db/prisma";
-import { auth } from "@/../../auth";
+import { auth } from "@/../auth";
 import { createPointSchema, updatePointSchema } from "@/lib/schemas/point";
 
 const app = new Hono();
@@ -126,3 +126,4 @@ app.delete("/pontos/:id", async (c) => {
 });
 
 export { app as parceiroRouter };
+

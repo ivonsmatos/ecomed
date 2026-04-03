@@ -1,4 +1,4 @@
-import { auth } from "@/../../auth";
+﻿import { auth } from "@/../auth";
 import { redirect } from "next/navigation";
 import type { Session } from "next-auth";
 
@@ -38,3 +38,4 @@ export async function requirePartner(): Promise<Session> {
   if (role !== "PARTNER" && role !== "ADMIN") redirect("/app");
   return session;
 }
+

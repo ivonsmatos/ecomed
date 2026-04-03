@@ -1,9 +1,9 @@
-import { Hono } from "hono";
+﻿import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { checkRateLimit } from "@/lib/ratelimit";
-import { auth } from "@/../../auth";
+import { auth } from "@/../auth";
 
 const app = new Hono();
 
@@ -76,3 +76,4 @@ app.get("/:id", async (c) => {
 });
 
 export const pontosRouter = app;
+

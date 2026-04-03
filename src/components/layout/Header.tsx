@@ -1,8 +1,8 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Leaf } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { auth } from "@/../../auth";
-import { signOut } from "@/../../auth";
+import { buttonVariants } from "@/components/ui/button-variants";
+import { auth } from "@/../auth";
+import { signOut } from "@/../auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -84,3 +84,5 @@ export async function Header() {
     </header>
   );
 }
+
+
