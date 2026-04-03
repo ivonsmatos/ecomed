@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
 import { auth } from "@/../auth";
+import { sendEmail } from "@/lib/email";
 
 const app = new Hono();
 
@@ -64,8 +65,19 @@ app.post("/pontos/:id/aprovar", async (c) => {
   const point = await prisma.point.update({
     where: { id: c.req.param("id") },
     data: { status: "APPROVED", rejectedReason: null },
-    select: { id: true, name: true, partner: { select: { user: { select: { email: true } } } } },
+    select: {
+      id: true,
+      name: true,
+      partner: { select: { companyName: true, tradeName: true, user: { select: { email: true } } } },
+    },
   });
+
+  const partnerName = point.partner.tradeName ?? point.partner.companyName;
+  sendEmail("partner-approved", point.partner.user.email, {
+    partnerName,
+    pointName: point.name,
+    dashboardUrl: `${process.env.NEXTAUTH_URL ?? "https://ecomed.eco.br"}/parceiro/dashboard`,
+  }).catch(console.error);
 
   return c.json({ ok: true, point });
 });
@@ -82,8 +94,19 @@ app.post(
     const point = await prisma.point.update({
       where: { id: c.req.param("id") },
       data: { status: "REJECTED", rejectedReason: motivo },
-      select: { id: true, name: true },
+      select: {
+        id: true,
+        name: true,
+        partner: { select: { companyName: true, tradeName: true, user: { select: { email: true } } } },
+      },
     });
+
+    const partnerName = point.partner.tradeName ?? point.partner.companyName;
+    sendEmail("partner-rejected", point.partner.user.email, {
+      partnerName,
+      pointName: point.name,
+      motivo,
+    }).catch(console.error);
 
     return c.json({ ok: true, point });
   },
