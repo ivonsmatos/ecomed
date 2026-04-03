@@ -1,65 +1,108 @@
-import Image from "next/image";
+import Link from "next/link";
+import { MapPin, Leaf, ShieldCheck, Smartphone, ArrowRight } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
-export default function Home() {
+const features = [
+  {
+    icon: MapPin,
+    title: "Mapa interativo",
+    description:
+      "Encontre pontos de coleta de medicamentos em farmácias, UBS e ecopontos perto de você.",
+  },
+  {
+    icon: Leaf,
+    title: "Impacto ambiental",
+    description:
+      "Medicamentos descartados incorretamente contaminam rios e solos. Descarte correto salva o meio ambiente.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Pontos verificados",
+    description:
+      "Todos os pontos de coleta são verificados e aprovados pela equipe do EcoMed antes de aparecer no mapa.",
+  },
+  {
+    icon: Smartphone,
+    title: "Funciona offline",
+    description:
+      "Salve pontos favoritos e acesse mesmo sem conexão com a internet. Perfeito para uso no dia a dia.",
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      <Header />
+      <main className="flex flex-col">
+        {/* Hero */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950 dark:to-emerald-950 py-20 md:py-32">
+          <div className="container mx-auto px-4 text-center">
+            <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-green-700 text-white shadow-lg">
+              <Leaf className="size-8" />
+            </div>
+            <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight text-green-950 dark:text-green-50 md:text-5xl lg:text-6xl">
+              Descarte seus medicamentos de forma correta
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-lg text-green-900/70 dark:text-green-100/70">
+              Encontre pontos de coleta de medicamentos vencidos ou sem uso próximos a você.
+              Proteja o meio ambiente e a saúde pública.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/mapa"
+                className={cn(buttonVariants({ size: "lg" }), "bg-green-700 hover:bg-green-800 text-white gap-2")}
+              >
+                <MapPin className="size-4" />
+                Encontrar ponto próximo
+              </Link>
+              <Link href="/cadastrar" className={buttonVariants({ size: "lg", variant: "outline" })}>
+                Cadastrar meu ponto
+                <ArrowRight className="size-4 ml-2" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <h2 className="mb-12 text-center text-3xl font-bold">Por que usar o EcoMed?</h2>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {features.map((feature) => (
+                <div key={feature.title} className="flex flex-col items-center text-center">
+                  <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                    <feature.icon className="size-6" />
+                  </div>
+                  <h3 className="mb-2 font-semibold">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="border-t bg-green-700 py-16 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="mb-4 text-3xl font-bold">Sua farmácia já é um ponto de coleta?</h2>
+            <p className="mb-8 text-green-100">
+              Cadastre gratuitamente e apareça no mapa do EcoMed. Ajude sua comunidade com o
+              descarte correto.
+            </p>
+            <Link
+              href="/cadastrar"
+              className={cn(buttonVariants({ size: "lg", variant: "outline" }), "border-white text-white hover:bg-white hover:text-green-700")}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+              Cadastrar minha farmácia
+            </Link>
+          </div>
+        </section>
       </main>
-    </div>
+      <Footer />
+    </>
   );
 }
+

@@ -1,0 +1,123 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { Leaf, Loader2 } from "lucide-react";
+import { registerSchema } from "@/lib/schemas/user";
+import type { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+type FormData = z.infer<typeof registerSchema>;
+
+export default function CadastrarPage() {
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({ resolver: zodResolver(registerSchema) });
+
+  async function onSubmit(data: FormData) {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      toast.error(json.error ?? "Erro ao criar conta.");
+      return;
+    }
+
+    await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+    toast.success("Conta criada! Bem-vindo(a) ao EcoMed.");
+    router.push("/app");
+  }
+
+  return (
+    <Card>
+      <CardHeader className="space-y-1 text-center">
+        <Link href="/" className="mx-auto flex items-center gap-2 text-green-700">
+          <Leaf className="size-6" />
+          <span className="text-xl font-bold">EcoMed</span>
+        </Link>
+        <CardTitle className="text-2xl">Criar conta</CardTitle>
+        <CardDescription>Comece a usar o EcoMed gratuitamente</CardDescription>
+      </CardHeader>
+
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="name">Nome completo</Label>
+            <Input id="name" autoComplete="name" placeholder="Seu nome" {...register("name")} />
+            {errors.name && <p className="text-xs text-red-600">{errors.name.message}</p>}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="email">E-mail</Label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="voce@exemplo.com"
+              {...register("email")}
+            />
+            {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="password">Senha</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="new-password"
+              placeholder="Mínimo 8 caracteres"
+              {...register("password")}
+            />
+            {errors.password && (
+              <p className="text-xs text-red-600">{errors.password.message}</p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-green-700 hover:bg-green-800 text-white"
+            disabled={isSubmitting}
+          >
+            {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
+            Criar conta
+          </Button>
+        </form>
+      </CardContent>
+
+      <CardFooter className="justify-center">
+        <p className="text-sm text-muted-foreground">
+          Já tem conta?{" "}
+          <Link href="/entrar" className="font-medium text-green-700 hover:underline">
+            Entrar
+          </Link>
+        </p>
+      </CardFooter>
+    </Card>
+  );
+}
