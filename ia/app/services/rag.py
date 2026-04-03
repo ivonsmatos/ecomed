@@ -54,6 +54,9 @@ class RAGService:
         base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
         model = os.getenv("OLLAMA_MODEL", "llama3.2:latest")
         db_url = os.getenv("DATABASE_URL", "").strip('"')
+        # langchain-postgres exige driver psycopg3 explícito na URL
+        if db_url.startswith("postgresql://"):
+            db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
         embeddings = OllamaEmbeddings(model="nomic-embed-text", base_url=base_url)
         llm = OllamaLLM(
