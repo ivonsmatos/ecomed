@@ -58,8 +58,11 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install ruff
-        run: pip install ruff
+      - name: Install dependencies
+        run: pip install ruff pytest pytest-asyncio anyio[trio] httpx fastapi
 
       - name: Lint with ruff
         run: ruff check .
+
+      - name: Test guardrails
+        run: pytest tests/test_guardrails.py -v
