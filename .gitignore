@@ -1,0 +1,21 @@
+# Ambientes
+app/.env.local
+app/.env.*.local
+ia/.env
+ia/.env.*
+
+# Dependências
+app/node_modules/
+ia/venv/
+ia/__pycache__/
+ia/**/__pycache__/
+
+# Build
+app/.next/
+app/out/
+app/.vercel/
+
+# Misc
+.DS_Store
+Thumbs.db
+*.pem
