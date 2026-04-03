@@ -84,6 +84,10 @@ def indexar(chunks: list[Document], reset: bool = False) -> int:
         print("[ERRO] DATABASE_URL não definida no .env")
         sys.exit(1)
 
+    # langchain-postgres exige driver psycopg3 explícito na URL
+    if db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
     ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
     embeddings = OllamaEmbeddings(model="nomic-embed-text", base_url=ollama_url)
