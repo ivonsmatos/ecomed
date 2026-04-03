@@ -1,13 +1,15 @@
 import { requireAdmin } from "@/lib/auth/session";
 import { Header } from "@/components/layout/Header";
 import Link from "next/link";
-import { Users, MapPin, FileText, LayoutDashboard } from "lucide-react";
+import { Users, MapPin, FileText, LayoutDashboard, Flag, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/parceiros", label: "Parceiros", icon: Users },
   { href: "/admin/pontos", label: "Pontos", icon: MapPin },
+  { href: "/admin/reportes", label: "Reportes", icon: Flag },
+  { href: "/admin/usuarios", label: "Usuários", icon: UserCog },
   { href: "/admin/conteudo", label: "Conteúdo", icon: FileText },
 ];
 
