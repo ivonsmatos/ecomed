@@ -1,23 +1,27 @@
-import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen } from "lucide-react";
 import type { Metadata } from "next";
+import { getArticles } from "@/lib/sanity/queries";
+import { urlFor } from "@/lib/sanity/image";
 
 export const metadata: Metadata = {
   title: "Blog Educativo | EcoMed",
   description: "Aprenda sobre descarte correto de medicamentos e saúde ambiental.",
 };
 
+const CATEGORY_LABEL: Record<string, string> = {
+  descarte: "Descarte",
+  legislacao: "Legislação",
+  "saude-ambiental": "Saúde Ambiental",
+  dicas: "Dicas",
+  ecomed: "EcoMed",
+};
+
 export default async function BlogPage() {
-  const articles = await prisma.article.findMany({
-    where: { published: true },
-    select: { id: true, slug: true, title: true, excerpt: true, category: true, coverUrl: true, publishedAt: true },
-    orderBy: { publishedAt: "desc" },
-    take: 20,
-  });
+  const articles = await getArticles();
 
   return (
     <>
@@ -37,24 +41,50 @@ export default async function BlogPage() {
           <p className="text-center text-muted-foreground py-16">Nenhum artigo publicado ainda.</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2">
-            {articles.map((article) => (
-              <Link key={article.id} href={`/blog/${article.slug}`} className="group rounded-xl border overflow-hidden hover:shadow-md transition-shadow">
-                {article.coverUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={article.coverUrl} alt={article.title} className="w-full h-40 object-cover" />
-                )}
-                <div className="p-4 space-y-2">
-                  {article.category && <Badge variant="secondary" className="text-xs">{article.category}</Badge>}
-                  <h2 className="font-semibold leading-snug group-hover:text-green-700 transition-colors">{article.title}</h2>
-                  {article.excerpt && <p className="text-sm text-muted-foreground line-clamp-2">{article.excerpt}</p>}
-                  {article.publishedAt && (
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(article.publishedAt).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}
-                    </p>
+            {articles.map((article) => {
+              const coverSrc = article.coverImage
+                ? urlFor(article.coverImage).width(640).height(320).url()
+                : null;
+
+              return (
+                <Link
+                  key={article._id}
+                  href={`/blog/${article.slug}`}
+                  className="group rounded-xl border overflow-hidden hover:shadow-md transition-shadow"
+                >
+                  {coverSrc && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={coverSrc}
+                      alt={article.coverImage?.alt ?? article.title}
+                      className="w-full h-40 object-cover"
+                    />
                   )}
-                </div>
-              </Link>
-            ))}
+                  <div className="p-4 space-y-2">
+                    {article.category && (
+                      <Badge variant="secondary" className="text-xs">
+                        {CATEGORY_LABEL[article.category] ?? article.category}
+                      </Badge>
+                    )}
+                    <h2 className="font-semibold leading-snug group-hover:text-green-700 transition-colors">
+                      {article.title}
+                    </h2>
+                    {article.excerpt && (
+                      <p className="text-sm text-muted-foreground line-clamp-2">{article.excerpt}</p>
+                    )}
+                    {article.publishedAt && (
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(article.publishedAt).toLocaleDateString("pt-BR", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </main>
