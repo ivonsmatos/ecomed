@@ -38,6 +38,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
+      {process.env.NODE_ENV === "production" && (
+        <head>
+          <script
+            defer
+            data-domain="ecomed.eco.br"
+            src="https://plausible.io/js/script.js"
+          />
+        </head>
+      )}
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}

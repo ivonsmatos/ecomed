@@ -284,6 +284,66 @@ A **RDC ANVISA nº 222/2018** obriga estabelecimentos de saúde a implantarem si
   });
 
   console.log("✅ Artigo de exemplo criado");
+
+  // ---- Badges ----
+  const badgesData = [
+    { slug: "primeiro-cadastro",  name: "Bem-vindo!",          coinReward: 0,  description: "Criou sua conta no EcoMed" },
+    { slug: "primeiro-artigo",    name: "Curioso",              coinReward: 0,  description: "Leu seu primeiro artigo" },
+    { slug: "leitor-assiduo",     name: "Leitor Assíduo",       coinReward: 10, description: "Leu 10 artigos" },
+    { slug: "primeiro-reporte",   name: "Fiscal Ambiental",     coinReward: 0,  description: "Reportou um problema pela primeira vez" },
+    { slug: "semente",            name: "Semente",              coinReward: 0,  description: "Atingiu o nível Semente" },
+    { slug: "broto",              name: "Broto",                coinReward: 5,  description: "Atingiu o nível Broto" },
+    { slug: "arvore",             name: "Árvore",               coinReward: 15, description: "Atingiu o nível Árvore" },
+    { slug: "guardiao",           name: "Guardião do Planeta",  coinReward: 50, description: "Atingiu o nível mais alto" },
+    { slug: "streak-7",           name: "Constante",            coinReward: 0,  description: "Acessou o app por 7 dias seguidos" },
+    { slug: "indicador",          name: "Embaixador",           coinReward: 0,  description: "Indicou um amigo que se cadastrou" },
+  ]
+
+  for (const badge of badgesData) {
+    await prisma.badge.upsert({
+      where: { slug: badge.slug },
+      update: {},
+      create: badge,
+    })
+  }
+  console.log(`✅ ${badgesData.length} badges criados`)
+
+  // ---- Missions ----
+  const missionsData = [
+    // DAILY
+    { slug: "ler-1-artigo",   title: "Leitura diária",   type: "DAILY"  as const, event: "ARTICLE_READ"     as const, targetCount: 1,  coinReward: 3,  description: "Leia 1 artigo hoje" },
+    { slug: "ler-3-artigos",  title: "Leitor do dia",    type: "DAILY"  as const, event: "ARTICLE_READ"     as const, targetCount: 3,  coinReward: 8,  description: "Leia 3 artigos hoje" },
+    { slug: "reportar-1",     title: "Fiscal",           type: "DAILY"  as const, event: "REPORT_SUBMITTED" as const, targetCount: 1,  coinReward: 5,  description: "Reporte 1 problema" },
+    // WEEKLY
+    { slug: "ler-10-artigos", title: "Semana educativa", type: "WEEKLY" as const, event: "ARTICLE_READ"     as const, targetCount: 10, coinReward: 25, description: "Leia 10 artigos esta semana" },
+    { slug: "streak-semanal", title: "Acesso constante", type: "WEEKLY" as const, event: "STREAK_7_DAYS"    as const, targetCount: 1,  coinReward: 15, description: "Acesse o app todos os dias da semana" },
+  ]
+
+  for (const mission of missionsData) {
+    await prisma.mission.upsert({
+      where: { slug: mission.slug },
+      update: {},
+      create: mission,
+    })
+  }
+  console.log(`✅ ${missionsData.length} missions criadas`)
+
+  // ---- Wallet para usuário cidadão de exemplo ----
+  await prisma.wallet.upsert({
+    where: { userId: citizen.id },
+    update: {},
+    create: { userId: citizen.id, balance: 20, totalEarned: 20, level: "SEMENTE" },
+  })
+  await prisma.coinTransaction.create({
+    data: {
+      wallet: { connect: { userId: citizen.id } },
+      amount: 20,
+      event: "SIGNUP",
+      note: "Cadastro completo",
+    },
+  }).catch(() => {/* já existe em re-runs */})
+  console.log("✅ Wallet do cidadão criada")
+
   console.log("\n🌿 Seed concluído com sucesso!");
   console.log("\nContas criadas:");
   console.log("  Admin:    admin@ecomed.eco.br   / Admin@123");

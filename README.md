@@ -14,17 +14,18 @@ pnpm dev                     # http://localhost:3000 (Turbopack)
 
 ## Scripts
 
-| Comando            | Descrição                      |
-| ------------------ | ------------------------------ |
-| `pnpm dev`         | Dev server com Turbopack       |
-| `pnpm build`       | Build de produção              |
-| `pnpm lint`        | ESLint                         |
-| `pnpm test`        | Vitest (unitários)             |
-| `pnpm test:e2e`    | Playwright (E2E)               |
-| `pnpm db:migrate`  | Criar migration Prisma         |
-| `pnpm db:studio`   | Prisma Studio                  |
-| `pnpm db:seed`     | Popular banco com dados de dev |
-| `pnpm db:generate` | Regenerar Prisma Client        |
+| Comando               | Descrição                          |
+| --------------------- | ---------------------------------- |
+| `pnpm dev`            | Dev server com Turbopack           |
+| `pnpm build`          | Build de produção                  |
+| `pnpm lint`           | ESLint                             |
+| `pnpm test`           | Vitest (unitários)                 |
+| `pnpm test:e2e`       | Playwright (E2E)                   |
+| `pnpm db:migrate`     | Criar migration Prisma             |
+| `pnpm db:studio`      | Prisma Studio                      |
+| `pnpm db:seed`        | Popular banco com dados de dev     |
+| `pnpm db:seed:logmed` | Popular banco com pontos de coleta |
+| `pnpm db:generate`    | Regenerar Prisma Client            |
 
 ## Stack
 

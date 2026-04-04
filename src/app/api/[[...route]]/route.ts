@@ -9,6 +9,9 @@ import { pushRouter } from "./routes/push";
 import { adminRouter } from "./routes/admin";
 import { parceiroRouter } from "./routes/parceiro";
 import { notificacoesRouter } from "./routes/notificacoes";
+import qr from "./routes/qr";
+import checkin from "./routes/checkin";
+import onboarding from "./routes/onboarding";
 
 const app = new Hono().basePath("/api");
 
@@ -25,6 +28,9 @@ app.route("/push", pushRouter);
 app.route("/admin", adminRouter);
 app.route("/parceiro", parceiroRouter);
 app.route("/notificacoes", notificacoesRouter);
+app.route("/qr", qr);
+app.route("/checkin", checkin);
+app.route("/onboarding", onboarding);
 
 export const GET = handle(app);
 export const POST = handle(app);

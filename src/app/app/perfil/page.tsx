@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button-variants";
 import { Heart, Flag, Calendar, ShieldCheck, Building2 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { QRCodeDisplay } from "@/components/coins/QRCodeDisplay";
 
 export const metadata = { title: "Meu Perfil | EcoMed" };
 
@@ -104,6 +105,17 @@ export default async function PerfilPage() {
         <section className="rounded-xl border border-yellow-200 bg-yellow-50 p-5 space-y-1">
           <p className="text-sm font-medium text-yellow-800">Solicitação de parceiro em análise</p>
           <p className="text-xs text-yellow-700">Você receberá um e-mail em até 48 horas úteis.</p>
+        </section>
+      )}
+
+      {/* QR Code de descarte — apenas para cidadãos */}
+      {user.role === "CITIZEN" && (
+        <section className="rounded-xl border p-5 space-y-2">
+          <h2 className="font-semibold">Meu QR Code de descarte</h2>
+          <p className="text-sm text-muted-foreground">
+            Apresente ao parceiro no momento do descarte para ganhar EcoCoins.
+          </p>
+          <QRCodeDisplay />
         </section>
       )}
     </div>

@@ -171,5 +171,22 @@ app.delete("/pontos/:id", async (c) => {
   return c.json({ ok: true });
 });
 
+// GET /api/parceiro/meu-ponto — retorna o primeiro ponto aprovado do parceiro
+app.get("/meu-ponto", async (c) => {
+  const session = await auth();
+  if (!session?.user?.id) return c.json({ error: "N\u00e3o autenticado." }, 401);
+
+  const point = await prisma.point.findFirst({
+    where: {
+      partner: { userId: session.user.id },
+      status: "APPROVED",
+    },
+    select: { id: true, name: true, status: true },
+  });
+
+  if (!point) return c.json({ error: "Nenhum ponto aprovado." }, 404);
+  return c.json(point);
+});
+
 export { app as parceiroRouter };
 
