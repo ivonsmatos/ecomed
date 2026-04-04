@@ -14,6 +14,12 @@ const ADMIN_ROUTES = ["/admin"];
 export default auth((req: NextAuthRequest) => {
   const { pathname } = req.nextUrl;
 
+  // Rewrite /sitemap-llm.xml → /sitemap-llm
+  // (App Router não roteia segmentos terminados em extensão conhecida como .xml)
+  if (pathname === "/sitemap-llm.xml") {
+    return NextResponse.rewrite(new URL("/sitemap-llm", req.url));
+  }
+
   const isAuthRoute = AUTH_ROUTES.some((r) => pathname.startsWith(r));
   const isPartnerRoute = PARTNER_ROUTES.some((r) => pathname.startsWith(r));
   const isAdminRoute = ADMIN_ROUTES.some((r) => pathname.startsWith(r));
@@ -44,5 +50,5 @@ export default auth((req: NextAuthRequest) => {
 });
 
 export const config = {
-  matcher: ["/app/:path*", "/parceiro/:path*", "/admin/:path*"],
+  matcher: ["/app/:path*", "/parceiro/:path*", "/admin/:path*", "/sitemap-llm.xml"],
 };
