@@ -14,7 +14,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https://cdn.sanity.io https://uploads.ecomed.eco.br https://*.r2.dev https://www.google-analytics.com https://www.googletagmanager.com",
-  "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://plausible.io https://api.indexnow.org https://static.cloudflareinsights.com wss:",
+  "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://plausible.io https://api.indexnow.org https://static.cloudflareinsights.com https://fonts.googleapis.com https://fonts.gstatic.com wss:",
   "frame-src https://www.googletagmanager.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
