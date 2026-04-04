@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator";
 
 type FormData = z.infer<typeof loginSchema>;
 
-export default function EntrarPage() {
+function LoginContent() {
   const router = useRouter();
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") ?? "/app";
@@ -145,5 +145,13 @@ export default function EntrarPage() {
         </p>
       </CardFooter>
     </Card>
+  );
+}
+
+export default function EntrarPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   );
 }

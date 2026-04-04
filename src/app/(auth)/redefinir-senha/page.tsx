@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -32,7 +32,7 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
-export default function RedefinirSenhaPage() {
+function RedefinirSenhaContent() {
   const params = useSearchParams();
   const router = useRouter();
   const token = params.get("token");
@@ -139,5 +139,13 @@ export default function RedefinirSenhaPage() {
         </form>
       )}
     </Card>
+  );
+}
+
+export default function RedefinirSenhaPage() {
+  return (
+    <Suspense>
+      <RedefinirSenhaContent />
+    </Suspense>
   );
 }
