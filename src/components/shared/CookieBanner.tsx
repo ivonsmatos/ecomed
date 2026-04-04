@@ -1,36 +1,42 @@
 "use client";
 
-import { useEffect, useState, startTransition } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "ecomed_cookie_consent";
 
-type ConsentState = "accepted" | "rejected" | null;
+function subscribe(cb: () => void) {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+}
+
+function getSnapshot() {
+  return localStorage.getItem(STORAGE_KEY);
+}
+
+function getServerSnapshot() {
+  return "accepted"; // SSR: assume respondido → sem banner no servidor
+}
 
 export function CookieBanner() {
-  const [consent, setConsent] = useState<ConsentState>("accepted"); // começa oculto no SSR
-
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as ConsentState | null;
-    startTransition(() => setConsent(stored)); // null = não respondeu ainda → mostra o banner
-  }, []);
+  const consent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   function handleAccept() {
     localStorage.setItem(STORAGE_KEY, "accepted");
-    setConsent("accepted");
+    // dispara o subscriber manualmente (mesma aba)
+    window.dispatchEvent(new Event("storage"));
   }
 
   function handleReject() {
     localStorage.setItem(STORAGE_KEY, "rejected");
-    setConsent("rejected");
-    // Apaga cookies analíticos existentes (GA/GTM)
+    window.dispatchEvent(new Event("storage"));
     document.cookie = "_ga=; Max-Age=0; path=/";
     document.cookie = "_ga_WY07TY58R1=; Max-Age=0; path=/";
   }
 
-  // Não mostrar se já respondeu
+  // Qualquer valor salvo → ocultar banner
   if (consent !== null) return null;
 
   return (
