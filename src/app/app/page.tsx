@@ -2,20 +2,40 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
-import { MapPin, Heart, MessageCircle, Leaf } from "lucide-react";
+import { MapPin, Heart, MessageCircle, Leaf, Coins, Trophy, Gift, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Minha área | EcoMed" };
 
+const NIVEL_INFO: Record<string, { label: string; icon: string }> = {
+  SEMENTE:   { label: "Semente",  icon: "🌱" },
+  BROTO:     { label: "Broto",    icon: "🌿" },
+  ARVORE:    { label: "Árvore",   icon: "🌳" },
+  GUARDIAO:  { label: "Guardião", icon: "🌍" },
+  LENDA_ECO: { label: "Lenda Eco",icon: "⭐" },
+};
+
 export default async function AppPage() {
   const session = await requireSession();
+  const userId = session.user!.id!;
 
-  const [favoritesCount, reportsCount] = await Promise.all([
-    prisma.favorite.count({ where: { userId: session.user!.id! } }),
-    prisma.report.count({ where: { userId: session.user!.id! } }),
+  const [favoritesCount, reportsCount, wallet, missoesHoje] = await Promise.all([
+    prisma.favorite.count({ where: { userId } }),
+    prisma.report.count({ where: { userId } }),
+    prisma.wallet.findUnique({ where: { userId } }),
+    prisma.userMission.findMany({
+      where: { userId, expiresAt: { gte: new Date(new Date().setUTCHours(0,0,0,0)) } },
+      include: { mission: true },
+    }),
   ]);
+
+  const balance = wallet?.balance ?? 0;
+  const nivel = wallet?.level ?? "SEMENTE";
+  const nivelInfo = NIVEL_INFO[nivel];
+  const missoesCompletas = missoesHoje.filter((m) => m.completed).length;
+  const missoesTotal = missoesHoje.length;
 
   const cards = [
     {
@@ -55,6 +75,30 @@ export default async function AppPage() {
         </p>
       </div>
 
+      {/* Banner EcoMed Coins */}
+      <Card className="border-yellow-200 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/40 dark:to-amber-950/40">
+        <CardContent className="flex items-center justify-between gap-4 py-4">
+          <div className="flex items-center gap-3">
+            <Coins className="size-8 text-yellow-500 shrink-0" />
+            <div>
+              <p className="text-xs text-muted-foreground">Seu saldo</p>
+              <p className="text-2xl font-bold text-yellow-700">{balance} <span className="text-sm font-normal">EcoCoins</span></p>
+              <p className="text-xs text-muted-foreground mt-0.5">{nivelInfo.icon} Nível {nivelInfo.label}</p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 shrink-0">
+            <Link href="/app/missoes" className={cn(buttonVariants({ size: "sm", variant: "outline" }), "gap-1.5 border-yellow-300 hover:bg-yellow-100")}>
+              <Trophy className="size-3.5" />
+              Missões {missoesTotal > 0 && <span className="text-xs text-muted-foreground">({missoesCompletas}/{missoesTotal})</span>}
+            </Link>
+            <Link href="/app/recompensas" className={cn(buttonVariants({ size: "sm", variant: "outline" }), "gap-1.5 border-yellow-300 hover:bg-yellow-100")}>
+              <Gift className="size-3.5" />
+              Recompensas
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-4 sm:grid-cols-3">
         {cards.map((card) => (
           <Card key={card.title} className="hover:shadow-md transition-shadow">
@@ -72,6 +116,16 @@ export default async function AppPage() {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Links rápidos (desktop) */}
+      <div className="hidden md:flex gap-3">
+        <Link href="/app/perfil" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "gap-2 text-muted-foreground")}>
+          <ChevronRight className="size-3.5" />Ver meu perfil completo
+        </Link>
+        <Link href="/ranking" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "gap-2 text-muted-foreground")}>
+          <Trophy className="size-3.5" />Ranking semanal
+        </Link>
       </div>
 
       {/* Educação */}

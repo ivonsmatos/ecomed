@@ -51,6 +51,9 @@ export async function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem render={<Link href="/app" />}>Minha área</DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/app/missoes" />}>🏆 Missões</DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/app/recompensas" />}>🎁 Recompensas</DropdownMenuItem>
+                <DropdownMenuItem render={<Link href="/app/perfil" />}>Meu perfil</DropdownMenuItem>
                 {(session.user as { role?: string }).role === "PARTNER" && (
                   <DropdownMenuItem render={<Link href="/parceiro/dashboard" />}>Parceiro</DropdownMenuItem>
                 )}
