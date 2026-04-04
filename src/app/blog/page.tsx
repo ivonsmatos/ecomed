@@ -10,6 +10,7 @@ import { urlFor } from "@/lib/sanity/image";
 export const metadata: Metadata = {
   title: "Blog Educativo | EcoMed",
   description: "Aprenda sobre descarte correto de medicamentos e saúde ambiental.",
+  alternates: { canonical: "https://ecomed.eco.br/blog" },
 };
 
 const CATEGORY_LABEL: Record<string, string> = {

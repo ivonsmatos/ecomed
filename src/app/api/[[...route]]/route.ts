@@ -12,6 +12,7 @@ import { notificacoesRouter } from "./routes/notificacoes";
 import qr from "./routes/qr";
 import checkin from "./routes/checkin";
 import onboarding from "./routes/onboarding";
+import indexnow from "./routes/indexnow";
 
 const app = new Hono().basePath("/api");
 
@@ -31,6 +32,7 @@ app.route("/notificacoes", notificacoesRouter);
 app.route("/qr", qr);
 app.route("/checkin", checkin);
 app.route("/onboarding", onboarding);
+app.route("/indexnow", indexnow);
 
 export const GET = handle(app);
 export const POST = handle(app);

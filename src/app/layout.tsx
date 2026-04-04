@@ -7,6 +7,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ecomed.eco.br"),
   title: {
     template: "%s | EcoMed",
     default: "EcoMed — Seu remédio tem destino certo.",
@@ -45,6 +46,10 @@ const organizationSchema = {
   areaServed: { "@type": "Country", name: "Brasil" },
   sameAs: [
     "https://github.com/ivonsmatos/ecomed",
+    "https://www.instagram.com/ecomed.eco.br",
+    "https://www.facebook.com/ecomed.eco.br",
+    "https://www.linkedin.com/company/ecomed-brasil",
+    "https://twitter.com/ecomed_eco_br",
   ],
   contactPoint: {
     "@type": "ContactPoint",
@@ -74,6 +79,29 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
       <head>
+        {/* Google Tag Manager */}
+        {process.env.NODE_ENV === "production" && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NQS3PK8S');`,
+            }}
+          />
+        )}
+        {/* Google Analytics */}
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-WY07TY58R1" />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-WY07TY58R1');`,
+              }}
+            />
+          </>
+        )}
+        {/* Plausible Analytics */}
+        {process.env.NODE_ENV === "production" && (
+          <script defer data-domain="ecomed.eco.br" src="https://plausible.io/js/script.js" />
+        )}
         {/* JSON-LD — Organization + WebSite schemas (GEO/AI citability) */}
         <script
           type="application/ld+json"
@@ -83,15 +111,19 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
-        {process.env.NODE_ENV === "production" && (
-          <script
-            defer
-            data-domain="ecomed.eco.br"
-            src="https://plausible.io/js/script.js"
-          />
-        )}
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
+        {/* Google Tag Manager (noscript) */}
+        {process.env.NODE_ENV === "production" && (
+          <noscript>
+            <iframe
+              src="https://www.googletagmanager.com/ns.html?id=GTM-NQS3PK8S"
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
           <Toaster richColors position="top-right" />

@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${article.title} | EcoMed`,
     description: article.excerpt ?? undefined,
+    alternates: { canonical: `https://ecomed.eco.br/blog/${slug}` },
     openGraph: { images: coverUrl ? [coverUrl] : [] },
   };
 }
@@ -38,6 +39,32 @@ export default async function ArticlePage({ params }: Params) {
     ? urlFor(article.coverImage).width(800).height(450).url()
     : null;
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt ?? undefined,
+    datePublished: article.publishedAt ?? undefined,
+    image: coverUrl ?? "https://ecomed.eco.br/icons/icon-512.png",
+    author: { "@type": "Organization", name: "EcoMed", url: "https://ecomed.eco.br" },
+    publisher: {
+      "@type": "Organization",
+      name: "EcoMed",
+      logo: { "@type": "ImageObject", url: "https://ecomed.eco.br/icons/icon-512.png" },
+    },
+    mainEntityOfPage: `https://ecomed.eco.br/blog/${slug}`,
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Início", item: "https://ecomed.eco.br" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://ecomed.eco.br/blog" },
+      { "@type": "ListItem", position: 3, name: article.title, item: `https://ecomed.eco.br/blog/${slug}` },
+    ],
+  };
+
   const CATEGORY_LABEL: Record<string, string> = {
     descarte: "Descarte",
     legislacao: "Legislação",
@@ -48,6 +75,8 @@ export default async function ArticlePage({ params }: Params) {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Header />
       <main className="container mx-auto max-w-2xl px-4 py-12 space-y-8">
         <Link href="/blog" className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}>

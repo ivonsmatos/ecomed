@@ -5,6 +5,7 @@ import { MapContainer } from "@/components/map/MapContainer";
 export const metadata: Metadata = {
   title: "Mapa de pontos de coleta | EcoMed",
   description: "Encontre pontos de coleta de medicamentos vencidos perto de você.",
+  alternates: { canonical: "https://ecomed.eco.br/mapa" },
 };
 
 export default function MapaPage() {
