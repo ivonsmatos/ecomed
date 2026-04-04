@@ -14,7 +14,9 @@ const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
-  navigationPreload: true,
+  // navigationPreload desabilitado: pode causar no-response em algumas
+  // situações onde o preload falha e não há cache disponível.
+  navigationPreload: false,
   runtimeCaching: [
     // Pontos próximos: network-first com fallback de 5 minutos
     {
