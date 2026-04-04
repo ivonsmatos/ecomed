@@ -1,6 +1,6 @@
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { Serwist, NetworkFirst, CacheFirst } from "serwist";
+import { Serwist, NetworkFirst, CacheFirst, NetworkOnly } from "serwist";
 
 declare global {
   interface ServiceWorkerGlobalScope extends SerwistGlobalConfig {
@@ -10,14 +10,21 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
+// URLs externas de analytics/telemetria — nunca cachear, ignorar falhas silenciosamente
+const PASSTHROUGH_ORIGINS = [
+  "static.cloudflareinsights.com",
+  "cloudflareinsights.com",
+  "plausible.io",
+  "www.google-analytics.com",
+  "analytics.google.com",
+  "www.googletagmanager.com",
+];
+
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
-  // navigationPreload desabilitado: pode causar no-response em algumas
-  // situações onde o preload falha e não há cache disponível.
   navigationPreload: false,
-  // Fallback para navegação quando o servidor não responde (offline / container down)
   fallbacks: {
     entries: [
       {
@@ -29,6 +36,20 @@ const serwist = new Serwist({
     ],
   },
   runtimeCaching: [
+    // Analytics e telemetria externa: NetworkOnly sem cache, falhas silenciosas
+    {
+      matcher: ({ url }) => PASSTHROUGH_ORIGINS.includes(url.hostname),
+      handler: new NetworkOnly(),
+    },
+    // Rotas dinâmicas do servidor — nunca servir do cache
+    {
+      matcher: ({ url }) =>
+        url.pathname.startsWith("/api/") ||
+        url.pathname === "/sitemap-llm.xml" ||
+        url.pathname === "/sitemap-llm" ||
+        url.pathname === "/sitemap.xml",
+      handler: new NetworkOnly(),
+    },
     // Pontos próximos: network-first com fallback de 5 minutos
     {
       matcher: /^\/api\/pontos\/proximos/,
