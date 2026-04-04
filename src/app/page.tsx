@@ -381,7 +381,7 @@ export default function HomePage() {
         {/* ════════════════════════════════════════════════
             5. COUNTER — bg:counter-bg.png | 4 colunas
         ════════════════════════════════════════════════ */}
-        <section className="py-28 bg-[url('/echofy/counter-bg.png')] bg-no-repeat bg-cover bg-center">
+        <section className="py-28 bg-[url('/counter-bg.png')] bg-no-repeat bg-cover bg-center">
           <div className="echofy-container">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-7 lg:gap-0 lg:grid-cols-4 items-center justify-center">
               {counters.map((c) => (
@@ -451,7 +451,7 @@ export default function HomePage() {
         {/* ════════════════════════════════════════════════
             7. CTA — bg:banner-bg2.jpg + overlay escuro
         ════════════════════════════════════════════════ */}
-        <section className="py-[80px] bg-[url('/echofy/banner-bg2.jpg')] bg-cover bg-center bg-no-repeat relative">
+        <section className="py-[80px] bg-[url('/brand-bg.jpg')] bg-cover bg-center bg-no-repeat relative">
           <div className="absolute inset-0 bg-[#001819]/75" />
           <div className="echofy-container relative z-10 text-center">
             <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] text-sm uppercase tracking-widest mb-4">
