@@ -1,4 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EcoMed — App Next.js
+
+> Front-end PWA e API do EcoMed. Documentação completa do projeto em [../README.md](../README.md).
+
+## Desenvolvimento
+
+```bash
+pnpm install
+cp .env.example .env.local   # preencher credenciais
+pnpm db:generate             # gerar Prisma Client
+pnpm db:migrate              # aplicar migrations
+pnpm dev                     # http://localhost:3000 (Turbopack)
+```
+
+## Scripts
+
+| Comando            | Descrição                      |
+| ------------------ | ------------------------------ |
+| `pnpm dev`         | Dev server com Turbopack       |
+| `pnpm build`       | Build de produção              |
+| `pnpm lint`        | ESLint                         |
+| `pnpm test`        | Vitest (unitários)             |
+| `pnpm test:e2e`    | Playwright (E2E)               |
+| `pnpm db:migrate`  | Criar migration Prisma         |
+| `pnpm db:studio`   | Prisma Studio                  |
+| `pnpm db:seed`     | Popular banco com dados de dev |
+| `pnpm db:generate` | Regenerar Prisma Client        |
+
+## Stack
+
+- **Next.js 16** — App Router, Server Components, standalone output
+- **Prisma 7** — ORM + migrations, PostgreSQL + PostGIS (Supabase)
+- **NextAuth v5** — autenticação JWT (Google OAuth + credenciais)
+- **Hono** — API Routes tipadas com Zod
+- **Serwist v9** — Service Worker PWA (Workbox)
+- **Tailwind CSS v4** — estilização
+- **shadcn/ui** — design system (@base-ui/react)
+- **Leaflet + react-leaflet** — mapas interativos
+- **Recharts** — gráficos de estatísticas
+- **Resend + React Email** — emails transacionais
+- **Cloudflare R2** — storage de imagens
+- **Upstash Redis** — rate limiting
+
+## Estrutura
+
+```
+src/
+├── app/                # App Router (rotas = pastas)
+│   ├── (auth)/         # login, cadastro, reset senha
+│   ├── app/            # área cidadão (/app/*)
+│   ├── parceiro/       # painel parceiro (/parceiro/*)
+│   ├── admin/          # painel admin (/admin/*)
+│   ├── mapa/           # mapa público
+│   ├── blog/           # artigos Sanity
+│   ├── offline/        # fallback PWA offline
+│   ├── studio/         # Sanity Studio embutido
+│   └── api/[[...route]]/ # API catch-all (Hono)
+├── components/         # componentes React
+├── lib/                # utilitários (db, auth, email, push, r2)
+├── hooks/              # React hooks customizados
+└── generated/prisma/   # Prisma Client (gerado automaticamente)
+```
+
+## Deploy
+
+**Cloudflare Pages (principal):**
+
+```bash
+git push origin main   # CI/CD automático
+```
+
+**Docker (VPS alternativo):**
+
+```bash
+docker build --no-cache -t ecomed-app:latest .
+docker run -d --name ecomed-app -p 3010:3010 \
+  --env-file .env.production ecomed-app:latest
+```
 
 ## Getting Started
 
