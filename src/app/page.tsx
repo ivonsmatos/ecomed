@@ -17,34 +17,34 @@ export const metadata: Metadata = {
 /* ─── FAQ Data ───────────────────────────────────────────────────────────────── */
 const faqItems = [
   {
-    question: "Onde posso descartar medicamentos vencidos?",
+    question: "Por que não posso jogar remédio no lixo ou na pia?",
     answer:
-      "Medicamentos vencidos ou sem uso devem ser descartados em farmácias e drogarias participantes do programa de logística reversa, Unidades Básicas de Saúde (UBS), hospitais e ecopontos municipais. O EcoMed mapeia todos esses pontos verificados — use o mapa para encontrar o mais próximo de você.",
+      "Um único comprimido pode contaminar até 450.000 litros de água. Antibióticos geram superbactérias resistentes. Hormônios afetam a vida aquática. As estações de tratamento não conseguem filtrar substâncias farmacêuticas. O descarte no lixo ou esgoto é proibido pela Lei 12.305/2010 (PNRS).",
   },
   {
-    question: "Posso jogar remédio no lixo comum ou no vaso sanitário?",
+    question: "Onde posso descartar medicamentos vencidos?",
     answer:
-      "Não. O descarte de medicamentos no lixo doméstico ou vaso sanitário é proibido e prejudicial. Substâncias farmacêuticas podem contaminar o lençol freático, rios e solos, afetando toda a cadeia alimentar. O descarte correto em pontos de coleta é obrigatório no Brasil pela Lei 12.305/2010.",
+      "Existem mais de 7.500 pontos de coleta no Brasil pelo sistema LogMed (Decreto 10.388/2020): farmácias e drogarias parceiras, Unidades Básicas de Saúde (UBS), hospitais e ecopontos municipais. O EcoMed mapeia todos esses pontos — use o mapa para encontrar o mais próximo de você.",
   },
   {
     question: "Quais medicamentos posso entregar nos pontos de coleta?",
     answer:
-      "São aceitos medicamentos vencidos, sobras de tratamento, comprimidos, cápsulas, xaropes, pomadas, ampolas, injetáveis de uso domiciliar e suas embalagens. Alguns pontos também aceitam seringas e termômetros quebrados. Não é necessário retirar bulas ou abrir embalagens.",
+      "São aceitos medicamentos vencidos, sobras de tratamento, comprimidos, cápsulas, xaropes, pomadas, ampolas e injetáveis de uso domiciliar — com ou sem embalagem. Não é necessário abrir embalagens nem retirar bulas. Leve tudo como está.",
   },
   {
     question: "Farmácias são obrigadas a aceitar medicamentos para descarte?",
     answer:
-      "Sim. O Decreto nº 10.388/2020 regulamenta a logística reversa de medicamentos domiciliares e obriga fabricantes, distribuidores e importadores a manter pontos de coleta. Farmácias e drogarias são os principais pontos de recebimento no Brasil.",
+      "Sim. O Decreto Federal 10.388/2020 regulamenta a logística reversa de medicamentos domiciliares e obriga fabricantes, distribuidores e importadores a manter pontos de coleta acessíveis. Farmácias e drogarias são os principais pontos de recebimento no Brasil.",
   },
   {
-    question: "O serviço do EcoMed é gratuito?",
+    question: "O EcoMed é gratuito? Preciso criar conta?",
     answer:
-      "Sim, o EcoMed é totalmente gratuito para cidadãos. Basta criar uma conta para acessar o mapa completo, favoritar pontos e usar o assistente de IA especializado em descarte de medicamentos.",
+      "O mapa de pontos de coleta é gratuito e não exige cadastro. Para acessar o EcoBot (IA), favoritar pontos e acumular EcoMed Coins, basta criar uma conta gratuita. O EcoMed não vende dados dos usuários e é LGPD compliant.",
   },
   {
     question: "Como minha farmácia pode aparecer no mapa do EcoMed?",
     answer:
-      "Farmácias e estabelecimentos de saúde que sejam pontos de coleta de medicamentos podem se cadastrar gratuitamente no EcoMed. Após uma verificação pela nossa equipe, o ponto aparece no mapa e fica visível para todos os usuários da plataforma.",
+      "Farmácias e estabelecimentos com ponto de coleta LogMed podem se cadastrar gratuitamente. Após verificação pela nossa equipe, o ponto aparece no mapa, recebe o badge \"Farmácia Parceira EcoMed\" e você passa a receber relatórios mensais de usuários direcionados até você.",
   },
 ];
 
@@ -66,6 +66,9 @@ const sliderItems = [
   "Pontos de Coleta",
   "Logística Reversa",
   "Saúde Pública",
+  "EcoMed Coins",
+  "450 mil Litros Protegidos",
+  "#DescarteCerto",
 ];
 
 const services = [
@@ -73,33 +76,33 @@ const services = [
     img: "/echofy/service-thumb.png",
     icon: "/echofy/service-icon1.png",
     shape: "/echofy/service-shape.png",
-    title: "Encontre o ponto próximo",
-    desc: "Mapa interativo com farmácias, UBS e ecopontos verificados para descarte de medicamentos.",
+    title: "📍 Encontre — Mapa Interativo",
+    desc: "Veja os pontos de coleta mais próximos de você: farmácias LogMed, UBS e hospitais. Filtros por tipo, horário de funcionamento e rota direta no Google Maps ou Waze.",
     href: "/mapa",
   },
   {
     img: "/echofy/service-thumb2.png",
     icon: "/echofy/service-icon2.png",
     shape: "/echofy/service-shape.png",
-    title: "Cadastre sua farmácia",
-    desc: "Farmácias e estabelecimentos de saúde podem se cadastrar gratuitamente como ponto de coleta.",
-    href: "/cadastrar",
+    title: "💬 Pergunte — EcoBot com IA",
+    desc: "Tire dúvidas com o EcoBot, nosso assistente de inteligência artificial. Responde em linguagem simples sobre descarte, legislação e impacto ambiental — disponível 24 horas.",
+    href: "/app/chat",
   },
   {
     img: "/echofy/service-thumb3.png",
     icon: "/echofy/service-icon3.png",
     shape: "/echofy/service-shape.png",
-    title: "Assistente com IA",
-    desc: "Tire dúvidas sobre descarte correto com nosso assistente especializado nas normas brasileiras.",
-    href: "/app/chat",
+    title: "🪙 Ganhe — EcoMed Coins",
+    desc: "Cada descarte correto, artigo lido ou quiz respondido gera EcoMed Coins. Suba de nível, complete missões e receba recompensas — porque cuidar do planeta merece reconhecimento.",
+    href: "/app",
   },
 ];
 
 const counters = [
-  { icon: "/echofy/counter-icon.png",  value: "1B+",    label: "Embalagens descartadas/ano" },
-  { icon: "/echofy/counter-icon2.png", value: "70%",    label: "Descarte incorreto no Brasil" },
-  { icon: "/echofy/counter-icon3.png", value: "300+",   label: "Pontos verificados" },
-  { icon: "/echofy/counter-icon4.png", value: "100%",   label: "Gratuito ao cidadão" },
+  { icon: "/echofy/counter-icon.png",  value: "91%",     label: "Descartam incorretamente" },
+  { icon: "/echofy/counter-icon2.png", value: "7.500+",  label: "Pontos de coleta no Brasil" },
+  { icon: "/echofy/counter-icon3.png", value: "30mil",   label: "Toneladas descartadas/ano" },
+  { icon: "/echofy/counter-icon4.png", value: "450mil",  label: "Litros de água protegidos" },
 ];
 
 const steps = [
@@ -146,21 +149,21 @@ export default function HomePage() {
             <div className="pt-36 relative">
               <div className="relative banner-content">
                 <h5 className="font-['Albert_Sans'] text-[#79b900] font-medium uppercase tracking-wider text-sm sm:text-base mb-3">
-                  Descarte Correto de Medicamentos
+                  Descarte certo, planeta saudável
                 </h5>
                 <h1 className="font-['Albert_Sans'] font-extrabold text-white
                                text-[32px] sm:text-[56px] md:text-[70px] lg:text-[52px] xl:text-[62px] 2xl:text-[70px]
                                leading-tight">
-                  Descarte Seguro
+                  Proteja o Planeta.
                 </h1>
                 <h1 className="font-['Albert_Sans'] font-extrabold text-white
                                text-[32px] sm:text-[56px] md:text-[70px] lg:text-[52px] xl:text-[62px] 2xl:text-[70px]
                                leading-tight -mt-3 sm:-mt-5">
-                  <span className="text-[#79b900]">Protege</span> Vidas
+                  <span className="text-[#79b900]">Descarte Certo.</span>
                 </h1>
                 <p className="font-['Albert_Sans'] text-lg text-white/90 mb-10 max-w-xl">
-                  Encontre pontos de coleta de medicamentos vencidos próximos a você.
-                  Gratuito para cidadãos e farmácias.
+                  91% dos brasileiros descartam medicamentos errado — não por má vontade,
+                  mas porque ninguém ensinou como fazer certo. O EcoMed muda isso.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-5">
                   <Link href="/mapa" className="echofy-btn">
