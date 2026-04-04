@@ -5,6 +5,7 @@ import { PartnerRegistrationForm } from "@/components/parceiro/PartnerRegistrati
 import { Building2, Clock, CheckCircle } from "lucide-react";
 
 export const metadata = { title: "Seja um Parceiro | EcoMed" };
+export const dynamic = "force-dynamic";
 
 export default async function SejaParceiroPage() {
   const session = await requireSession();
