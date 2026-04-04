@@ -10,7 +10,14 @@ declare global {
 
 declare const self: ServiceWorkerGlobalScope;
 
-// URLs externas de analytics/telemetria — nunca cachear, ignorar falhas silenciosamente
+// Plugin que silencia erros de rede para requisições de analytics/telemetria.
+// Retorna 204 No Content em vez de propagar "no-response" no console.
+const silentFallbackPlugin = {
+  handlerDidError: async () =>
+    new Response(null, { status: 204, statusText: "No Content" }),
+};
+
+// Origens externas de analytics/telemetria — NetworkOnly sem cache
 const PASSTHROUGH_ORIGINS = [
   "static.cloudflareinsights.com",
   "cloudflareinsights.com",
@@ -18,6 +25,13 @@ const PASSTHROUGH_ORIGINS = [
   "www.google-analytics.com",
   "analytics.google.com",
   "www.googletagmanager.com",
+  "region1.google-analytics.com",
+];
+
+// Prefixos de caminho (mesmo domínio) usados pelo proxy GA4 first-party
+const ANALYTICS_PATHS = [
+  "/fslp/",   // Google Analytics 4 first-party measurement
+  "/g/collect",
 ];
 
 const serwist = new Serwist({
@@ -36,10 +50,16 @@ const serwist = new Serwist({
     ],
   },
   runtimeCaching: [
-    // Analytics e telemetria externa: NetworkOnly sem cache, falhas silenciosas
+    // Analytics externas: NetworkOnly + silencia erros de rede
     {
       matcher: ({ url }) => PASSTHROUGH_ORIGINS.includes(url.hostname),
-      handler: new NetworkOnly(),
+      handler: new NetworkOnly({ plugins: [silentFallbackPlugin] }),
+    },
+    // Rotas de analytics no mesmo domínio (/fslp/, /g/collect, etc.)
+    {
+      matcher: ({ url }) =>
+        ANALYTICS_PATHS.some((p) => url.pathname.startsWith(p)),
+      handler: new NetworkOnly({ plugins: [silentFallbackPlugin] }),
     },
     // Rotas dinâmicas do servidor — nunca servir do cache
     {
