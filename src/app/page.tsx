@@ -420,25 +420,25 @@ export default function HomePage() {
             </div>
 
             <div className="pb-16 mt-[60px]">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {steps.map((step, i) => (
-                  <div key={i} className="text-center group relative">
+                  <div key={i} className="text-center group relative pt-16">
                     {/* Ícone com círculo tracejado */}
                     <div className="inline-block m-auto relative z-10
-                                    before:absolute before:top-4 before:-left-[10px]
-                                    before:w-[200px] before:h-[200px]
+                                    before:absolute before:-top-[52px] before:-left-[52px]
+                                    before:w-[270px] before:h-[270px]
                                     before:border-[2px] before:border-dashed before:border-[#79b900]
                                     before:rounded-full before:animate-echofy-rotate">
-                      <Image src={step.icon} alt="" width={120} height={120} draggable={false} />
+                      <Image src={step.icon} alt="" width={166} height={166} draggable={false} />
 
                       {/* Seta entre cards (xl+) */}
                       {step.arrow && (
-                        <Image src={step.arrow} alt="" width={100} height={50} draggable={false}
-                          className="absolute top-1/2 -translate-y-1/2 -right-[165px] 2xl:-right-[195px] hidden xl:block" />
+                        <Image src={step.arrow} alt="" width={110} height={55} draggable={false}
+                          className="absolute top-1/2 -translate-y-1/2 -right-[180px] 2xl:-right-[210px] hidden xl:block" />
                       )}
                     </div>
 
-                    <h5 className="font-['Albert_Sans'] font-semibold text-[#001819] text-2xl mt-9 mb-4">
+                    <h5 className="font-['Albert_Sans'] font-semibold text-[#001819] text-2xl mt-16 mb-4">
                       {step.title}
                     </h5>
                     <p className="font-['Albert_Sans'] text-gray-500 sm:w-2/3 md:w-full 2xl:w-3/4 mx-auto">
