@@ -1,6 +1,11 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
-import { MapPin, ArrowRight, ArrowUpRight, ChevronDown, Instagram, Facebook, Twitter } from "lucide-react";
+import { MapPin, ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
+
+/* Ícones sociais inline (lucide-react v1.x removeu brand icons) */
+const SvgInstagram = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>);
+const SvgFacebook = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>);
+const SvgTwitter = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l16 16M4 20L20 4"/></svg>);
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import type { Metadata } from "next";
@@ -180,19 +185,19 @@ export default function HomePage() {
                     <li>
                       <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
                          className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
-                        <Instagram className="size-4" />
+                        <SvgInstagram />
                       </a>
                     </li>
                     <li>
                       <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
                          className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
-                        <Facebook className="size-4" />
+                        <SvgFacebook />
                       </a>
                     </li>
                     <li>
-                      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
+                      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X"
                          className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
-                        <Twitter className="size-4" />
+                        <SvgTwitter />
                       </a>
                     </li>
                   </ul>
