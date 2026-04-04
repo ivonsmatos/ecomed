@@ -51,8 +51,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} EcoMed. Desenvolvido para o meio ambiente.
+        <div className="mt-8 border-t pt-6 flex flex-col items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+            <Link href="/privacidade" className="hover:text-foreground">Política de Privacidade</Link>
+            <Link href="/termos" className="hover:text-foreground">Termos de Uso</Link>
+            <Link href="/cookies" className="hover:text-foreground">Cookies</Link>
+            <Link href="/aviso-medico" className="hover:text-foreground">Aviso Médico</Link>
+          </div>
+          <span>© {new Date().getFullYear()} EcoMed. Desenvolvido para o meio ambiente.</span>
         </div>
       </div>
     </footer>

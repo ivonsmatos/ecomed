@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/shared/CookieBanner";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -120,12 +121,13 @@ export default function RootLayout({
               src="https://www.googletagmanager.com/ns.html?id=GTM-NQS3PK8S"
               height="0"
               width="0"
-              style={{ display: "none", visibility: "hidden" }}
+              className="hidden invisible"
             />
           </noscript>
         )}
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
+          <CookieBanner />
           <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
