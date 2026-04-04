@@ -32,6 +32,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.sanity.io" },
     ],
   },
+  async rewrites() {
+    return [
+      // /sitemap-llm.xml → route handler at /sitemap-llm
+      // (Next.js App Router does not match route.ts for segments ending in .xml)
+      { source: "/sitemap-llm.xml", destination: "/sitemap-llm" },
+    ];
+  },
   async headers() {
     return [
       {
