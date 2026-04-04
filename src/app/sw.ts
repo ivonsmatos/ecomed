@@ -17,6 +17,17 @@ const serwist = new Serwist({
   // navigationPreload desabilitado: pode causar no-response em algumas
   // situações onde o preload falha e não há cache disponível.
   navigationPreload: false,
+  // Fallback para navegação quando o servidor não responde (offline / container down)
+  fallbacks: {
+    entries: [
+      {
+        url: "/offline",
+        matcher({ request }) {
+          return request.destination === "document";
+        },
+      },
+    ],
+  },
   runtimeCaching: [
     // Pontos próximos: network-first com fallback de 5 minutos
     {
