@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "EcoMed — Descarte correto de medicamentos",
+    name: "EcoMed — Seu remédio tem destino certo.",
     short_name: "EcoMed",
     description: "Encontre pontos de coleta de medicamentos vencidos perto de você.",
     start_url: "/mapa",

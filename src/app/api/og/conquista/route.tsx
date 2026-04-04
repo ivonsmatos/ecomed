@@ -39,7 +39,7 @@ export async function GET(request: Request) {
           {badge}
         </div>
         <div style={{ fontSize: 20, color: "#6B7280" }}>
-          Nível {nivel} · Descarte certo, planeta saudável
+          Nível {nivel} · Seu remédio tem destino certo.
         </div>
       </div>
     ),

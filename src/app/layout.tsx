@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: {
     template: "%s | EcoMed",
-    default: "EcoMed — Descarte correto de medicamentos",
+    default: "EcoMed — Seu remédio tem destino certo.",
   },
   description:
     "Encontre pontos de coleta de medicamentos vencidos perto de você. Farmácias, UBS e ecopontos para descarte seguro e sustentável.",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: "https://ecomed.eco.br",
     siteName: "EcoMed",
-    title: "EcoMed — Descarte correto de medicamentos",
+    title: "EcoMed — Seu remédio tem destino certo.",
     description: "Encontre pontos de coleta de medicamentos vencidos perto de você.",
   },
 };

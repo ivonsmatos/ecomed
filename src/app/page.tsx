@@ -44,7 +44,7 @@ export default function HomePage() {
               <Leaf className="size-8" />
             </div>
             <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight text-green-950 dark:text-green-50 md:text-5xl lg:text-6xl">
-              Descarte seus medicamentos de forma correta
+              Seu remédio tem destino certo.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-green-900/70 dark:text-green-100/70">
               Encontre pontos de coleta de medicamentos vencidos ou sem uso próximos a você.
