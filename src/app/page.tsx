@@ -138,7 +138,7 @@ export default function HomePage() {
             1. HERO — banner-bg.jpg | xl:h-[960px] | pt-36
         ════════════════════════════════════════════════ */}
         <section
-          className="bg-[url('/echofy/banner-bg.jpg')] bg-cover bg-left lg:bg-center bg-no-repeat
+          className="bg-[url('/banner-ecomed.jpg')] bg-cover bg-left lg:bg-center bg-no-repeat
                      h-[750px] sm:h-[700px] md:h-[750px] lg:h-[760px] xl:h-[960px]
                      flex items-center"
         >
