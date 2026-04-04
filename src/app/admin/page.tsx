@@ -2,7 +2,7 @@
 import { requireAdmin } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, MapPin, FileText, AlertTriangle } from "lucide-react";
+import { Users, MapPin, FileText, AlertTriangle, Building2 } from "lucide-react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Badge } from "@/components/ui/badge";
@@ -12,11 +12,12 @@ export const metadata: Metadata = { title: "Painel Admin | EcoMed" };
 export default async function AdminPage() {
   await requireAdmin();
 
-  const [users, pendingPoints, approvedPoints, reports] = await Promise.all([
+  const [users, pendingPoints, approvedPoints, reports, pendingCandidates] = await Promise.all([
     prisma.user.count(),
     prisma.point.count({ where: { status: "PENDING" } }),
     prisma.point.count({ where: { status: "APPROVED" } }),
     prisma.report.count({ where: { resolved: false } }),
+    prisma.partner.count({ where: { user: { role: "CITIZEN" } } }),
   ]);
 
   const recentPoints = await prisma.point.findMany({
@@ -29,7 +30,8 @@ export default async function AdminPage() {
   const stats = [
     { label: "Usuários", value: users, icon: Users, href: "/admin/usuarios" },
     { label: "Pontos aprovados", value: approvedPoints, icon: MapPin, href: "/admin/pontos" },
-    { label: "Aguardando aprovação", value: pendingPoints, icon: AlertTriangle, href: "/admin/pontos?status=PENDING", alert: pendingPoints > 0 },
+    { label: "Candidatos parceiros", value: pendingCandidates, icon: Building2, href: "/admin/parceiros", alert: pendingCandidates > 0 },
+    { label: "Pontos pendentes", value: pendingPoints, icon: AlertTriangle, href: "/admin/pontos?status=PENDING", alert: pendingPoints > 0 },
     { label: "Reportes abertos", value: reports, icon: FileText, href: "/admin/reportes", alert: reports > 0 },
   ];
 
@@ -37,7 +39,7 @@ export default async function AdminPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Painel Admin</h1>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map(({ label, value, icon: Icon, href, alert }) => (
           <Link key={label} href={href}>
             <Card className={`hover:shadow-md transition-shadow cursor-pointer ${alert ? "border-orange-300" : ""}`}>
