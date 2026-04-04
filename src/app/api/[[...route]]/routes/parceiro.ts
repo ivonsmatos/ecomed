@@ -3,8 +3,54 @@ import { zValidator } from "@hono/zod-validator";
 import { prisma } from "@/lib/db/prisma";
 import { auth } from "@/../auth";
 import { createPointSchema, updatePointSchema } from "@/lib/schemas/point";
+import { partnerRegistrationSchema } from "@/lib/schemas/partner";
+import { sendEmail } from "@/lib/email";
+import { checkRateLimit } from "@/lib/ratelimit";
 
 const app = new Hono();
+
+// POST /api/parceiro/cadastro — solicita cadastro como parceiro (qualquer usuário autenticado)
+app.post("/cadastro", zValidator("json", partnerRegistrationSchema), async (c) => {
+  const session = await auth();
+  if (!session?.user?.id) return c.json({ error: "Não autenticado" }, 401);
+
+  const ip = c.req.header("CF-Connecting-IP") ?? c.req.header("x-forwarded-for") ?? "unknown";
+  const { success } = await checkRateLimit("auth", ip);
+  if (!success) return c.json({ error: "Muitas tentativas. Aguarde alguns minutos." }, 429);
+
+  const existing = await prisma.partner.findUnique({ where: { userId: session.user.id } });
+  if (existing) return c.json({ error: "Você já possui uma solicitação de parceiro em andamento ou aprovada." }, 409);
+
+  const data = c.req.valid("json");
+
+  const cnpjExists = await prisma.partner.findUnique({ where: { cnpj: data.cnpj } });
+  if (cnpjExists) return c.json({ error: "Este CNPJ já está cadastrado no sistema." }, 409);
+
+  const partner = await prisma.partner.create({
+    data: {
+      userId: session.user.id,
+      cnpj: data.cnpj,
+      companyName: data.companyName,
+      tradeName: data.tradeName || null,
+      phone: data.phone || null,
+    },
+    select: { id: true },
+  });
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { email: true },
+  });
+
+  if (user) {
+    sendEmail("partner-pending", user.email, {
+      partnerName: data.tradeName ?? data.companyName,
+      pointName: data.companyName,
+    }).catch(console.error);
+  }
+
+  return c.json({ ok: true, partnerId: partner.id }, 201);
+});
 
 async function requirePartnerSession(c: Parameters<Parameters<typeof app.use>[1]>[0]) {
   const session = await auth();

@@ -193,5 +193,79 @@ app.patch("/reportes/:id/resolver", async (c) => {
   return c.json({ ok: true, report });
 });
 
+// GET /api/admin/parceiros — lista candidatos a parceiro (tem Partner mas role ainda é CITIZEN)
+app.get("/parceiros", async (c) => {
+  const r = await requireAdminSession(c);
+  if (r && typeof r === "object" && "json" in r) return r;
+
+  const parceiros = await prisma.partner.findMany({
+    where: { user: { role: "CITIZEN" } },
+    include: {
+      user: { select: { id: true, name: true, email: true, createdAt: true } },
+      _count: { select: { points: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return c.json(parceiros);
+});
+
+// POST /api/admin/parceiros/:id/aprovar — promove usuário a PARTNER
+app.post("/parceiros/:id/aprovar", async (c) => {
+  const r = await requireAdminSession(c);
+  if (r && typeof r === "object" && "json" in r) return r;
+
+  const partner = await prisma.partner.findUnique({
+    where: { id: c.req.param("id") },
+    include: { user: { select: { id: true, email: true, role: true } } },
+  });
+
+  if (!partner) return c.json({ error: "Parceiro não encontrado" }, 404);
+  if (partner.user.role === "PARTNER") return c.json({ error: "Usuário já é parceiro" }, 409);
+
+  await prisma.user.update({
+    where: { id: partner.userId },
+    data: { role: "PARTNER" },
+  });
+
+  const dashboardUrl = `${process.env.NEXTAUTH_URL ?? "https://ecomed.eco.br"}/parceiro/dashboard`;
+  sendEmail("partner-approved", partner.user.email, {
+    partnerName: partner.tradeName ?? partner.companyName,
+    pointName: partner.companyName,
+    dashboardUrl,
+  }).catch(console.error);
+
+  return c.json({ ok: true });
+});
+
+// POST /api/admin/parceiros/:id/rejeitar — remove registro de parceiro e notifica
+app.post(
+  "/parceiros/:id/rejeitar",
+  zValidator("json", z.object({ motivo: z.string().min(5, "Informe o motivo da rejeição") })),
+  async (c) => {
+    const r = await requireAdminSession(c);
+    if (r && typeof r === "object" && "json" in r) return r;
+
+    const { motivo } = c.req.valid("json");
+
+    const partner = await prisma.partner.findUnique({
+      where: { id: c.req.param("id") },
+      include: { user: { select: { email: true } } },
+    });
+
+    if (!partner) return c.json({ error: "Parceiro não encontrado" }, 404);
+
+    await prisma.partner.delete({ where: { id: partner.id } });
+
+    sendEmail("partner-rejected", partner.user.email, {
+      partnerName: partner.tradeName ?? partner.companyName,
+      pointName: partner.companyName,
+      motivo,
+    }).catch(console.error);
+
+    return c.json({ ok: true });
+  },
+);
+
 export { app as adminRouter };
 
