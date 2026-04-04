@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { MapPin, Leaf, ShieldCheck, Smartphone, ArrowRight, ChevronDown } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button-variants";
-import { cn } from "@/lib/utils";
+﻿import Link from "next/link";
+import Image from "next/image";
+import { MapPin, ArrowRight, ArrowUpRight, ChevronDown, Instagram, Facebook, Twitter } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import type { Metadata } from "next";
@@ -10,6 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://ecomed.eco.br" },
 };
 
+/* ─── FAQ Data ───────────────────────────────────────────────────────────────── */
 const faqItems = [
   {
     question: "Onde posso descartar medicamentos vencidos?",
@@ -49,47 +49,76 @@ const faqSchema = {
   mainEntity: faqItems.map((item) => ({
     "@type": "Question",
     name: item.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.answer,
-    },
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
   })),
 };
 
-const stats = [
-  { value: "1 bilhão", label: "de embalagens de medicamentos descartadas por ano no Brasil" },
-  { value: "70%", label: "dos brasileiros descartam remédios no lixo comum ou esgoto" },
-  { value: "Decreto 10.388/2020", label: "obriga logística reversa de medicamentos domiciliares" },
-  { value: "Gratuito", label: "para cidadãos e pontos de coleta cadastrados no EcoMed" },
+/* ─── Sections Data ─────────────────────────────────────────────────────────── */
+const sliderItems = [
+  "Medicamentos Vencidos",
+  "Descarte Correto",
+  "Meio Ambiente",
+  "Pontos de Coleta",
+  "Logística Reversa",
+  "Saúde Pública",
 ];
 
-const features = [
+const services = [
   {
-    icon: MapPin,
-    title: "Mapa interativo",
-    description:
-      "Encontre pontos de coleta de medicamentos em farmácias, UBS e ecopontos perto de você.",
+    img: "/echofy/service-thumb.png",
+    icon: "/echofy/service-icon1.png",
+    shape: "/echofy/service-shape.png",
+    title: "Encontre o ponto próximo",
+    desc: "Mapa interativo com farmácias, UBS e ecopontos verificados para descarte de medicamentos.",
+    href: "/mapa",
   },
   {
-    icon: Leaf,
-    title: "Impacto ambiental",
-    description:
-      "Medicamentos descartados incorretamente contaminam rios e solos. Descarte correto salva o meio ambiente.",
+    img: "/echofy/service-thumb2.png",
+    icon: "/echofy/service-icon2.png",
+    shape: "/echofy/service-shape.png",
+    title: "Cadastre sua farmácia",
+    desc: "Farmácias e estabelecimentos de saúde podem se cadastrar gratuitamente como ponto de coleta.",
+    href: "/cadastrar",
   },
   {
-    icon: ShieldCheck,
-    title: "Pontos verificados",
-    description:
-      "Todos os pontos de coleta são verificados e aprovados pela equipe do EcoMed antes de aparecer no mapa.",
-  },
-  {
-    icon: Smartphone,
-    title: "Funciona offline",
-    description:
-      "Salve pontos favoritos e acesse mesmo sem conexão com a internet. Perfeito para uso no dia a dia.",
+    img: "/echofy/service-thumb3.png",
+    icon: "/echofy/service-icon3.png",
+    shape: "/echofy/service-shape.png",
+    title: "Assistente com IA",
+    desc: "Tire dúvidas sobre descarte correto com nosso assistente especializado nas normas brasileiras.",
+    href: "/app/chat",
   },
 ];
 
+const counters = [
+  { icon: "/echofy/counter-icon.png",  value: "1B+",    label: "Embalagens descartadas/ano" },
+  { icon: "/echofy/counter-icon2.png", value: "70%",    label: "Descarte incorreto no Brasil" },
+  { icon: "/echofy/counter-icon3.png", value: "300+",   label: "Pontos verificados" },
+  { icon: "/echofy/counter-icon4.png", value: "100%",   label: "Gratuito ao cidadão" },
+];
+
+const steps = [
+  {
+    icon: "/echofy/process-icon.png",
+    arrow: "/echofy/process-arrow.png",
+    title: "Encontre o ponto",
+    desc: "Use o mapa para localizar o ponto de coleta de medicamentos mais próximo: farmácia, UBS ou ecoponto.",
+  },
+  {
+    icon: "/echofy/process-icon2.png",
+    arrow: "/echofy/process-arrow2.png",
+    title: "Separe os medicamentos",
+    desc: "Separe comprimidos, xaropes, pomadas e resíduos farmacêuticos. Não é preciso abrir as embalagens.",
+  },
+  {
+    icon: "/echofy/process-icon3.png",
+    arrow: null,
+    title: "Faça o descarte correto",
+    desc: "Leve ao ponto de coleta e entregue. Sua atitude protege rios, solos e a saúde de toda a comunidade.",
+  },
+];
+
+/* ─── Page Component ────────────────────────────────────────────────────────── */
 export default function HomePage() {
   return (
     <>
@@ -98,100 +127,368 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Header />
-      <main className="flex flex-col">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950 dark:to-emerald-950 py-20 md:py-32">
-          <div className="container mx-auto px-4 text-center">
-            <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-green-700 text-white shadow-lg">
-              <Leaf className="size-8" />
-            </div>
-            <h1 className="mx-auto max-w-2xl text-4xl font-bold tracking-tight text-green-950 dark:text-green-50 md:text-5xl lg:text-6xl">
-              Seu remédio tem destino certo.
-            </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-green-900/70 dark:text-green-100/70">
-              Encontre pontos de coleta de medicamentos vencidos ou sem uso próximos a você.
-              Proteja o meio ambiente e a saúde pública.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/mapa"
-                className={cn(buttonVariants({ size: "lg" }), "bg-green-700 hover:bg-green-800 text-white gap-2")}
-              >
-                <MapPin className="size-4" />
-                Encontrar ponto próximo
-              </Link>
-              <Link href="/cadastrar" className={buttonVariants({ size: "lg", variant: "outline" })}>
-                Cadastrar meu ponto
-                <ArrowRight className="size-4 ml-2" />
-              </Link>
+      <main className="overflow-hidden">
+
+        {/* ════════════════════════════════════════════════
+            1. HERO — banner-bg.jpg | xl:h-[960px] | pt-36
+        ════════════════════════════════════════════════ */}
+        <section
+          className="bg-[url('/echofy/banner-bg.jpg')] bg-cover bg-left lg:bg-center bg-no-repeat
+                     h-[750px] sm:h-[700px] md:h-[750px] lg:h-[760px] xl:h-[960px]
+                     flex items-center"
+        >
+          <div className="echofy-container">
+            <div className="pt-36 relative">
+              <div className="relative banner-content">
+                <h5 className="font-['Albert_Sans'] text-[#79b900] font-medium uppercase tracking-wider text-sm sm:text-base mb-3">
+                  Descarte Correto de Medicamentos
+                </h5>
+                <h1 className="font-['Albert_Sans'] font-extrabold text-white
+                               text-[32px] sm:text-[56px] md:text-[70px] lg:text-[52px] xl:text-[62px] 2xl:text-[70px]
+                               leading-tight">
+                  Descarte Seguro
+                </h1>
+                <h1 className="font-['Albert_Sans'] font-extrabold text-white
+                               text-[32px] sm:text-[56px] md:text-[70px] lg:text-[52px] xl:text-[62px] 2xl:text-[70px]
+                               leading-tight -mt-3 sm:-mt-5">
+                  <span className="text-[#79b900]">Protege</span> Vidas
+                </h1>
+                <p className="font-['Albert_Sans'] text-lg text-white/90 mb-10 max-w-xl">
+                  Encontre pontos de coleta de medicamentos vencidos próximos a você.
+                  Gratuito para cidadãos e farmácias.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-5">
+                  <Link href="/mapa" className="echofy-btn">
+                    <MapPin className="size-4" />
+                    Encontrar Ponto
+                    <Image src="/echofy/button-shape-1.png" alt="" width={24} height={24} draggable={false} />
+                  </Link>
+                  <Link href="/cadastrar" className="echofy-btn-outline">
+                    Cadastrar Farmácia
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </div>
+
+                {/* Social vertical — visible on xl+ like Echofy */}
+                <div className="banner-share hidden xl:flex gap-[100px] items-center -rotate-90
+                                absolute top-full -translate-y-1/2 xl:-left-[16%] 2xl:-left-[23%]">
+                  <h5 className="font-['Albert_Sans'] text-white relative
+                                 before:absolute before:top-1/2 before:-right-[82px] before:w-16 before:h-[1px] before:bg-gray-500">
+                    FOLLOW US
+                  </h5>
+                  <ul className="flex gap-7 items-center">
+                    <li>
+                      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                         className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
+                        <Instagram className="size-4" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+                         className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
+                        <Facebook className="size-4" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"
+                         className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
+                        <Twitter className="size-4" />
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Stats — citabilidade para IA */}
-        <section className="border-b bg-white dark:bg-zinc-900 py-12">
-          <div className="container mx-auto px-4">
-            <dl className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-center">
-              {stats.map((s) => (
-                <div key={s.value}>
-                  <dt className="text-2xl font-bold text-green-700">{s.value}</dt>
-                  <dd className="mt-1 text-sm text-muted-foreground">{s.label}</dd>
+        {/* ════════════════════════════════════════════════
+            2. CONTENT SLIDER — bg:#79b900 | white text
+               Duas cópias = scroll infinito sem JS
+        ════════════════════════════════════════════════ */}
+        <div className="echofy-content-slider-wrap">
+          {[0, 1].map((g) => (
+            <div key={g} className="echofy-content-slider">
+              {sliderItems.map((item, i) => (
+                <div key={i} className="flex items-center gap-[50px]">
+                  <h3>{item}</h3>
+                  <Image src="/echofy/text-shape.png" alt="" width={40} height={40} draggable={false} />
                 </div>
               ))}
-            </dl>
-          </div>
-        </section>
+            </div>
+          ))}
+        </div>
 
-        {/* Features */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <h2 className="mb-12 text-center text-3xl font-bold">Por que usar o EcoMed?</h2>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {features.map((feature) => (
-                <div key={feature.title} className="flex flex-col items-center text-center">
-                  <div className="mb-4 flex size-12 items-center justify-center rounded-xl bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                    <feature.icon className="size-6" />
+        {/* ════════════════════════════════════════════════
+            3. ABOUT — bg:about-bg.jpg
+               Esquerda: about.png + about-award.png (float)
+               Direita: sub-title-shape | about-icon | about-icon2
+               about-shape-1.png (top-right, zoom) | about-shape.png (dance)
+        ════════════════════════════════════════════════ */}
+        <section className="py-[120px] bg-[url('/echofy/about-bg.jpg')] bg-no-repeat bg-center bg-cover relative">
+          {/* about-shape-1.png — canto superior direito, zoom */}
+          <Image
+            src="/echofy/about-shape-1.png"
+            alt=""
+            width={80}
+            height={80}
+            draggable={false}
+            className="absolute top-32 right-20 animate-echofy-zoom hidden 2xl:block"
+          />
+
+          <div className="echofy-container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-[92px] lg:gap-5 xl:gap-24 items-center">
+
+              {/* Esquerda: about.png com about-award.png flutuando */}
+              <div className="relative">
+                <Image src="/echofy/about.png" alt="Sobre o EcoMed" width={550} height={500}
+                  className="w-full" draggable={false} />
+                <Image src="/echofy/about-award.png" alt="" width={180} height={180}
+                  draggable={false}
+                  className="absolute bottom-10 left-0 animate-echofy-float hidden sm:block" />
+              </div>
+
+              {/* Direita: texto */}
+              <div className="relative">
+                <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 uppercase tracking-wider text-sm">
+                  <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
+                  Sobre o EcoMed
+                </h5>
+                <h1 className="font-['Albert_Sans'] font-bold
+                               text-[22px] leading-8 sm:text-[38px] sm:leading-[48px]
+                               md:text-[44px] md:leading-[54px] lg:text-[32px] lg:leading-[42px]
+                               xl:text-[40px] xl:leading-[50px] 2xl:text-[46px] 2xl:leading-[56px]
+                               text-[#001819] mt-5 mb-3">
+                  Descarte Sustentável<br />
+                  para um Brasil Mais Verde
+                </h1>
+
+                {/* about-icon row 1 */}
+                <div className="flex gap-6 mt-12">
+                  <div className="shrink-0">
+                    <Image src="/echofy/about-icon.png" alt="" width={56} height={56} draggable={false} />
                   </div>
-                  <h3 className="mb-2 font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  <div className="flex-1">
+                    <h5 className="font-['Albert_Sans'] font-semibold text-2xl text-[#001819] -mt-2">
+                      Impacto Ambiental
+                    </h5>
+                    <p className="font-['Albert_Sans'] text-gray-500 pt-3 leading-relaxed">
+                      Medicamentos descartados no lixo ou esgoto contaminam rios e solos.
+                      O descarte correto protege o ecossistema e a cadeia alimentar.
+                    </p>
+                  </div>
+                </div>
+
+                {/* about-icon2 row 2 */}
+                <div className="flex gap-6 mt-9 pb-9 mb-10 border-b border-gray-200">
+                  <div className="shrink-0">
+                    <Image src="/echofy/about-icon2.png" alt="" width={56} height={56} draggable={false} />
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="font-['Albert_Sans'] font-semibold text-2xl text-[#001819] -mt-2">
+                      Saúde Pública
+                    </h5>
+                    <p className="font-['Albert_Sans'] text-gray-500 pt-3 leading-relaxed">
+                      Antibióticos e hormônios no ambiente favorecem resistência bacteriana
+                      e comprometem o abastecimento de água potável.
+                    </p>
+                  </div>
+                </div>
+
+                <Link href="/mapa" className="echofy-btn">
+                  Saiba Mais
+                  <Image src="/echofy/button-shape-1.png" alt="" width={24} height={24} draggable={false} />
+                </Link>
+
+                {/* about-shape.png — dançando no canto inferior */}
+                <Image src="/echofy/about-shape.png" alt="" width={60} height={60}
+                  draggable={false}
+                  className="absolute -bottom-0 left-1/2 animate-echofy-dance hidden sm:block" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════
+            4. SERVICES — bg:service-bg.jpg
+               3 cards com service-shape.png no canto
+               Hover: overlay escuro #001819
+        ════════════════════════════════════════════════ */}
+        <section className="relative pt-28 pb-[120px] bg-[url('/echofy/service-bg.jpg')] bg-cover bg-no-repeat bg-center">
+          <div className="echofy-container">
+            <div className="md:-mb-[11.2rem]">
+              <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 uppercase tracking-wider text-sm">
+                <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
+                Nossos Serviços
+              </h5>
+              <h1 className="font-['Albert_Sans'] font-bold
+                             text-xl leading-6 sm:text-[38px] sm:leading-[48px]
+                             md:text-[40px] md:leading-[54px] lg:text-[32px] lg:leading-[42px]
+                             xl:text-[40px] xl:leading-[50px] 2xl:text-[46px] 2xl:leading-[56px]
+                             text-[#001819] mt-5 mb-3 border-b border-gray-200 pb-9">
+                EcoMed Oferece Tudo que<br />
+                Você Precisa para Descartar
+              </h1>
+            </div>
+
+            <div className="mt-[180px] sm:mt-[220px] md:mt-[200px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+              {services.map((s) => (
+                <div key={s.title} className="echofy-service-card group">
+                  {/* Imagem com overlay no hover */}
+                  <div className="echofy-service-img-wrap">
+                    <Image src={s.img} alt={s.title} width={400} height={260} className="w-full" draggable={false} />
+                  </div>
+
+                  {/* Ícone + botão seta */}
+                  <div className="flex justify-between items-center mt-8 mb-6">
+                    <Image src={s.icon} alt="" width={48} height={48} draggable={false} />
+                    <Link href={s.href}>
+                      <div className="echofy-service-arrow">
+                        <ArrowUpRight className="size-5" />
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Título */}
+                  <Link href={s.href}>
+                    <h3 className="echofy-service-title font-['Albert_Sans'] font-semibold text-[22px] pb-[10px]
+                                   text-[#001819] transition-colors duration-500 relative
+                                   before:absolute before:bottom-0 before:left-0 before:w-8 before:h-[2px] before:bg-[#79b900]">
+                      {s.title}
+                    </h3>
+                  </Link>
+
+                  {/* Descrição */}
+                  <p className="echofy-service-desc font-['Albert_Sans'] text-gray-500 pt-6 pb-[10px] transition-colors duration-500">
+                    {s.desc}
+                  </p>
+
+                  {/* service-shape.png — canto inferior direito */}
+                  <Image src={s.shape} alt="" width={120} height={120} draggable={false}
+                    className="absolute -z-10 rotate-90 -bottom-28 -right-28 transition-all duration-500
+                               group-hover:-bottom-[14px] group-hover:-right-2" />
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="border-t bg-green-700 py-16 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-4 text-3xl font-bold">Sua farmácia já é um ponto de coleta?</h2>
-            <p className="mb-8 text-green-100">
-              Cadastre gratuitamente e apareça no mapa do EcoMed. Ajude sua comunidade com o
-              descarte correto.
+        {/* ════════════════════════════════════════════════
+            5. COUNTER — bg:counter-bg.png | 4 colunas
+        ════════════════════════════════════════════════ */}
+        <section className="py-28 bg-[url('/echofy/counter-bg.png')] bg-no-repeat bg-cover bg-center">
+          <div className="echofy-container">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-7 lg:gap-0 lg:grid-cols-4 items-center justify-center">
+              {counters.map((c) => (
+                <div key={c.label} className="text-center">
+                  <Image src={c.icon} alt="" width={64} height={64} draggable={false} className="mx-auto" />
+                  <p className="font-['Albert_Sans'] text-[46px] text-white font-bold mt-3 -mb-1">{c.value}</p>
+                  <p className="font-['Albert_Sans'] text-white text-xl">{c.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════
+            6. PROCESS — cards centralizados
+               Círculo tracejado rotacionando = animate-echofy-rotate
+               Seta entre cards: process-arrow.png (xl+)
+        ════════════════════════════════════════════════ */}
+        <section className="pb-10 relative z-10 pt-28 echofy-process-section">
+          <div className="echofy-container">
+            <div className="text-center">
+              <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 justify-center uppercase tracking-wider text-sm">
+                <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
+                Como Descartar
+              </h5>
+              <h1 className="font-['Albert_Sans'] font-bold
+                             text-[22px] leading-8 sm:text-[38px] sm:leading-[48px]
+                             md:text-[44px] md:leading-[54px] lg:text-[32px] lg:leading-[42px]
+                             xl:text-[40px] xl:leading-[50px] 2xl:text-[46px] 2xl:leading-[56px]
+                             text-[#001819] mt-5 mb-3">
+                Processo para Descarte Seguro
+              </h1>
+            </div>
+
+            <div className="pb-16 mt-[60px]">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                {steps.map((step, i) => (
+                  <div key={i} className="text-center group relative">
+                    {/* Ícone com círculo tracejado */}
+                    <div className="inline-block m-auto relative z-10
+                                    before:absolute before:top-4 before:-left-[10px]
+                                    before:w-[200px] before:h-[200px]
+                                    before:border-[2px] before:border-dashed before:border-[#79b900]
+                                    before:rounded-full before:animate-echofy-rotate">
+                      <Image src={step.icon} alt="" width={120} height={120} draggable={false} />
+
+                      {/* Seta entre cards (xl+) */}
+                      {step.arrow && (
+                        <Image src={step.arrow} alt="" width={100} height={50} draggable={false}
+                          className="absolute top-1/2 -translate-y-1/2 -right-[165px] 2xl:-right-[195px] hidden xl:block" />
+                      )}
+                    </div>
+
+                    <h5 className="font-['Albert_Sans'] font-semibold text-[#001819] text-2xl mt-9 mb-4">
+                      {step.title}
+                    </h5>
+                    <p className="font-['Albert_Sans'] text-gray-500 sm:w-2/3 md:w-full 2xl:w-3/4 mx-auto">
+                      {step.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════
+            7. CTA — bg:banner-bg2.jpg + overlay escuro
+        ════════════════════════════════════════════════ */}
+        <section className="py-[80px] bg-[url('/echofy/banner-bg2.jpg')] bg-cover bg-center bg-no-repeat relative">
+          <div className="absolute inset-0 bg-[#001819]/75" />
+          <div className="echofy-container relative z-10 text-center">
+            <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] text-sm uppercase tracking-widest mb-4">
+              Sua farmácia já coleta medicamentos?
+            </h5>
+            <h2 className="font-['Albert_Sans'] font-bold text-white text-[28px] sm:text-[44px] leading-tight mb-6 max-w-2xl mx-auto">
+              Cadastre gratuitamente e apareça no mapa do EcoMed
+            </h2>
+            <p className="font-['Albert_Sans'] text-white/75 mb-10 max-w-lg mx-auto">
+              Ajude sua comunidade com o descarte correto de medicamentos.
+              Verificação rápida e visibilidade para milhares de cidadãos.
             </p>
-            <Link
-              href="/cadastrar"
-              className={cn(buttonVariants({ size: "lg", variant: "outline" }), "border-white text-white hover:bg-white hover:text-green-700")}
-            >
+            <Link href="/cadastrar" className="echofy-btn">
               Cadastrar minha farmácia
+              <Image src="/echofy/button-shape-1.png" alt="" width={24} height={24} draggable={false} />
             </Link>
           </div>
         </section>
 
-        {/* FAQ — schema FAQPage + citabilidade para IA */}
-        <section id="faq" className="py-20 bg-zinc-50 dark:bg-zinc-900">
-          <div className="container mx-auto px-4 max-w-3xl">
-            <h2 className="mb-2 text-center text-3xl font-bold">Perguntas Frequentes</h2>
-            <p className="mb-10 text-center text-muted-foreground">
-              Tudo que você precisa saber sobre o descarte correto de medicamentos no Brasil.
-            </p>
-            <dl className="space-y-6">
+        {/* ════════════════════════════════════════════════
+            8. FAQ — bg:about-bg.jpg
+        ════════════════════════════════════════════════ */}
+        <section id="faq" className="py-[100px] bg-[url('/echofy/about-bg.jpg')] bg-cover bg-center bg-no-repeat">
+          <div className="echofy-container max-w-3xl">
+            <div className="text-center mb-14">
+              <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 justify-center text-sm uppercase tracking-wider">
+                <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
+                Perguntas Frequentes
+              </h5>
+              <h2 className="font-['Albert_Sans'] font-bold text-[28px] sm:text-[42px] text-[#001819] mt-4">
+                Tudo sobre descarte correto<br className="hidden sm:block" />
+                de medicamentos no Brasil
+              </h2>
+            </div>
+            <dl className="space-y-4">
               {faqItems.map((item) => (
-                <div key={item.question} className="rounded-xl border bg-white dark:bg-zinc-800 p-6 shadow-sm">
+                <div key={item.question} className="bg-white/90 rounded-xl border border-gray-100 p-6 shadow-sm backdrop-blur-sm">
                   <dt className="flex items-start justify-between gap-4">
-                    <span className="font-semibold text-base">{item.question}</span>
-                    <ChevronDown className="size-4 shrink-0 text-muted-foreground mt-0.5" />
+                    <span className="font-['Albert_Sans'] font-semibold text-[#001819]">{item.question}</span>
+                    <ChevronDown className="size-5 shrink-0 text-[#79b900] mt-0.5" />
                   </dt>
-                  <dd className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  <dd className="mt-3 font-['Albert_Sans'] text-gray-500 text-sm leading-relaxed">
                     {item.answer}
                   </dd>
                 </div>
@@ -199,9 +496,9 @@ export default function HomePage() {
             </dl>
           </div>
         </section>
+
       </main>
       <Footer />
     </>
   );
 }
-

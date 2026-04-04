@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import url("https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -127,4 +128,240 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ─── Echofy Layout Utilities ─────────────────────────────────────────────── */
+.echofy-container {
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 576px)  { .echofy-container { max-width: 540px; } }
+@media (min-width: 768px)  { .echofy-container { max-width: 720px; } }
+@media (min-width: 992px)  { .echofy-container { max-width: 960px; } }
+@media (min-width: 1200px) { .echofy-container { max-width: 1140px; } }
+@media (min-width: 1400px) { .echofy-container { max-width: 1320px; } }
+
+.echofy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #16a34a;
+  background-color: #16a34a;
+  transition: all 0.5s;
+  padding: 14px 36px;
+  position: relative;
+  border-radius: 9999px;
+  font-size: 1rem;
+  color: white;
+  font-weight: 500;
+  font-family: 'Albert Sans', sans-serif;
+  z-index: 10;
+  text-decoration: none;
+}
+.echofy-btn::before {
+  content: '';
+  background: #001819;
+  height: 100%;
+  width: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  transition: all 0.5s;
+}
+.echofy-btn:hover::before {
+  width: 100%;
+  left: 0;
+}
+.echofy-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  border: 2px solid white;
+  background-color: transparent;
+  transition: all 0.5s;
+  padding: 13px 36px;
+  position: relative;
+  border-radius: 9999px;
+  font-size: 1rem;
+  color: white;
+  font-weight: 500;
+  font-family: 'Albert Sans', sans-serif;
+  z-index: 10;
+  text-decoration: none;
+}
+.echofy-btn-outline::before {
+  content: '';
+  background: #16a34a;
+  height: 100%;
+  width: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  transition: all 0.5s;
+}
+.echofy-btn-outline:hover::before {
+  width: 100%;
+  left: 0;
+}
+
+/* ─── Echofy Animations ───────────────────────────────────────────────────── */
+@keyframes echofy-zoomInOut {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes echofy-movebtn {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes echofy-dance {
+  0%, 100% { transform: rotate(-6deg) translateY(0); }
+  50% { transform: rotate(6deg) translateY(-8px); }
+}
+@keyframes echofy-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-echofy-zoom { animation: echofy-zoomInOut 4s ease-in-out infinite; }
+.animate-echofy-float { animation: echofy-movebtn 3s ease-in-out infinite; }
+.animate-echofy-dance { animation: echofy-dance 5s ease-in-out infinite; }
+.animate-echofy-marquee { animation: echofy-marquee 50s linear infinite; }
+
+/* ─── Process icon rotating dashed circle ────────────────────────────────── */
+@keyframes echofy-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-echofy-rotate { animation: echofy-rotate 8s linear infinite; }
+
+/* ─── Content slider (Echofy faithful) ──────────────────────────────────── */
+@keyframes echofy-scroll {
+  to { transform: translateX(-100%); }
+}
+.echofy-content-slider-wrap {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 50px;
+  padding: 30px 0;
+  background: #79b900;
+  position: relative;
+  z-index: 1;
+}
+.echofy-content-slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 50px;
+  min-width: 100%;
+  flex-shrink: 0;
+  animation: echofy-scroll 50s linear infinite;
+}
+.echofy-content-slider h3 {
+  font-size: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  font-family: 'Albert Sans', sans-serif;
+  white-space: nowrap;
+}
+
+/* ─── Service card (Echofy faithful) ────────────────────────────────────── */
+.echofy-service-card {
+  padding: 24px;
+  border-radius: 0.5rem;
+  background: #f5f8ed;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  transition: all 0.5s;
+}
+.echofy-service-card::before {
+  content: '';
+  background: #001819;
+  height: 0;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  transition: all 0.5s;
+}
+.echofy-service-card:hover::before {
+  height: 100%;
+  top: 0;
+}
+.echofy-service-card:hover .echofy-service-title,
+.echofy-service-card:hover .echofy-service-desc {
+  color: #fff !important;
+}
+.echofy-service-img-wrap {
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+.echofy-service-img-wrap::before {
+  content: '';
+  background: #79b900;
+  width: 0;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transition: all 0.5s;
+  opacity: 0;
+}
+.echofy-service-card:hover .echofy-service-img-wrap::before {
+  width: 100%;
+  left: 0;
+  opacity: 0;
+}
+.echofy-service-arrow {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  color: #79b900;
+  font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  transition: all 0.5s;
+}
+.echofy-service-arrow::before {
+  content: '';
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  height: 100%;
+  background: #79b900;
+  border-radius: 50%;
+  transition: all 0.5s;
+  transform: scale(0);
+}
+.echofy-service-card:hover .echofy-service-arrow {
+  color: white;
+}
+.echofy-service-card:hover .echofy-service-arrow::before {
+  transform: scale(1);
+}
+
+/* ─── Process section background shape ──────────────────────────────────── */
+.echofy-process-section { position: relative; z-index: 10; }
+.echofy-process-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(121,185,0,0.06) 0%, rgba(0,24,25,0.04) 100%);
+  z-index: -1;
 }
