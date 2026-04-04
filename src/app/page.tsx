@@ -420,25 +420,25 @@ export default function HomePage() {
             </div>
 
             <div className="pb-16 mt-[60px]">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {steps.map((step, i) => (
-                  <div key={i} className="text-center group relative pt-16">
-                    {/* Ícone com círculo tracejado */}
+                  <div key={i} className="text-center group relative">
+                    {/* Ícone com círculo tracejado — imagem natural 180×207 (folha inclusa) */}
                     <div className="inline-block m-auto relative z-10
-                                    before:absolute before:-top-[52px] before:-left-[52px]
-                                    before:w-[270px] before:h-[270px]
-                                    before:border-[2px] before:border-dashed before:border-[#79b900]
+                                    before:absolute before:top-[18px] before:-left-[10px]
+                                    before:w-[200px] before:h-[200px]
+                                    before:border-2 before:border-dashed before:border-[#79b900]
                                     before:rounded-full before:animate-echofy-rotate">
-                      <Image src={step.icon} alt="" width={166} height={166} draggable={false} />
+                      <Image src={step.icon} alt="" width={180} height={207} draggable={false} />
 
                       {/* Seta entre cards (xl+) */}
                       {step.arrow && (
-                        <Image src={step.arrow} alt="" width={110} height={55} draggable={false}
-                          className="absolute top-1/2 -translate-y-1/2 -right-[180px] 2xl:-right-[210px] hidden xl:block" />
+                        <Image src={step.arrow} alt="" width={100} height={26} draggable={false}
+                          className="absolute top-[120px] -translate-y-1/2 -right-[150px] 2xl:-right-[175px] hidden xl:block" />
                       )}
                     </div>
 
-                    <h5 className="font-['Albert_Sans'] font-semibold text-[#001819] text-2xl mt-16 mb-4">
+                    <h5 className="font-['Albert_Sans'] font-semibold text-[#001819] text-2xl mt-6 mb-4">
                       {step.title}
                     </h5>
                     <p className="font-['Albert_Sans'] text-gray-500 sm:w-2/3 md:w-full 2xl:w-3/4 mx-auto">
