@@ -62,14 +62,14 @@ O EcoMed resolve um problema ambiental concreto: medicamentos descartados incorr
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    CLOUDFLARE (Edge)                            │
-│         WAF · CDN · DDoS Protection · DNS · Pages              │
-└────────┬───────────────────┬────────────────────────────────────┘
-         │                   │
-         ▼                   ▼
+│              WAF · CDN · DDoS Protection · DNS                  │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ HTTPS (proxy para VPS)
+                             ▼
 ┌─────────────────┐  ┌──────────────────────────────────────────┐
-│  Static Assets  │  │         Next.js (Cloudflare Pages)       │
-│  (CDN Cache)    │  │  App Router · Server Components · Hono   │
-│  _next/static   │  │  next.config.ts · middleware.ts · auth   │
+│  Static Assets  │  │  VPS Oracle Cloud — Next.js standalone   │
+│  (CDN Cache)    │  │  Nginx :443 → Docker :3010               │
+│  _next/static   │  │  App Router · Server Components · Hono   │
 └─────────────────┘  └─────────────────────────┬────────────────┘
                                                 │
                         ┌───────────────────────┼────────────────┐
@@ -109,7 +109,7 @@ Serviços Externos:
 
 ```
 1. Browser abre /mapa
-2. Cloudflare Pages serve HTML estático (SSG)
+2. Cloudflare WAF/CDN → Nginx no VPS → Next.js Docker :3010
 3. Leaflet carrega → geolocalização do usuário
 4. GET /api/pontos/proximos?lat=&lng=&raio=
 5. Hono → checkRateLimit("map", ip) → Prisma $queryRaw PostGIS ST_DWithin
@@ -150,20 +150,21 @@ Serviços Externos:
 
 ## Infraestrutura e Deploy
 
-| Componente             | Serviço                         | URL                   |
-| ---------------------- | ------------------------------- | --------------------- |
-| Frontend / App Next.js | Cloudflare Pages                | ecomed.eco.br         |
-| Banco principal        | Supabase (PostgreSQL + PostGIS) | pooler :6543          |
-| Rate limiting          | Upstash Redis                   | REST API              |
-| Imagens                | Cloudflare R2                   | uploads.ecomed.eco.br |
-| Blog / CMS             | Sanity.io                       | sanity.io/manage      |
-| Emails                 | Resend                          | resend.com            |
-| IA API                 | VPS Oracle Cloud Ubuntu 22.04   | :8002                 |
-| Embeddings / LLM       | Ollama (Docker)                 | :11434                |
-| Vetores                | PGVector (Docker)               | :5432                 |
-| Monitoramento          | Sentry                          | sentry.io             |
+| Componente             | Serviço                                           | URL                   |
+| ---------------------- | ------------------------------------------------- | --------------------- |
+| Frontend / App Next.js | VPS Oracle Cloud — Docker :3010 + Nginx :443      | ecomed.eco.br         |
+| DNS / WAF / CDN        | Cloudflare (proxy reverso)                        | ecomed.eco.br         |
+| Banco principal        | AWS Lightsail (PostgreSQL + PostGIS)               | :5432                 |
+| Rate limiting          | Upstash Redis                                     | REST API              |
+| Imagens                | Cloudflare R2                                     | uploads.ecomed.eco.br |
+| Blog / CMS             | Sanity.io                                         | sanity.io/manage      |
+| Emails                 | Resend                                            | resend.com            |
+| IA API                 | VPS Oracle Cloud Ubuntu 22.04                     | :8002                 |
+| Embeddings / LLM       | Ollama (Docker)                                   | :11434                |
+| Vetores                | PGVector (Docker)                                 | :5432                 |
+| Monitoramento          | Sentry                                            | sentry.io             |
 
-**VPS:** `45.151.122.234` — 3 containers Docker: `ecomed-ia`, `ecomed-pgvector`, `ecomed-ollama`
+**VPS:** `45.151.122.234` — containers Docker: `ecomed-app` (:3010), `ecomed-ia` (:8002), `ecomed-pgvector`, `ecomed-ollama`
 
 ---
 
@@ -177,7 +178,7 @@ ecomed/
 │   ├── next.config.ts           ← Serwist PWA + imagens R2
 │   ├── middleware.ts            ← RBAC por role
 │   ├── auth.ts                  ← NextAuth v5 (Google + Credentials)
-│   ├── wrangler.toml            ← Cloudflare Pages config
+│   ├── wrangler.toml            ← config Wrangler (não usado em produção)
 │   ├── prisma/
 │   │   ├── schema.prisma        ← fonte da verdade do banco
 │   │   ├── seed.ts              ← dados iniciais de dev
@@ -763,12 +764,12 @@ CoinEvent:   SIGNUP | ONBOARDING_PROFILE | ONBOARDING_SCREENS | ONBOARDING_GEO
 
 ## Variáveis de Ambiente
 
-### `app/.env.local` (desenvolvimento) / `app/.env.production` (VPS)
+### `app/.env.production` (VPS)
 
 ```env
-# Banco de dados (Supabase)
-DATABASE_URL=postgresql://...@...supabase.co:6543/postgres  # pooler (runtime)
-DIRECT_URL=postgresql://...@...supabase.co:5432/postgres    # direto (migrations)
+# Banco de dados (AWS Lightsail PostgreSQL)
+DATABASE_URL=postgresql://...@ls-...rds.amazonaws.com:5432/postgres  # pooler/direto
+DIRECT_URL=postgresql://... (mesma string, conexão direta p/ migrations)
 
 # Auth (NextAuth v5 — usar AUTH_* não NEXTAUTH_*)
 AUTH_URL=https://ecomed.eco.br
@@ -916,22 +917,14 @@ python -m app.ingest --reset   # re-indexar documentos
 
 ## Deploy em Produção
 
-### App Next.js — Cloudflare Pages
+### App Next.js — VPS Docker + Nginx
+
+O app roda como container Docker na porta 3010, com Nginx como proxy reverso na 443.
 
 ```bash
-# Build automático na branch main via GitHub Actions
-git push origin main
-
-# Ou via wrangler CLI
-npx wrangler pages deploy .vercel/output/static
-```
-
-### App Next.js — VPS Docker (alternativo)
-
-```bash
-# No VPS
+# No VPS (45.151.122.234)
 cd /opt/ecomed-app
-git pull origin master
+git pull origin main
 docker build --no-cache -t ecomed-app:latest .
 docker stop ecomed-app && docker rm ecomed-app
 docker run -d \
@@ -941,6 +934,20 @@ docker run -d \
   --env-file .env.production \
   ecomed-app:latest
 ```
+
+**Variáveis obrigatórias no `.env.production` do VPS:**
+
+```env
+AUTH_URL=https://ecomed.eco.br
+AUTH_SECRET=...
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+DATABASE_URL=...
+DIRECT_URL=...
+```
+
+> **Google OAuth:** no [Google Cloud Console](https://console.cloud.google.com), o redirect URI deve ser:
+> `https://ecomed.eco.br/api/auth/callback/google`
 
 ### IA — VPS Docker
 
