@@ -2,9 +2,10 @@ import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { Heart, Flag, Calendar, ShieldCheck, Building2 } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Meu Perfil | EcoMed" };
 
@@ -89,9 +90,12 @@ export default async function PerfilPage() {
           <p className="text-sm text-green-700">
             Cadastre seu ponto de coleta de medicamentos gratuitamente e apareça no mapa do EcoMed.
           </p>
-          <Button asChild size="sm" className="bg-green-700 hover:bg-green-800">
-            <Link href="/app/seja-parceiro">Quero ser parceiro</Link>
-          </Button>
+          <Link
+            href="/app/seja-parceiro"
+            className={cn(buttonVariants({ size: "sm" }), "bg-green-700 hover:bg-green-800 text-white")}
+          >
+            Quero ser parceiro
+          </Link>
         </section>
       )}
 
