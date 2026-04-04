@@ -3,26 +3,45 @@ import { prisma } from "@/lib/db/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
-import { Heart, Flag, Calendar, ShieldCheck, Building2 } from "lucide-react";
+import { Heart, Flag, Calendar, ShieldCheck, Building2, Coins, Flame, Trophy, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { QRCodeDisplay } from "@/components/coins/QRCodeDisplay";
+import { CoinDisclaimer } from "@/components/coins/CoinDisclaimer";
 
 export const metadata = { title: "Meu Perfil | EcoMed" };
 
 const ROLE_LABEL: Record<string, string> = { CITIZEN: "Cidadão", PARTNER: "Parceiro", ADMIN: "Administrador" };
 
+const NIVEL_INFO: Record<string, { label: string; icon: string; cor: string; max: number }> = {
+  SEMENTE:   { label: "Semente",    icon: "🌱", cor: "bg-[#C7D93D]", max: 100 },
+  BROTO:     { label: "Broto",      icon: "🌿", cor: "bg-[#24A645]", max: 500 },
+  ARVORE:    { label: "Árvore",     icon: "🌳", cor: "bg-[#3E8C8C]", max: 2000 },
+  GUARDIAO:  { label: "Guardião",   icon: "🌍", cor: "bg-[#1A736A]", max: 5000 },
+  LENDA_ECO: { label: "Lenda Eco",  icon: "⭐", cor: "bg-[#D4A017]", max: Infinity },
+};
+
+const NIVEL_MIN_ANTERIOR: Record<string, number> = {
+  SEMENTE: 0, BROTO: 101, ARVORE: 501, GUARDIAO: 2001, LENDA_ECO: 5001,
+};
+
 export default async function PerfilPage() {
   const session = await requireSession();
   const userId = session.user!.id!;
 
-  const [user, favoritesCount, reportsCount] = await Promise.all([
+  const [user, favoritesCount, reportsCount, wallet] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: { name: true, email: true, image: true, role: true, createdAt: true, partner: { select: { id: true } } },
     }),
     prisma.favorite.count({ where: { userId } }),
     prisma.report.count({ where: { userId } }),
+    prisma.wallet.findUnique({
+      where: { userId },
+      include: {
+        transactions: { orderBy: { createdAt: "desc" }, take: 5 },
+      },
+    }),
   ]);
 
   if (!user) return null;
@@ -33,6 +52,16 @@ export default async function PerfilPage() {
     .map((n) => n[0])
     .join("")
     .toUpperCase() ?? "?";
+
+  const nivel = wallet?.level ?? "SEMENTE";
+  const nivelInfo = NIVEL_INFO[nivel];
+  const totalEarned = wallet?.totalEarned ?? 0;
+  const balance = wallet?.balance ?? 0;
+  const minAnterior = NIVEL_MIN_ANTERIOR[nivel];
+  const progressoPct =
+    nivelInfo.max === Infinity
+      ? 100
+      : Math.min(100, Math.round(((totalEarned - minAnterior) / (nivelInfo.max - minAnterior)) * 100));
 
   return (
     <div className="max-w-lg space-y-8">
@@ -52,6 +81,88 @@ export default async function PerfilPage() {
             {ROLE_LABEL[user.role]}
           </Badge>
         </div>
+      </section>
+
+      {/* ---- EcoMed Coins ---- */}
+      <section className="rounded-xl border p-5 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold flex items-center gap-2">
+            <Coins className="size-5 text-yellow-500" />
+            EcoMed Coins
+          </h2>
+          <span className="text-2xl font-bold text-yellow-600">{balance}</span>
+        </div>
+
+        {/* Nível e barra de progresso */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-sm">
+            <span className="font-medium">{nivelInfo.icon} {nivelInfo.label}</span>
+            {nivelInfo.max !== Infinity && (
+              <span className="text-muted-foreground">{totalEarned} / {nivelInfo.max} Coins</span>
+            )}
+          </div>
+          <div className="h-2 rounded-full bg-muted overflow-hidden">
+            <div
+              className={cn("h-full rounded-full transition-all", nivelInfo.cor)}
+              style={{ width: `${progressoPct}%` }}
+            />
+          </div>
+          {nivelInfo.max !== Infinity && (
+            <p className="text-xs text-muted-foreground">
+              Faltam {nivelInfo.max - totalEarned} Coins para o próximo nível
+            </p>
+          )}
+        </div>
+
+        {/* Streak */}
+        {(wallet?.streakCurrent ?? 0) > 0 && (
+          <div className="flex items-center gap-2 text-sm rounded-lg bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900 px-3 py-2">
+            <Flame className="size-4 text-orange-500" />
+            <span className="font-medium text-orange-800 dark:text-orange-300">
+              Streak de {wallet!.streakCurrent} dia{wallet!.streakCurrent !== 1 ? "s" : ""}
+            </span>
+            {wallet!.streakBest > 1 && (
+              <span className="text-orange-600 dark:text-orange-400 ml-auto text-xs">
+                Recorde: {wallet!.streakBest} dias
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Últimas transações */}
+        {wallet?.transactions && wallet.transactions.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Últimas movimentações</p>
+            <ul className="divide-y text-sm">
+              {wallet.transactions.map((t) => (
+                <li key={t.id} className="py-2 flex items-center justify-between gap-2">
+                  <span className="text-muted-foreground truncate">{t.note ?? t.event}</span>
+                  <span className={cn("font-semibold shrink-0", t.amount > 0 ? "text-green-600" : "text-red-500")}>
+                    {t.amount > 0 ? "+" : ""}{t.amount}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Links rápidos */}
+        <div className="flex gap-2 pt-1">
+          <Link
+            href="/app/missoes"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "flex-1 justify-between")}
+          >
+            <Trophy className="size-4" /> Missões <ChevronRight className="size-4" />
+          </Link>
+          <Link
+            href="/app/recompensas"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "flex-1 justify-between")}
+          >
+            <Coins className="size-4" /> Recompensas <ChevronRight className="size-4" />
+          </Link>
+        </div>
+
+        <CoinDisclaimer />
       </section>
 
       {/* Estatísticas */}

@@ -69,15 +69,81 @@ export default function TermosPage() {
             </ul>
           </section>
 
-          <section>
-            <h2>3. EcoMed Coins</h2>
+          <section id="ecocoins">
+            <h2>3. EcoMed Coins — Natureza Jurídica e Regras</h2>
+
+            <h3>3.1 Definição legal</h3>
             <p>
-              Os EcoMed Coins são pontos virtuais de uso exclusivo dentro da plataforma.{" "}
-              <strong>
-                Não possuem valor monetário, não são moeda digital, criptomoeda ou ativo financeiro
-              </strong>{" "}
-              e não podem ser convertidos em dinheiro ou transferidos entre usuários. Os valores e
-              regras podem ser alterados a qualquer momento sem aviso prévio.
+              Os <strong>EcoMed Coins</strong> são pontos virtuais de exclusivo uso interno na
+              plataforma EcoMed. Em hipótese alguma devem ser confundidos com moeda,
+              instrumento financeiro ou qualquer tipo de ativo econômico.
+            </p>
+            <p>
+              Especificamente, os EcoMed Coins <strong>NÃO</strong>:
+            </p>
+            <ul>
+              <li>possuem valor monetário, financeiro ou patrimonial;</li>
+              <li>são moeda digital, criptomoeda, token ou ativo financeiro;</li>
+              <li>podem ser convertidos em dinheiro (incluindo PIX, TED, DOC ou equivalente), salvo em promoções específicas expressamente comunicadas;</li>
+              <li>podem ser transferidos entre usuários ou negociados com terceiros;</li>
+              <li>podem ser utilizados fora da plataforma ecomed.eco.br.</li>
+            </ul>
+
+            <h3>3.2 Como são obtidos</h3>
+            <p>
+              Os EcoMed Coins são creditados automaticamente ao usuário em decorrência de ações
+              educativas e de sustentabilidade realizadas na plataforma, como:
+            </p>
+            <ul>
+              <li>Registro de descarte correto de medicamentos em pontos de coleta cadastrados;</li>
+              <li>Leitura de artigos educativos e conclusão de quizzes;</li>
+              <li>Interação com o assistente virtual EcoBot;</li>
+              <li>Cumprimento de missões diárias e semanais;</li>
+              <li>Indicação de novos usuários que confirmem o cadastro.</li>
+            </ul>
+            <p>
+              Cada ação possui limites diários e condições técnicas de validação para evitar acumulação
+              artificial. O EcoMed se reserva o direito de revisar, estornar ou excluir Coins obtidos
+              de forma fraudulenta ou em desacordo com estas regras.
+            </p>
+
+            <h3>3.3 Resgate de recompensas</h3>
+            <p>
+              Os EcoMed Coins podem ser trocados por recompensas disponíveis no catálogo da
+              plataforma. Ao resgatar uma recompensa, o usuário concorda que:
+            </p>
+            <ul>
+              <li>o resgate é <strong>irreversível</strong> — os Coins gastos não são devolvidos;</li>
+              <li>recompensas digitais são entregues instantaneamente; recompensas físicas ou de parceiros seguem o prazo indicado no catálogo;</li>
+              <li>cada recompensa pode ter um período mínimo de espera entre resgates consecutivos (cooldown);</li>
+              <li>o nível mínimo exigido deve ser atingido antes do resgate;</li>
+              <li>o EcoMed pode descontinuar recompensas, respeitando os resgates já confirmados.</li>
+            </ul>
+
+            <h3>3.4 Validade e cancelamento</h3>
+            <p>
+              Em caso de exclusão ou encerramento de conta, todos os EcoMed Coins acumulados
+              serão definitivamente perdidos, sem direito a indenização ou compensação. O EcoMed
+              reserva-se o direito de alterar os valores de ações, regras de acúmulo e catálogo de
+              recompensas a qualquer momento, com aviso prévio de 7 (sete) dias por e-mail ou
+              notificação na plataforma, exceto em casos de ajuste emergencial de segurança.
+            </p>
+
+            <h3>3.5 Sanções por uso indevido</h3>
+            <p>
+              O uso de bots, scripts, múltiplas contas ou qualquer meio artificial para acumular
+              EcoMed Coins é expressamente proibido e sujeito a:
+            </p>
+            <ul>
+              <li><strong>Leve:</strong> notificação educativa;</li>
+              <li><strong>Média:</strong> estorno dos Coins das últimas 24 horas + aviso formal;</li>
+              <li><strong>Grave:</strong> suspensão de 7 dias e estorno total;</li>
+              <li><strong>Crítica:</strong> banimento permanente e exclusão de conta.</li>
+            </ul>
+            <p>
+              Sanções de nível médio ou superior são revisadas manualmente antes da aplicação. O
+              usuário pode contestar decisões pelo e-mail{" "}
+              <a href="mailto:contato@ecomed.eco.br">contato@ecomed.eco.br</a>.
             </p>
           </section>
 

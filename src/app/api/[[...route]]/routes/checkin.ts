@@ -12,6 +12,7 @@ const checkin = new Hono()
 const checkinSchema = z.object({
   token: z.string().min(10),
   pointId: z.string().cuid(),
+  hasGps: z.boolean().optional().default(false),
 })
 
 // POST /api/checkin — parceiro escaneia QR do cidadão e registra check-in
@@ -29,7 +30,7 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
     return c.json({ error: "Apenas parceiros podem registrar check-ins." }, 403)
   }
 
-  const { token, pointId } = c.req.valid("json")
+  const { token, pointId, hasGps } = c.req.valid("json")
 
   // 3. Validar token HMAC — extrai o userId do cidadão
   const parsed = validarTokenQR(token)
@@ -79,22 +80,52 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
     )
   }
 
-  // 6. Registrar check-in e creditar coins
+  // 6. Verificar bônus especiais antes de creditar
+  const coinsBase = hasGps ? 15 : 10
+
+  // CHECKIN_NEW_POINT: primeiro check-in do usuário neste ponto
+  const primeiraVisita = await prisma.checkin.findFirst({
+    where: { userId, pointId },
+  })
+
+  // CHECKIN_FIRST_MONTH: primeiro check-in em qualquer ponto nos últimos 30 dias
+  const trintiaDiasAtras = new Date()
+  trintiaDiasAtras.setDate(trintiaDiasAtras.getDate() - 30)
+  const checkinRecente = await prisma.checkin.findFirst({
+    where: { userId, createdAt: { gte: trintiaDiasAtras } },
+  })
+
+  // 7. Registrar check-in e creditar coins base
   const [, coinResult] = await Promise.all([
-    prisma.checkin.create({ data: { userId, pointId, coinsEarned: 10 } }),
-    creditCoins(userId, "CHECKIN", pointId),
+    prisma.checkin.create({ data: { userId, pointId, coinsEarned: coinsBase, hasGps } }),
+    creditCoins(userId, "CHECKIN", pointId, coinsBase),
   ])
 
-  const usuario = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { name: true },
-  })
+  // 8. Bônus por novo ponto
+  if (!primeiraVisita) {
+    await creditCoins(userId, "CHECKIN_NEW_POINT", pointId)
+  }
+
+  // 9. Bônus por retorno ao descarte (primeiro em 30 dias)
+  if (!checkinRecente) {
+    await creditCoins(userId, "CHECKIN_FIRST_MONTH", pointId)
+  }
+
+  const [usuario, walletAtual] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId }, select: { name: true } }),
+    prisma.wallet.findUnique({ where: { userId }, select: { balance: true } }),
+  ])
 
   return c.json({
     ok: true,
-    coinsEarned: 10,
-    newBalance: coinResult.newBalance,
+    coinsEarned: coinsBase,
+    hasGps,
+    newBalance: walletAtual?.balance ?? coinResult.newBalance,
     levelUp: coinResult.levelUp ?? null,
+    bonuses: {
+      newPoint: !primeiraVisita,
+      firstInMonth: !checkinRecente,
+    },
     userName: usuario?.name ?? "Usuário",
     pointName: point.name,
   })

@@ -344,6 +344,93 @@ A **RDC ANVISA nº 222/2018** obriga estabelecimentos de saúde a implantarem si
   }).catch(() => {/* já existe em re-runs */})
   console.log("✅ Wallet do cidadão criada")
 
+  // ---- RewardCatalog ----
+  const rewardsData = [
+    // Tier SEMENTE (nível mínimo: SEMENTE)
+    {
+      slug: "badge-personalizado",
+      name: "Badge Personalizado",
+      description: "Escolha um badge exclusivo para exibir no seu perfil.",
+      tier: "SEMENTE",
+      cost: 30,
+      minLevel: "SEMENTE",
+      cooldownDays: 30,
+      active: true,
+    },
+    {
+      slug: "tema-visual",
+      name: "Tema Visual Exclusivo",
+      description: "Desbloqueie um tema especial para o app.",
+      tier: "SEMENTE",
+      cost: 50,
+      minLevel: "SEMENTE",
+      cooldownDays: 0,
+      active: true,
+    },
+    // Tier BROTO
+    {
+      slug: "certificado-eco-cidadao",
+      name: "Certificado Eco-Cidadão",
+      description: "Certificado digital de participação no programa de descarte correto.",
+      tier: "BROTO",
+      cost: 100,
+      minLevel: "BROTO",
+      cooldownDays: 90,
+      active: true,
+    },
+    {
+      slug: "destaque-ranking",
+      name: "Destaque no Ranking Semanal",
+      description: "Seu perfil aparece em destaque no topo do ranking por uma semana.",
+      tier: "BROTO",
+      cost: 80,
+      minLevel: "BROTO",
+      cooldownDays: 7,
+      active: true,
+    },
+    // Tier ARVORE
+    {
+      slug: "selo-verificado",
+      name: "Selo Verificado no Perfil",
+      description: "Exibe um selo de usuário verificado e comprometido com o meio ambiente.",
+      tier: "ARVORE",
+      cost: 200,
+      minLevel: "ARVORE",
+      cooldownDays: 0,
+      active: true,
+    },
+    {
+      slug: "certificado-premium",
+      name: "Certificado Premium com QR",
+      description: "Certificado premium com QR Code verificável, ideal para currículo e redes sociais.",
+      tier: "ARVORE",
+      cost: 300,
+      minLevel: "ARVORE",
+      cooldownDays: 90,
+      active: true,
+    },
+    // Tier GUARDIAO
+    {
+      slug: "hall-da-fama",
+      name: "Nome no Hall da Fama",
+      description: "Seu nome é inscrito permanentemente no Hall da Fama EcoMed.",
+      tier: "GUARDIAO",
+      cost: 500,
+      minLevel: "GUARDIAO",
+      cooldownDays: 0,
+      active: true,
+    },
+  ] as const
+
+  for (const reward of rewardsData) {
+    await prisma.rewardCatalog.upsert({
+      where: { slug: reward.slug },
+      update: { name: reward.name, description: reward.description, cost: reward.cost, active: reward.active },
+      create: reward,
+    })
+  }
+  console.log(`✅ ${rewardsData.length} recompensas criadas no catálogo`)
+
   console.log("\n🌿 Seed concluído com sucesso!");
   console.log("\nContas criadas:");
   console.log("  Admin:    admin@ecomed.eco.br   / Admin@123");

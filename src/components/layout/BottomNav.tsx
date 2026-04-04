@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MapPin, Heart, MessageCircle, User, Leaf } from "lucide-react";
+import { MapPin, Heart, MessageCircle, User, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/mapa", label: "Mapa", icon: MapPin },
   { href: "/app/favoritos", label: "Favoritos", icon: Heart },
-  { href: "/app/impacto", label: "Impacto", icon: Leaf },
+  { href: "/app/missoes", label: "Missões", icon: Trophy },
   { href: "/app/chat", label: "Assistente", icon: MessageCircle },
   { href: "/app/perfil", label: "Perfil", icon: User },
 ];

@@ -30,20 +30,52 @@ enum Level {
   SEMENTE // 0 – 100 coins
   BROTO // 101 – 500 coins
   ARVORE // 501 – 2.000 coins
-  GUARDIAO // 2.001+ coins
+  GUARDIAO // 2.001 – 5.000 coins (mult 1.2x)
+  LENDA_ECO // 5.001+ coins (mult 1.5x)
 }
 
 enum CoinEvent {
-  SIGNUP // +20 — cadastro completo (único)
-  ARTICLE_READ // +2  — artigo lido até o final
+  // Onboarding (únicos)
+  SIGNUP // +20 — cadastro confirmado por e-mail
+  ONBOARDING_PROFILE // +10 — perfil completo (nome + foto)
+  ONBOARDING_SCREENS // +5  — visualizou todas as telas de boas-vindas
+  ONBOARDING_GEO // +5  — ativou geolocalização
+  ONBOARDING_PUSH // +5  — ativou notificações push
+
+  // Descarte
+  CHECKIN // +10/+15 — check-in presencial (simples/GPS)
+  CHECKIN_FIRST_MONTH // +5 bônus — primeiro descarte do mês
+  CHECKIN_NEW_POINT // +5 bônus — ponto nunca visitado antes
+
+  // Educação
+  ARTICLE_READ // +2  — artigo lido ≥ 2 min e scroll ≥ 90%
+  QUIZ // +5  — quiz completado (qualquer nota)
+  QUIZ_PERFECT // +10 — quiz completado com 100%
+  ECOBOT_QUESTION // +1  — pergunta ao EcoBot (≥ 10 chars)
+  ECOBOT_RATING // +1  — avaliou resposta do EcoBot
+
+  // Engajamento social
+  REFERRAL // +20 — amigo criou conta com código de indicação
+  SHARE_ARTICLE // +3  — compartilhou artigo via Web Share API
+  SHARE_BADGE // +2  — compartilhou badge/conquista
+
+  // Streaks
+  STREAK_3_DAYS // +5  — streak de 3 dias consecutivos
+  STREAK_7_DAYS // +15 — streak de 7 dias consecutivos
+  STREAK_30_DAYS // +50 — streak de 30 dias consecutivos
+  DAILY_STREAK // +1  — manter streak ativo (qualquer ação do dia)
+
+  // Missões
+  MISSION_COMPLETE // variável — missão individual concluída
+  MISSION_DAILY_BONUS // +10 — bonus ao completar as 3 missões diárias
+  MISSION_WEEKLY_BONUS // +15 — bonus ao completar as 2 missões semanais
+
+  // Recompensas e concessões
   REPORT_SUBMITTED // +5  — reporte de problema enviado
-  STREAK_7_DAYS // +15 — 7 dias consecutivos de acesso
-  REFERRAL // +20 — indicação de amigo que se cadastrou
-  MISSION_COMPLETE // variável — missão diária/semanal concluída
   BADGE_EARNED // variável — conquista desbloqueada
-  REDEMPTION // negativo — resgate de recompensa
+  REDEMPTION // negativo — resgate de recompensa (debit)
   ADMIN_GRANT // variável — concessão manual pelo admin
-  CHECKIN // +10 — check-in presencial no ponto de coleta
+  ADJUSTMENT // variável — estorno/ajuste (pode ser negativo)
 }
 
 enum MissionType {
@@ -52,16 +84,16 @@ enum MissionType {
 }
 
 model User {
-  id                String             @id @default(cuid())
+  id                String              @id @default(cuid())
   name              String?
-  email             String             @unique
+  email             String              @unique
   emailVerified     DateTime?
   image             String?
   passwordHash      String?
-  role              Role               @default(CITIZEN)
-  active            Boolean            @default(true)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  role              Role                @default(CITIZEN)
+  active            Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
   accounts          Account[]
   sessions          Session[]
   favorites         Favorite[]
@@ -73,6 +105,8 @@ model User {
   userBadges        UserBadge[]
   userMissions      UserMission[]
   checkins          Checkin[]
+  userRewards       UserReward[]
+  dailyLimits       DailyLimitTracker[]
 }
 
 model Account {
@@ -233,15 +267,20 @@ model PasswordResetToken {
 // ---- EcoCoin / Gamificação ----
 
 model Wallet {
-  id           String            @id @default(cuid())
-  userId       String            @unique
-  balance      Int               @default(0)
-  totalEarned  Int               @default(0)
-  level        Level             @default(SEMENTE)
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
-  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions CoinTransaction[]
+  id                 String            @id @default(cuid())
+  userId             String            @unique
+  balance            Int               @default(0)
+  totalEarned        Int               @default(0)
+  level              Level             @default(SEMENTE)
+  streakCurrent      Int               @default(0)
+  streakBest         Int               @default(0)
+  lastActivityAt     DateTime?
+  weeklyCoins        Int               @default(0) // coins acumulados na semana (ranking)
+  weeklyCoinsResetAt DateTime? // quando foi resetado pela última vez
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions       CoinTransaction[]
 }
 
 model CoinTransaction {
@@ -309,10 +348,54 @@ model Checkin {
   userId      String
   pointId     String
   coinsEarned Int      @default(10)
+  hasGps      Boolean  @default(false)
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   point       Point    @relation(fields: [pointId], references: [id], onDelete: Cascade)
 
   // Anti-abuso: 1 check-in por usuário por ponto por dia (usando date truncation na query)
   @@index([userId, pointId, createdAt])
+}
+
+// Controle de limites diários por categoria (anti-fraude)
+model DailyLimitTracker {
+  id       String   @id @default(cuid())
+  userId   String
+  date     DateTime // truncado para o dia (UTC midnight)
+  category String // ex: "ARTICLE_READ", "CHECKIN", "ECOBOT_QUESTION"
+  count    Int      @default(0)
+  coins    Int      @default(0)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date, category])
+  @@index([userId, date])
+}
+
+// Catálogo de recompensas (MVP: digitais; futuro: físicas/parceiros)
+model RewardCatalog {
+  id           String       @id @default(cuid())
+  slug         String       @unique
+  name         String
+  description  String
+  tier         String // "digital" | "physical" | "partner"
+  cost         Int // custo em Coins
+  minLevel     Level        @default(SEMENTE)
+  stock        Int? // null = ilimitado
+  active       Boolean      @default(true)
+  cooldownDays Int          @default(0) // dias de cooldown entre resgates do mesmo tipo
+  createdAt    DateTime     @default(now())
+  userRewards  UserReward[]
+}
+
+// Histórico de resgates de recompensas por usuário
+model UserReward {
+  id        String        @id @default(cuid())
+  userId    String
+  rewardId  String
+  status    String        @default("PENDING") // PENDING | DELIVERED | CANCELLED
+  createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reward    RewardCatalog @relation(fields: [rewardId], references: [id])
+
+  @@index([userId, createdAt])
 }
