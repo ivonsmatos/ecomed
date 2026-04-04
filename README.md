@@ -22,6 +22,7 @@
   - [Notificações Push](#notificações-push)
   - [Rate Limiting](#rate-limiting)
   - [Emails](#emails)
+  - [Gamificação EcoCoins](#gamificação-ecocoins)
 - [IA — FastAPI + RAG](#ia--fastapi--rag)
   - [Pipeline RAG](#pipeline-rag)
   - [Guardrails](#guardrails)
@@ -276,10 +277,12 @@ ecomed/
 | Rota                 | Descrição                               |
 | -------------------- | --------------------------------------- |
 | `/app`               | Dashboard do cidadão                    |
-| `/app/perfil`        | Perfil e configurações da conta         |
+| `/app/perfil`        | Perfil, EcoCoins e histórico de coins   |
 | `/app/favoritos`     | Pontos salvos como favoritos            |
 | `/app/notificacoes`  | Notificações do sistema                 |
 | `/app/chat`          | Chat com assistente de IA               |
+| `/app/missoes`       | Missões diárias e semanais (EcoCoins)   |
+| `/app/recompensas`   | Catálogo de recompensas + resgate       |
 | `/app/seja-parceiro` | Formulário de candidatura como parceiro |
 
 #### Painel do Parceiro (`/parceiro/*` — role: PARTNER+)
@@ -355,6 +358,22 @@ Todas as rotas de API ficam em `src/app/api/[[...route]]/route.ts`, roteadas via
 | Método | Endpoint                 | Auth    | Descrição                 |
 | ------ | ------------------------ | ------- | ------------------------- |
 | `POST` | `/api/parceiro/cadastro` | CITIZEN | Candidatura como parceiro |
+
+#### Gamificação — EcoCoins
+
+| Método | Endpoint                        | Auth    | Descrição                                                      |
+| ------ | ------------------------------- | ------- | -------------------------------------------------------------- |
+| `GET`  | `/api/coins`                    | CITIZEN | Saldo, nível, streak e histórico de transações                 |
+| `POST` | `/api/coins/article-read`       | CITIZEN | Credita ARTICLE_READ (≥120s lido + ≥90% scroll)               |
+| `POST` | `/api/coins/ecobot-question`    | CITIZEN | Credita ECOBOT_QUESTION (pergunta ≥10 chars)                   |
+| `POST` | `/api/coins/ecobot-rating`      | CITIZEN | Credita ECOBOT_RATING após avaliação da resposta               |
+| `POST` | `/api/coins/share`              | CITIZEN | Credita SHARE_ARTICLE ou SHARE_BADGE                           |
+| `GET`  | `/api/missions`                 | CITIZEN | Lista missões do dia e da semana (auto-gera se não existirem)  |
+| `POST` | `/api/missions/:id/progress`    | CITIZEN | Avança progresso; credita bônus ao completar todas as missões  |
+| `GET`  | `/api/rewards`                  | CITIZEN | Catálogo com flags `podeResgatar` e `emCooldown`               |
+| `GET`  | `/api/rewards/my`               | CITIZEN | Histórico de resgates do usuário                               |
+| `POST` | `/api/rewards/:id/redeem`       | CITIZEN | Resgata recompensa (valida nível, saldo, estoque e cooldown)   |
+| `POST` | `/api/checkin`                  | PARTNER | Registra check-in via QR (+15 GPS / +10 sem GPS)               |
 
 #### Admin
 
@@ -462,7 +481,8 @@ pnpm prisma migrate deploy
 - `skipWaiting: true` — atualiza SW imediatamente
 - `clientsClaim: true` — assume controle de todas as abas
 - `navigationPreload: false` — evita `no-response` em redes instáveis
-- `navigateFallbackDenylist: [/\/api\//, /\/_next\//, /\/studio/]`
+- `Cache-Control: no-store` no header do `sw.js` — garante que CDN nunca cacheia o SW
+- Analytics externas (`cloudflareinsights.com`, GA4 via `/fslp/`) → `NetworkOnly` com `handlerDidError` silencioso (retorna 204)
 
 **Web App Manifest** (`/manifest.webmanifest`):
 
@@ -530,6 +550,38 @@ Identificador: `CF-Connecting-IP` (Cloudflare) → `x-forwarded-for` → `"unkno
 import { sendEmail } from "@/lib/email";
 await sendEmail("partner-approved", email, { partnerName, dashboardUrl });
 ```
+
+---
+
+### Gamificação EcoCoins
+
+Sistema de engajamento gamificado implementado em `src/lib/coins/index.ts`.
+
+**Função principal:**
+
+```typescript
+import { creditCoins } from "@/lib/coins"
+
+// Credita coins ao usuário — retorna {ok, newBalance, levelUp?, streakBonus?}
+await creditCoins(userId, "CHECKIN", pointId, 15) // 15 coins com GPS
+await creditCoins(userId, "ARTICLE_READ", articleSlug)
+```
+
+**Regras de negócio:**
+
+- **Teto global:** 120 EcoCoins/dia por usuário (exceto eventos isentos como onboarding e streaks)
+- **Teto por categoria:** ex. CHECKIN = 3/dia, ARTICLE_READ = 5/dia (via `DailyLimitTracker`)
+- **Multiplicadores de nível:** GUARDIAO × 1.2, LENDA_ECO × 1.5
+- **Streak:** detecta sequência de dias consecutivos — bônus milestone aos 3, 7 e 30 dias
+- **Check-in GPS:** +15 coins (com GPS) vs +10 (sem GPS) + bônus CHECKIN_NEW_POINT e CHECKIN_FIRST_MONTH
+
+**Componentes UI:**
+
+| Componente | Localização | Função |
+|---|---|---|
+| `CoinDisclaimer` | `components/coins/` | Disclaimer legal (EcoCoins ≠ moeda) |
+| `RedeemButton` | `components/coins/` | Botão de resgate com feedback de estado |
+| BottomNav | `components/layout/` | Link "Missões" com ícone Trophy |
 
 ---
 
@@ -633,11 +685,19 @@ User ──< Favorite ──> Point
 User ──< Report ──> Point
 User ──< PushSubscription
 User ──< Notification
+User ──< Checkin ──> Point       (descarte com QR)
 User ──1 Partner ──< Point
                     Point ──< Schedule   (horários por dia da semana)
                     Point ──< Report
                     Point ──< PointView  (analytics de visitas)
                     Point ──< Favorite
+
+# Gamificação EcoCoins
+User ──1 Wallet ──< CoinTransaction
+User ──< UserBadge ──> Badge
+User ──< UserMission ──> Mission
+User ──< UserReward ──> RewardCatalog
+User ──< DailyLimitTracker    (teto diário por categoria de evento)
 ```
 
 ### Modelos
@@ -656,12 +716,47 @@ User ──1 Partner ──< Point
 | `PointView`          | id, pointId, viewedAt                                                                | Point                                                                       |
 | `PasswordResetToken` | id, token (unique), userId, expiresAt, used                                          | —                                                                           |
 
+### Modelos de Gamificação
+
+| Model                | Campos principais                                                                 | Descrição                                           |
+| -------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `Wallet`             | userId, balance, totalEarned, level, streakCurrent, streakBest, weeklyCoins       | Carteira de EcoCoins por usuário                    |
+| `CoinTransaction`    | walletId, amount (+/-), event (CoinEvent), note, reference                        | Histórico de créditos e débitos                     |
+| `Badge`              | slug, name, description, coinReward                                               | Conquistas / troféus                                |
+| `UserBadge`          | userId, badgeId, earnedAt                                                         | Conquistas do usuário (idempotente por slug)        |
+| `Mission`            | slug, title, type (DAILY/WEEKLY), event, targetCount, coinReward                  | Definição de missão                                 |
+| `UserMission`        | userId, missionId, date, progress, completed, completedAt                         | Progresso do usuário na missão no dia/semana        |
+| `Checkin`            | userId, pointId, coinsEarned, hasGps                                              | Registro de descarte via QR Code                   |
+| `DailyLimitTracker`  | userId, date, category, count, coins  `@@unique([userId, date, category])`        | Controle de teto diário por categoria de evento     |
+| `RewardCatalog`      | slug, name, tier, cost, minLevel, stock?, cooldownDays, active                    | Catálogo de recompensas resgatáveis                 |
+| `UserReward`         | userId, rewardId, status (PENDING/DELIVERED/CANCELLED)                            | Histórico de resgates do usuário                    |
+
+### Níveis (Level)
+
+| Nível        | Total Ganho   | Bônus                    |
+| ------------ | ------------- | ------------------------ |
+| `SEMENTE`    | 0–100 coins   | —                        |
+| `BROTO`      | 101–500       | Missões semanais         |
+| `ARVORE`     | 501–2.000     | —                        |
+| `GUARDIAO`   | 2.001–5.000   | ×1.2 multiplicador       |
+| `LENDA_ECO`  | 5.001+        | ×1.5 multiplicador       |
+
+**Teto diário global:** 120 EcoCoins/dia (exceto onboarding, admin, redemption e bônus de streak).
+
 ### Enums
 
 ```sql
 Role:        CITIZEN | PARTNER | ADMIN
 PointStatus: PENDING | APPROVED | REJECTED
 ReportType:  CLOSED | WRONG_ADDRESS | NOT_ACCEPTING | OTHER
+MissionType: DAILY | WEEKLY
+CoinEvent:   SIGNUP | ONBOARDING_PROFILE | ONBOARDING_SCREENS | ONBOARDING_GEO
+             ONBOARDING_PUSH | CHECKIN | CHECKIN_FIRST_MONTH | CHECKIN_NEW_POINT
+             ARTICLE_READ | QUIZ | QUIZ_PERFECT | ECOBOT_QUESTION | ECOBOT_RATING
+             REFERRAL | SHARE_ARTICLE | SHARE_BADGE | STREAK_3_DAYS | STREAK_7_DAYS
+             STREAK_30_DAYS | DAILY_STREAK | MISSION_COMPLETE | MISSION_DAILY_BONUS
+             MISSION_WEEKLY_BONUS | REPORT_SUBMITTED | BADGE_EARNED
+             ADMIN_GRANT | ADJUSTMENT | REDEMPTION
 ```
 
 ---
@@ -675,11 +770,13 @@ ReportType:  CLOSED | WRONG_ADDRESS | NOT_ACCEPTING | OTHER
 DATABASE_URL=postgresql://...@...supabase.co:6543/postgres  # pooler (runtime)
 DIRECT_URL=postgresql://...@...supabase.co:5432/postgres    # direto (migrations)
 
-# Auth
-AUTH_SECRET=...                    # NextAuth secret
-NEXTAUTH_URL=https://ecomed.eco.br
+# Auth (NextAuth v5 — usar AUTH_* não NEXTAUTH_*)
+AUTH_URL=https://ecomed.eco.br
+AUTH_SECRET=...                    # gerar: openssl rand -base64 32
 
 # Google OAuth
+# Redirect URI autorizada no Google Console:
+# https://ecomed.eco.br/api/auth/callback/google
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 
