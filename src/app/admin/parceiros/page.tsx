@@ -182,8 +182,6 @@ export default async function AdminParceirosPage({
   );
 }
 
-
-  const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam ?? 1));
   const take = 30;
   const skip = (page - 1) * take;
