@@ -8,37 +8,6 @@ const withSerwist = withSerwistInit({
   disable: process.env.NODE_ENV === "development",
 });
 
-const csp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://plausible.io https://static.cloudflareinsights.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://cdn.sanity.io https://uploads.ecomed.eco.br https://*.r2.dev https://www.google-analytics.com https://www.googletagmanager.com https://lh3.googleusercontent.com https://*.tile.openstreetmap.org https://unpkg.com",
-  "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://plausible.io https://api.indexnow.org https://static.cloudflareinsights.com https://fonts.googleapis.com https://fonts.gstatic.com https://*.tile.openstreetmap.org https://unpkg.com wss:",
-  "frame-src https://www.googletagmanager.com",
-  "frame-ancestors 'none'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-].join("; ");
-
-// CSP permissiva apenas para /studio — o Sanity Studio requer acesso a core.sanity-cdn.com
-// e ao cluster *.api.sanity.io (API REST + WebSocket)
-const studioCsp = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://core.sanity-cdn.com https://cdn.sanity.io",
-  "style-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://cdn.sanity.io https://fonts.googleapis.com",
-  "font-src 'self' data: https://core.sanity-cdn.com https://cdn.sanity.io https://fonts.gstatic.com",
-  "img-src 'self' data: blob: https://cdn.sanity.io https://lh3.googleusercontent.com",
-  "connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://api.sanity.io https://cdn.sanity.io https://core.sanity-cdn.com",
-  "worker-src 'self' blob:",
-  "frame-src 'self' https://cdn.sanity.io",
-  "frame-ancestors 'none'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-].join("; ");
-
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
@@ -67,7 +36,9 @@ const nextConfig: NextConfig = {
           { key: "Service-Worker-Allowed", value: "/" },
         ],
       },
-      // CSP geral para todas as rotas
+      // Headers de segurança para todas as rotas
+      // OBS: Content-Security-Policy é aplicado pelo middleware.ts de forma condicional
+      // (/studio recebe CSP permissiva; demais rotas recebem CSP restritiva)
       {
         source: "/(.*)",
         headers: [
@@ -77,17 +48,7 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
-          { key: "Content-Security-Policy", value: csp },
         ],
-      },
-      // CSP permissiva para o Sanity Studio embutido (/studio e sub-rotas)
-      {
-        source: "/studio",
-        headers: [{ key: "Content-Security-Policy", value: studioCsp }],
-      },
-      {
-        source: "/studio/(.*)",
-        headers: [{ key: "Content-Security-Policy", value: studioCsp }],
       },
     ];
   },
