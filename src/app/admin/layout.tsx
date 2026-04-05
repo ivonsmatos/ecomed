@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/auth/session";
 import { Header } from "@/components/layout/Header";
 import Link from "next/link";
-import { Users, MapPin, FileText, LayoutDashboard, Flag, UserCog } from "lucide-react";
+import { Users, MapPin, FileText, LayoutDashboard, Flag, UserCog, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { href: "/admin/reportes", label: "Reportes", icon: Flag },
   { href: "/admin/usuarios", label: "Usuários", icon: UserCog },
   { href: "/admin/conteudo", label: "Conteúdo", icon: FileText },
+  { href: "/admin/kpis", label: "KPIs", icon: TrendingUp },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
