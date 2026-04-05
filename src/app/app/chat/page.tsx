@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { Send, Bot, User, Loader2 } from "lucide-react";
@@ -78,8 +78,8 @@ export default function ChatPage() {
     <div className="flex flex-col h-[calc(100dvh-4rem)] max-w-2xl mx-auto">
       {/* Header */}
       <div className="border-b px-4 py-3 flex items-center gap-3 bg-background">
-        <div className="flex items-center justify-center h-9 w-9 rounded-full bg-green-100 dark:bg-green-900">
-          <Bot className="h-5 w-5 text-green-600" />
+        <div className="flex items-center justify-center h-9 w-9 rounded-full bg-eco-teal/10 dark:bg-eco-teal/20">
+          <Bot className="h-5 w-5 text-eco-green" />
         </div>
         <div>
           <p className="font-semibold text-sm">EcoBot</p>
@@ -98,12 +98,12 @@ export default function ChatPage() {
               className={cn(
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
                 msg.role === "assistant"
-                  ? "bg-green-100 dark:bg-green-900"
+                  ? "bg-eco-teal/10 dark:bg-eco-teal/20"
                   : "bg-zinc-200 dark:bg-zinc-700",
               )}
             >
               {msg.role === "assistant" ? (
-                <Bot className="h-4 w-4 text-green-600" />
+                <Bot className="h-4 w-4 text-eco-green" />
               ) : (
                 <User className="h-4 w-4" />
               )}
@@ -113,7 +113,7 @@ export default function ChatPage() {
                 "max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap",
                 msg.role === "assistant"
                   ? "bg-muted rounded-tl-none"
-                  : "bg-green-600 text-white rounded-tr-none",
+                  : "bg-eco-green text-white rounded-tr-none",
               )}
             >
               {msg.content}
@@ -123,8 +123,8 @@ export default function ChatPage() {
 
         {isLoading && (
           <div className="flex gap-3 items-start">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-              <Bot className="h-4 w-4 text-green-600" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-eco-teal/10 dark:bg-eco-teal/20">
+              <Bot className="h-4 w-4 text-eco-green" />
             </div>
             <div className="bg-muted rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1">
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -160,7 +160,7 @@ export default function ChatPage() {
           type="submit"
           size="icon"
           disabled={!input.trim() || isLoading}
-          className="bg-green-600 hover:bg-green-700 shrink-0"
+          className="bg-eco-green hover:bg-eco-green shrink-0"
         >
           <Send className="h-4 w-4" />
         </Button>

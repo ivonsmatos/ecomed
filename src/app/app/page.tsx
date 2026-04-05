@@ -44,7 +44,7 @@ export default async function AppPage() {
       icon: MapPin,
       href: "/mapa",
       cta: "Abrir mapa",
-      color: "text-green-700",
+      color: "text-eco-teal-dark",
     },
     {
       title: "Favoritos",
@@ -137,12 +137,12 @@ export default async function AppPage() {
       </div>
 
       {/* Educação */}
-      <Card className="border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
+      <Card className="border-eco-teal/20 bg-eco-teal/10 dark:bg-eco-teal/20 dark:border-eco-teal/30">
         <CardContent className="flex items-center gap-4 pt-4">
-          <Leaf className="size-8 text-green-700 shrink-0" />
+          <Leaf className="size-8 text-eco-teal-dark shrink-0" />
           <div>
-            <p className="font-medium text-green-900 dark:text-green-100">Sabia que...?</p>
-            <p className="text-sm text-green-800 dark:text-green-200">
+            <p className="font-medium text-foreground dark:text-white/90">Sabia que...?</p>
+            <p className="text-sm text-eco-teal-dark dark:text-eco-teal">
               Medicamentos descartados no lixo comum ou vaso sanitário contaminam o solo e a água.
               Sempre leve ao ponto de coleta mais próximo.
             </p>

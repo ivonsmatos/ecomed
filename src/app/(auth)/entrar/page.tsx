@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
@@ -59,7 +59,7 @@ function LoginContent() {
   return (
     <Card>
       <CardHeader className="space-y-1 text-center">
-        <Link href="/" className="mx-auto flex items-center gap-2 text-green-700">
+        <Link href="/" className="mx-auto flex items-center gap-2 text-eco-teal-dark">
           <Leaf className="size-6" />
           <span className="text-xl font-bold">EcoMed</span>
         </Link>
@@ -127,7 +127,7 @@ function LoginContent() {
 
           <Button
             type="submit"
-            className="w-full bg-green-700 hover:bg-green-800 text-white"
+            className="w-full bg-eco-green hover:bg-eco-green/90 text-white"
             disabled={isSubmitting}
           >
             {isSubmitting && <Loader2 className="mr-2 size-4 animate-spin" />}
@@ -139,7 +139,7 @@ function LoginContent() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Não tem conta?{" "}
-          <Link href="/cadastrar" className="font-medium text-green-700 hover:underline">
+          <Link href="/cadastrar" className="font-medium text-eco-teal-dark hover:underline">
             Cadastre-se
           </Link>
         </p>

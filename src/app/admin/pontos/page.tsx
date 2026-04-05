@@ -57,7 +57,7 @@ export default async function AdminPontosPage({
               href={s ? `/admin/pontos?status=${s}` : "/admin/pontos"}
               className={cn(
                 buttonVariants({ variant: validStatus === s ? "default" : "outline", size: "sm" }),
-                validStatus === s && "bg-green-700 hover:bg-green-800",
+                validStatus === s && "bg-eco-green hover:bg-eco-green/90",
               )}
             >
               {s ? STATUS_LABEL[s] : "Todos"}

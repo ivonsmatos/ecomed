@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
@@ -13,7 +13,7 @@ export function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {
 
   return (
     <section className="mt-12">
-      <h2 className="text-2xl font-bold text-green-800 mb-6">Perguntas Frequentes</h2>
+      <h2 className="text-2xl font-bold text-eco-teal-dark mb-6">Perguntas Frequentes</h2>
       <div className="flex flex-col gap-3">
         {faqs.map((faq, i) => {
           const isOpen = open === i;
@@ -27,11 +27,11 @@ export function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {
               className="w-full flex items-center justify-between px-5 py-4 text-left gap-4"
               aria-expanded={isOpen}
             >
-              <span className="font-semibold text-green-800 text-sm leading-snug">
+              <span className="font-semibold text-eco-teal-dark text-sm leading-snug">
                 {faq.question}
               </span>
               <ChevronDown
-                className={`shrink-0 text-green-600 transition-transform duration-200 ${
+                className={`shrink-0 text-eco-green transition-transform duration-200 ${
                   isOpen ? "rotate-180" : ""
                 }`}
                 size={18}

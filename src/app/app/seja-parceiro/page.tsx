@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session";
+﻿import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import { PartnerRegistrationForm } from "@/components/parceiro/PartnerRegistrationForm";
@@ -41,7 +41,7 @@ export default async function SejaParceiroPage() {
     <div className="max-w-lg mx-auto space-y-8">
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <Building2 className="size-6 text-green-700" />
+          <Building2 className="size-6 text-eco-teal-dark" />
           <h1 className="text-2xl font-bold">Seja um parceiro EcoMed</h1>
         </div>
         <p className="text-muted-foreground">
@@ -51,8 +51,8 @@ export default async function SejaParceiroPage() {
       </div>
 
       {/* Benefícios */}
-      <div className="rounded-xl border bg-green-50 p-5 space-y-3">
-        <h2 className="font-semibold text-green-800 text-sm uppercase tracking-wide">
+      <div className="rounded-xl border bg-eco-teal/10 p-5 space-y-3">
+        <h2 className="font-semibold text-eco-teal-dark text-sm uppercase tracking-wide">
           Por que ser parceiro?
         </h2>
         <ul className="space-y-2">
@@ -62,8 +62,8 @@ export default async function SejaParceiroPage() {
             "Painel de estatísticas com visualizações e favoritos",
             "Gratuito — sem taxas ou mensalidades",
           ].map((item) => (
-            <li key={item} className="flex items-start gap-2 text-sm text-green-900">
-              <CheckCircle className="size-4 text-green-600 shrink-0 mt-0.5" />
+            <li key={item} className="flex items-start gap-2 text-sm text-foreground">
+              <CheckCircle className="size-4 text-eco-green shrink-0 mt-0.5" />
               {item}
             </li>
           ))}

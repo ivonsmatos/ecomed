@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,7 +30,7 @@ export function SideNav() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 active
-                  ? "bg-green-50 text-green-700 dark:bg-green-950/40 dark:text-green-400"
+                  ? "bg-eco-teal/10 text-eco-teal-dark dark:bg-eco-teal/20 dark:text-eco-teal"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >

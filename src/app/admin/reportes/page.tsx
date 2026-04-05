@@ -51,8 +51,8 @@ export default async function AdminReportesPage({
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold">Reportes</h1>
         <div className="flex gap-2">
-          <Link href="/admin/reportes" className={cn(buttonVariants({ variant: !showResolved ? "default" : "outline", size: "sm" }), !showResolved && "bg-green-700 hover:bg-green-800")}>Abertos</Link>
-          <Link href="/admin/reportes?resolved=1" className={cn(buttonVariants({ variant: showResolved ? "default" : "outline", size: "sm" }), showResolved && "bg-green-700 hover:bg-green-800")}>Resolvidos</Link>
+          <Link href="/admin/reportes" className={cn(buttonVariants({ variant: !showResolved ? "default" : "outline", size: "sm" }), !showResolved && "bg-eco-green hover:bg-eco-green/90")}>Abertos</Link>
+          <Link href="/admin/reportes?resolved=1" className={cn(buttonVariants({ variant: showResolved ? "default" : "outline", size: "sm" }), showResolved && "bg-eco-green hover:bg-eco-green/90")}>Resolvidos</Link>
         </div>
       </div>
 
@@ -67,7 +67,7 @@ export default async function AdminReportesPage({
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <p className="font-medium truncate">
-                    <Link href={`/admin/pontos/${r.point.id}`} className="hover:underline text-green-700">{r.point.name}</Link>
+                    <Link href={`/admin/pontos/${r.point.id}`} className="hover:underline text-eco-teal-dark">{r.point.name}</Link>
                     <span className="text-muted-foreground font-normal"> — {r.point.city}</span>
                   </p>
                   <p className="text-xs text-muted-foreground">

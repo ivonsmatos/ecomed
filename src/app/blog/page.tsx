@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +26,7 @@ export default async function BlogPage() {
       <Header />
       <main className="container mx-auto max-w-6xl px-4 py-12 space-y-10">
         <div className="text-center space-y-3">
-          <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-green-100 text-green-700">
+          <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-eco-teal/10 text-eco-teal-dark">
             <BookOpen className="size-6" />
           </div>
           <h1 className="text-3xl font-bold">Blog Educativo</h1>
@@ -64,7 +64,7 @@ export default async function BlogPage() {
                         {article.category.title}
                       </Badge>
                     )}
-                    <h2 className="font-semibold leading-snug group-hover:text-green-700 transition-colors">
+                    <h2 className="font-semibold leading-snug group-hover:text-eco-teal-dark transition-colors">
                       {article.title}
                     </h2>
                     {article.excerpt && (

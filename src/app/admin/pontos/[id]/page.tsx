@@ -70,7 +70,7 @@ export default async function ReviewPointPage({ params }: { params: Promise<{ id
               href={`https://www.google.com/maps?q=${point.latitude},${point.longitude}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 text-green-600 hover:underline text-xs"
+              className="ml-2 text-eco-green hover:underline text-xs"
             >
               Ver no Maps ↗
             </a>

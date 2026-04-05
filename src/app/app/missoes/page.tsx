@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session";
+﻿import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
 import { CheckCircle2, Clock, Trophy, Lock } from "lucide-react";
@@ -79,11 +79,11 @@ export default async function MissoesPage() {
                 key={m.id}
                 className={cn(
                   "rounded-xl border p-4 flex items-center gap-4",
-                  m.completed && "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-900",
+                  m.completed && "bg-eco-teal/10 border-eco-teal/20 dark:bg-eco-teal/10 dark:border-eco-teal/30",
                 )}
               >
                 {m.completed ? (
-                  <CheckCircle2 className="size-6 text-green-600 shrink-0" />
+                  <CheckCircle2 className="size-6 text-eco-green shrink-0" />
                 ) : (
                   <div className="size-6 rounded-full border-2 border-muted-foreground/40 shrink-0 flex items-center justify-center">
                     <span className="text-xs font-bold text-muted-foreground">{m.progress}/{m.mission.targetCount}</span>
@@ -97,7 +97,7 @@ export default async function MissoesPage() {
                 </div>
                 <span className={cn(
                   "shrink-0 text-sm font-bold",
-                  m.completed ? "text-green-600" : "text-yellow-600",
+                  m.completed ? "text-eco-green" : "text-yellow-600",
                 )}>
                   +{m.mission.coinReward}
                 </span>
@@ -110,14 +110,14 @@ export default async function MissoesPage() {
         <div className={cn(
           "rounded-xl border p-3 flex items-center gap-3 text-sm",
           bonusDiarioGanho
-            ? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-900"
+            ? "bg-eco-teal/10 border-eco-teal/20 dark:bg-eco-teal/10 dark:border-eco-teal/30"
             : "bg-muted/40",
         )}>
-          <Trophy className={cn("size-5 shrink-0", bonusDiarioGanho ? "text-green-600" : "text-muted-foreground")} />
-          <span className={bonusDiarioGanho ? "text-green-800 dark:text-green-300" : "text-muted-foreground"}>
+          <Trophy className={cn("size-5 shrink-0", bonusDiarioGanho ? "text-eco-green" : "text-muted-foreground")} />
+          <span className={bonusDiarioGanho ? "text-eco-teal-dark dark:text-green-300" : "text-muted-foreground"}>
             Bônus por completar todas as 3 missões
           </span>
-          <span className={cn("ml-auto font-bold", bonusDiarioGanho ? "text-green-600" : "text-muted-foreground")}>
+          <span className={cn("ml-auto font-bold", bonusDiarioGanho ? "text-eco-green" : "text-muted-foreground")}>
             {bonusDiarioGanho ? "✓ " : ""}+10
           </span>
         </div>

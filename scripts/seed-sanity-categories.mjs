@@ -11,12 +11,25 @@
  * Configure em .env.local ou exporte no terminal antes de rodar.
  */
 
-import { createClient } from "@sanity/client";
-import { config } from "dotenv";
+import { createClient } from "next-sanity";
+import { readFileSync } from "fs";
 import { resolve } from "path";
 
-// Carrega variáveis do .env.local
-config({ path: resolve(process.cwd(), ".env.local") });
+// Carrega .env.local e .env sem depender do dotenv
+for (const envFile of [".env.local", ".env"]) {
+  try {
+    const content = readFileSync(resolve(process.cwd(), envFile), "utf-8");
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const idx = trimmed.indexOf("=");
+      if (idx === -1) continue;
+      const key = trimmed.slice(0, idx).trim();
+      const val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+      if (!process.env[key]) process.env[key] = val;
+    }
+  } catch { /* arquivo não existe — ignora */ }
+}
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset   = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";

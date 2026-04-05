@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -49,14 +49,14 @@ export function ReviewActions({ pointId, currentStatus }: ReviewActionsProps) {
     setLoading(null);
   }
 
-  if (currentStatus === "APPROVED") return <p className="text-sm text-green-600 font-medium">✓ Este ponto já está aprovado.</p>;
+  if (currentStatus === "APPROVED") return <p className="text-sm text-eco-green font-medium">✓ Este ponto já está aprovado.</p>;
   if (currentStatus === "REJECTED") return <p className="text-sm text-destructive font-medium">✗ Este ponto foi rejeitado.</p>;
 
   return (
     <div className="space-y-3">
       <div className="flex gap-3">
         <Button
-          className="bg-green-700 hover:bg-green-800 text-white"
+          className="bg-eco-green hover:bg-eco-green/90 text-white"
           onClick={handleAprovar}
           disabled={!!loading}
         >

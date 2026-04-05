@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session"
+﻿import { requireSession } from "@/lib/auth/session"
 import { prisma } from "@/lib/db/prisma"
 import { calcularImpacto } from "@/lib/impacto"
 
@@ -36,9 +36,9 @@ export default async function ImpactoPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-green-700">{impacto.kgResiduoDescartado} kg</p>
-            <p className="text-green-600 text-xs mt-1">resíduos corretamente destinados</p>
+          <div className="bg-eco-teal/10 border border-eco-teal/20 rounded-xl p-4 text-center">
+            <p className="text-2xl font-bold text-eco-teal-dark">{impacto.kgResiduoDescartado} kg</p>
+            <p className="text-eco-green text-xs mt-1">resíduos corretamente destinados</p>
           </div>
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-amber-700">{impacto.co2EvitadoKg} kg</p>

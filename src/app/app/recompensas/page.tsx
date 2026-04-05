@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session";
+﻿import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { Coins, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -180,7 +180,7 @@ export default async function RecompensasPage() {
                 <span className="text-muted-foreground truncate">{r.rewardId}</span>
                 <span className={cn(
                   "shrink-0 text-xs font-medium rounded-full px-2 py-0.5",
-                  r.status === "DELIVERED" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700",
+                  r.status === "DELIVERED" ? "bg-eco-teal/10 text-eco-teal-dark" : "bg-yellow-100 text-yellow-700",
                 )}>
                   {r.status === "DELIVERED" ? "Entregue" : "Pendente"}
                 </span>

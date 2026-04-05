@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
@@ -28,7 +28,7 @@ const greenIcon = new L.Icon({
     "data:image/svg+xml;base64," +
     btoa(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 41" width="25" height="41">
-        <path fill="#16a34a" stroke="#fff" stroke-width="1.5" d="M12 0C5.4 0 0 5.4 0 12c0 7.2 12 29 12 29S24 19.2 24 12C24 5.4 18.6 0 12 0z"/>
+        <path fill="#24A645" stroke="#fff" stroke-width="1.5" d="M12 0C5.4 0 0 5.4 0 12c0 7.2 12 29 12 29S24 19.2 24 12C24 5.4 18.6 0 12 0z"/>
         <circle cx="12" cy="12" r="5" fill="#fff"/>
       </svg>`
     ),
@@ -76,8 +76,8 @@ export default function MapView({ center, points, userLocation, onPinClick }: Ma
           <Circle
             center={userLocation}
             radius={5000}
-            color="#16a34a"
-            fillColor="#16a34a"
+            color="#24A645"
+            fillColor="#24A645"
             fillOpacity={0.05}
             weight={1}
           />

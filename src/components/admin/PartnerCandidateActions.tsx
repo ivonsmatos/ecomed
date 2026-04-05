@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -63,7 +63,7 @@ export function PartnerCandidateActions({ partnerId, partnerName }: Props) {
           size="sm"
           onClick={aprovar}
           disabled={!!loading}
-          className="bg-green-700 hover:bg-green-800 text-white"
+          className="bg-eco-green hover:bg-eco-green/90 text-white"
         >
           {loading === "aprovar" ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle2 className="size-3.5" />}
           <span className="ml-1">Aprovar</span>

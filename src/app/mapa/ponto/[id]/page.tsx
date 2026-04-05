@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
@@ -70,7 +70,7 @@ export default async function PontoDetalhe({ params }: Props) {
         {/* Endereço e ações de mapa */}
         <section className="space-y-3">
           <div className="flex items-start gap-2 text-sm text-muted-foreground">
-            <MapPin className="mt-0.5 size-4 shrink-0 text-green-700" />
+            <MapPin className="mt-0.5 size-4 shrink-0 text-eco-teal-dark" />
             <span>
               {point.address}, {point.city} — {point.state}, {point.zipCode}
             </span>

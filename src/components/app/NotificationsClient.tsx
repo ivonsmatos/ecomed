@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useTransition } from "react";
 import { formatDistanceToNow } from "date-fns";
@@ -77,13 +77,13 @@ export function NotificationsClient({ notifications: initial }: Props) {
             key={n.id}
             className={cn(
               "flex gap-3 rounded-lg border p-4 transition-colors",
-              !n.read && "border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950/30"
+              !n.read && "border-eco-teal/20 bg-eco-teal/10 dark:border-eco-teal/30 dark:bg-eco-teal/15"
             )}
           >
             <Bell
               className={cn(
                 "mt-0.5 size-4 shrink-0",
-                n.read ? "text-muted-foreground" : "text-green-700"
+                n.read ? "text-muted-foreground" : "text-eco-teal-dark"
               )}
             />
             <div className="flex-1 space-y-0.5">

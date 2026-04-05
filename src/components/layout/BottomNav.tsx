@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -28,7 +28,7 @@ export function BottomNav() {
                 className={cn(
                   "flex flex-col items-center gap-0.5 py-2 text-xs transition-colors",
                   active
-                    ? "text-green-700 dark:text-green-400"
+                    ? "text-eco-teal-dark dark:text-eco-teal"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >

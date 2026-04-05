@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -8,7 +8,7 @@ export default function NotFound() {
       <Header />
       <main className="min-h-[70vh] flex items-center justify-center bg-white">
         <div className="text-center px-4 max-w-md">
-          <div className="text-[#79b900] text-8xl font-extrabold mb-4">404</div>
+          <div className="text-eco-lime text-8xl font-extrabold mb-4">404</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             Página não encontrada
           </h1>

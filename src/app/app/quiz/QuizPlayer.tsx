@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { CheckCircle2, XCircle, Trophy, ArrowRight, RotateCcw } from "lucide-react";
@@ -91,14 +91,14 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
               result.perfect
                 ? "bg-yellow-50 dark:bg-yellow-950/40"
                 : pct >= 50
-                  ? "bg-green-50 dark:bg-green-950/40"
+                  ? "bg-eco-teal/10 dark:bg-eco-teal/20"
                   : "bg-red-50 dark:bg-red-950/40",
             )}
           >
             {result.perfect ? (
               <Trophy className="size-10 text-yellow-500" />
             ) : pct >= 50 ? (
-              <CheckCircle2 className="size-10 text-green-600" />
+              <CheckCircle2 className="size-10 text-eco-green" />
             ) : (
               <XCircle className="size-10 text-red-500" />
             )}
@@ -132,7 +132,7 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
             <p className="text-sm text-muted-foreground">Sem Coins desta vez.</p>
           )}
           {result.levelUp && (
-            <p className="text-green-700 dark:text-green-400 text-sm font-semibold mt-1">
+            <p className="text-eco-teal-dark dark:text-eco-teal text-sm font-semibold mt-1">
               🎉 Novo nível desbloqueado: {result.levelUp}!
             </p>
           )}
@@ -156,13 +156,13 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
                 className={cn(
                   "rounded-xl border p-3 text-sm",
                   acertou
-                    ? "border-green-200 bg-green-50/60 dark:bg-green-950/20"
+                    ? "border-eco-teal/20 bg-eco-teal/10/60 dark:bg-eco-teal/10"
                     : "border-red-200 bg-red-50/60 dark:bg-red-950/20",
                 )}
               >
                 <div className="flex items-start gap-2">
                   {acertou ? (
-                    <CheckCircle2 className="size-4 text-green-600 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="size-4 text-eco-green shrink-0 mt-0.5" />
                   ) : (
                     <XCircle className="size-4 text-red-500 shrink-0 mt-0.5" />
                   )}
@@ -176,7 +176,7 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
                         </span>
                       </p>
                     )}
-                    <p className="mt-0.5 text-xs text-green-700 dark:text-green-400 font-medium">
+                    <p className="mt-0.5 text-xs text-eco-teal-dark dark:text-eco-teal font-medium">
                       Correta: {q.options[correct]}
                     </p>
                   </div>
@@ -224,7 +224,7 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
         </div>
         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full bg-green-500 transition-all"
+            className="h-full rounded-full bg-eco-teal/100 transition-all"
             data-progress={Math.round(((current + 1) / totalQuestions) * 100)}
             style={{ width: `${((current + 1) / totalQuestions) * 100}%` }}
           />
@@ -244,7 +244,7 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
                 className={cn(
                   "w-full text-left rounded-lg border px-4 py-3 text-sm transition-colors",
                   answers[current] === idx
-                    ? "border-green-500 bg-green-50 dark:bg-green-950/40 font-medium"
+                    ? "border-green-500 bg-eco-teal/10 dark:bg-eco-teal/20 font-medium"
                     : "border-border hover:bg-muted/60",
                 )}
               >
@@ -279,9 +279,9 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
               className={cn(
                 "size-2.5 rounded-full transition-colors",
                 i === current
-                  ? "bg-green-600"
+                  ? "bg-eco-green"
                   : answers[i] >= 0
-                    ? "bg-green-200 dark:bg-green-800"
+                    ? "bg-eco-teal/20 dark:bg-eco-teal/30"
                     : "bg-muted-foreground/30",
               )}
               title={`Ir para questão ${i + 1}`}
@@ -306,7 +306,7 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
             className={cn(
               "flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-semibold transition-colors",
               answered === totalQuestions
-                ? "bg-green-600 text-white hover:bg-green-700"
+                ? "bg-eco-green text-white hover:bg-eco-green"
                 : "border border-border text-muted-foreground cursor-not-allowed opacity-50",
             )}
           >

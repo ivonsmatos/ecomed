@@ -86,7 +86,7 @@ export default function ReportarPage() {
                   key={key}
                   className={`flex items-center gap-3 bg-white border rounded-lg p-3 cursor-pointer transition-colors ${
                     tipo === key
-                      ? "border-green-500 bg-green-50"
+                      ? "border-green-500 bg-eco-teal/10"
                       : "hover:border-green-300"
                   }`}
                 >
@@ -96,7 +96,7 @@ export default function ReportarPage() {
                     value={key}
                     checked={tipo === key}
                     onChange={() => setTipo(key)}
-                    className="accent-green-600"
+                    className="accent-eco-green"
                   />
                   <span className="flex-1 text-sm">{TIPO_LABELS[key]}</span>
                 </label>

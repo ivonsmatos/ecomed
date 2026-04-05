@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session";
+﻿import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -103,7 +103,7 @@ export default async function PerfilPage() {
       <section className="rounded-xl border p-6 flex items-center gap-5">
         <Avatar className="size-16">
           <AvatarImage src={user.image ?? undefined} />
-          <AvatarFallback className="bg-green-100 text-green-800 text-xl">{initials}</AvatarFallback>
+          <AvatarFallback className="bg-eco-teal/10 text-eco-teal-dark text-xl">{initials}</AvatarFallback>
         </Avatar>
         <div className="space-y-1 min-w-0">
           <p className="font-semibold text-lg truncate">{user.name ?? "Sem nome"}</p>
@@ -169,7 +169,7 @@ export default async function PerfilPage() {
               {wallet.transactions.map((t) => (
                 <li key={t.id} className="py-2 flex items-center justify-between gap-2">
                   <span className="text-muted-foreground truncate">{labelTransacao(t.note, t.event)}</span>
-                  <span className={cn("font-semibold shrink-0", t.amount > 0 ? "text-green-600" : "text-red-500")}>
+                  <span className={cn("font-semibold shrink-0", t.amount > 0 ? "text-eco-green" : "text-red-500")}>
                     {t.amount > 0 ? "+" : ""}{t.amount}
                   </span>
                 </li>
@@ -226,17 +226,17 @@ export default async function PerfilPage() {
 
       {/* CTA Seja Parceiro — apenas para cidadãos sem registro de parceiro */}
       {user.role === "CITIZEN" && !user.partner && (
-        <section className="rounded-xl border border-green-200 bg-green-50 p-5 space-y-3">
+        <section className="rounded-xl border border-eco-teal/20 bg-eco-teal/10 p-5 space-y-3">
           <div className="flex items-center gap-2">
-            <Building2 className="size-5 text-green-700" />
-            <h2 className="font-semibold text-green-800">Você tem uma farmácia ou UBS?</h2>
+            <Building2 className="size-5 text-eco-teal-dark" />
+            <h2 className="font-semibold text-eco-teal-dark">Você tem uma farmácia ou UBS?</h2>
           </div>
-          <p className="text-sm text-green-700">
+          <p className="text-sm text-eco-teal-dark">
             Cadastre seu ponto de coleta de medicamentos gratuitamente e apareça no mapa do EcoMed.
           </p>
           <Link
             href="/app/seja-parceiro"
-            className={cn(buttonVariants({ size: "sm" }), "bg-green-700 hover:bg-green-800 text-white")}
+            className={cn(buttonVariants({ size: "sm" }), "bg-eco-green hover:bg-eco-green/90 text-white")}
           >
             Quero ser parceiro
           </Link>

@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session";
+﻿import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Heart, MapPin } from "lucide-react";
@@ -42,7 +42,7 @@ export default async function FavoritosPage() {
           action={
             <Link
               href="/mapa"
-              className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-md bg-eco-green px-4 py-2 text-sm font-medium text-white hover:bg-eco-green transition-colors"
             >
               <MapPin className="h-4 w-4" />
               Explorar o mapa
@@ -78,7 +78,7 @@ export default async function FavoritosPage() {
               </div>
               <Link
                 href={`/mapa?ponto=${point.id}`}
-                className="shrink-0 text-sm text-green-600 hover:underline font-medium"
+                className="shrink-0 text-sm text-eco-green hover:underline font-medium"
               >
                 Ver no mapa
               </Link>

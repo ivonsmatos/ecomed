@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import { buttonVariants } from "@/components/ui/button-variants"
@@ -42,7 +42,7 @@ export function RedeemButton({ rewardId, disabled, label }: RedeemButtonProps) {
 
   if (done) {
     return (
-      <span className="text-xs font-medium text-green-600 bg-green-50 rounded-full px-3 py-1.5 border border-green-200">
+      <span className="text-xs font-medium text-eco-green bg-eco-teal/10 rounded-full px-3 py-1.5 border border-eco-teal/20">
         ✓ Resgatado
       </span>
     )

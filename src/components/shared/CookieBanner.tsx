@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
@@ -70,7 +70,7 @@ export function CookieBanner() {
           </button>
           <button
             onClick={handleAccept}
-            className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors"
+            className="rounded-md bg-eco-green px-4 py-2 text-sm font-medium text-white hover:bg-eco-green transition-colors"
           >
             Aceitar todos
           </button>

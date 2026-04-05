@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, ChevronRight } from "lucide-react";
 
@@ -40,12 +40,12 @@ export function Footer() {
           <div className="bg-[url('/echofy/footer-social.jpg')] bg-no-repeat bg-cover bg-center relative rounded-md">
             <div className="flex flex-col gap-7 lg:gap-0 lg:flex-row lg:items-center lg:justify-between p-10">
               <div>
-                <h2 className="font-['Albert_Sans'] font-bold text-white text-[30px] sm:text-[40px]">
+                <h2 className="font-sans font-bold text-white text-[30px] sm:text-[40px]">
                   Siga o EcoMed nas Redes
                 </h2>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <h5 className="font-['Albert_Sans'] font-semibold text-white text-lg uppercase">
+                <h5 className="font-sans font-semibold text-white text-lg uppercase">
                   Siga-nos:
                 </h5>
                 <ul className="flex gap-3">
@@ -63,7 +63,7 @@ export function Footer() {
                         aria-label={label}
                         className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center
                                    text-white overflow-hidden transition-all duration-500
-                                   hover:text-[#79b900] relative z-10
+                                   hover:text-eco-lime relative z-10
                                    before:absolute before:top-0 before:left-0 before:w-full before:h-full
                                    before:-z-10 before:bg-white before:transition-all before:duration-500
                                    before:scale-0 hover:before:scale-100"
@@ -106,25 +106,25 @@ export function Footer() {
           {/* Coluna 1 — Logo + contato */}
           <div>
             <Link href="/" className="inline-block">
-              <span className="font-['Albert_Sans'] font-bold text-2xl text-[#79b900]">EcoMed</span>
+              <span className="font-sans font-bold text-2xl text-eco-lime">EcoMed</span>
             </Link>
-            <p className="font-['Albert_Sans'] text-white/80 mt-7 mb-5">
+            <p className="font-sans text-white/80 mt-7 mb-5">
               Descarte correto de medicamentos para um Brasil mais sustentável e protegido.
             </p>
             <div>
-              <h6 className="font-['Albert_Sans'] font-medium text-white text-lg pl-8 relative
+              <h6 className="font-sans font-medium text-white text-lg pl-8 relative
                              before:absolute before:top-1/2 before:left-0 before:-translate-y-1/2
-                             before:bg-[#79b900] before:w-[22px] before:h-[2px]">
+                             before:bg-eco-lime before:w-[22px] before:h-[2px]">
                 Contato
               </h6>
-              <a href="tel:+5500000000000" className="mt-[18px] flex items-center gap-3 font-['Albert_Sans'] text-white/80
-                                                       transition-all duration-500 hover:text-[#79b900]">
-                <Phone className="size-4 text-[#79b900]" />
+              <a href="tel:+5500000000000" className="mt-[18px] flex items-center gap-3 font-sans text-white/80
+                                                       transition-all duration-500 hover:text-eco-lime">
+                <Phone className="size-4 text-eco-lime" />
                 +55 (00) 0000-0000
               </a>
-              <a href="mailto:contato@ecomed.eco.br" className="mt-[18px] flex items-center gap-3 font-['Albert_Sans'] text-white/80
-                                                                  transition-all duration-500 hover:text-[#79b900]">
-                <Mail className="size-4 text-[#79b900]" />
+              <a href="mailto:contato@ecomed.eco.br" className="mt-[18px] flex items-center gap-3 font-sans text-white/80
+                                                                  transition-all duration-500 hover:text-eco-lime">
+                <Mail className="size-4 text-eco-lime" />
                 contato@ecomed.eco.br
               </a>
             </div>
@@ -132,7 +132,7 @@ export function Footer() {
 
           {/* Coluna 2 — Cidadão */}
           <div>
-            <h4 className="font-['Albert_Sans'] text-2xl text-white font-semibold mb-[30px]">Cidadão</h4>
+            <h4 className="font-sans text-2xl text-white font-semibold mb-[30px]">Cidadão</h4>
             <ul>
               {[
                 { label: "Encontrar ponto", href: "/mapa" },
@@ -142,8 +142,8 @@ export function Footer() {
               ].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href}
-                    className="flex items-center gap-2 font-['Albert_Sans'] text-white/60 transition-all duration-500
-                               hover:text-[#79b900] hover:opacity-100 mb-[18px]">
+                    className="flex items-center gap-2 font-sans text-white/60 transition-all duration-500
+                               hover:text-eco-lime hover:opacity-100 mb-[18px]">
                     <ChevronRight className="size-3 opacity-60" />
                     {label}
                   </Link>
@@ -154,7 +154,7 @@ export function Footer() {
 
           {/* Coluna 3 — Parceiro */}
           <div>
-            <h4 className="font-['Albert_Sans'] text-2xl text-white font-semibold mb-[30px]">Parceiro</h4>
+            <h4 className="font-sans text-2xl text-white font-semibold mb-[30px]">Parceiro</h4>
             <ul>
               {[
                 { label: "Cadastre seu ponto", href: "/cadastrar" },
@@ -163,8 +163,8 @@ export function Footer() {
               ].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href}
-                    className="flex items-center gap-2 font-['Albert_Sans'] text-white/60 transition-all duration-500
-                               hover:text-[#79b900] hover:opacity-100 mb-[18px]">
+                    className="flex items-center gap-2 font-sans text-white/60 transition-all duration-500
+                               hover:text-eco-lime hover:opacity-100 mb-[18px]">
                     <ChevronRight className="size-3 opacity-60" />
                     {label}
                   </Link>
@@ -175,7 +175,7 @@ export function Footer() {
 
           {/* Coluna 4 — Legal */}
           <div>
-            <h4 className="font-['Albert_Sans'] text-2xl text-white font-semibold mb-[30px]">Sobre</h4>
+            <h4 className="font-sans text-2xl text-white font-semibold mb-[30px]">Sobre</h4>
             <ul>
               {[
                 { label: "Sobre o projeto", href: "/sobre" },
@@ -186,8 +186,8 @@ export function Footer() {
               ].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href}
-                    className="flex items-center gap-2 font-['Albert_Sans'] text-white/60 transition-all duration-500
-                               hover:text-[#79b900] hover:opacity-100 mb-[18px]">
+                    className="flex items-center gap-2 font-sans text-white/60 transition-all duration-500
+                               hover:text-eco-lime hover:opacity-100 mb-[18px]">
                     <ChevronRight className="size-3 opacity-60" />
                     {label}
                   </Link>
@@ -199,7 +199,7 @@ export function Footer() {
 
         {/* ── Copyright ────────────────────────────────────────────── */}
         <div className="border-t border-white/10 mt-10 py-6 text-center">
-          <p className="font-['Albert_Sans'] text-white/50 text-sm">
+          <p className="font-sans text-white/50 text-sm">
             © {new Date().getFullYear()} EcoMed. Desenvolvido para o meio ambiente. Todos os direitos reservados.
           </p>
         </div>

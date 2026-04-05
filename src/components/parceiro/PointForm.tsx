@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -215,7 +215,7 @@ export function PointForm({ defaultValues, pointId }: PointFormProps) {
         ))}
       </section>
 
-      <Button type="submit" className="bg-green-700 hover:bg-green-800 text-white w-full sm:w-auto" disabled={loading}>
+      <Button type="submit" className="bg-eco-green hover:bg-eco-green/90 text-white w-full sm:w-auto" disabled={loading}>
         {loading && <Loader2 className="size-4 mr-2 animate-spin" />}
         {pointId ? "Salvar alterações" : "Cadastrar ponto"}
       </Button>

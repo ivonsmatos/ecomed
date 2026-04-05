@@ -48,7 +48,7 @@ export default function RecuperarSenhaPage() {
     <Card className="w-full max-w-md">
       <CardHeader className="text-center space-y-2">
         <div className="flex justify-center">
-          <Leaf className="h-10 w-10 text-green-700" />
+          <Leaf className="h-10 w-10 text-eco-teal-dark" />
         </div>
         <CardTitle className="text-2xl">Recuperar senha</CardTitle>
         <CardDescription>

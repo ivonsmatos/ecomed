@@ -18,7 +18,7 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold text-green-700">
+        <Link href="/" className="flex items-center gap-2 font-bold text-eco-teal-dark">
           <Leaf className="size-5" />
           <span>EcoMed</span>
         </Link>
@@ -56,7 +56,7 @@ export async function Header() {
               <DropdownMenuTrigger className="relative size-9 rounded-full bg-transparent border-0 p-0 cursor-pointer inline-flex items-center justify-center hover:bg-muted transition-colors">
                 <Avatar className="size-8">
                     <AvatarImage src={session.user.image ?? undefined} />
-                    <AvatarFallback className="bg-green-100 text-green-800">
+                    <AvatarFallback className="bg-eco-teal/10 text-eco-teal-dark">
                       {session.user.name?.[0]?.toUpperCase() ?? "U"}
                     </AvatarFallback>
                   </Avatar>
@@ -91,7 +91,7 @@ export async function Header() {
           ) : (
             <>
               <Link href="/entrar" className={buttonVariants({ variant: "ghost", size: "sm" })}>Acesse aqui</Link>
-              <Link href="/cadastrar" className={buttonVariants({ size: "sm" }) + " bg-green-700 hover:bg-green-800 text-white hidden sm:inline-flex"}>Seja parceiro</Link>
+              <Link href="/cadastrar" className={buttonVariants({ size: "sm" }) + " bg-eco-green hover:bg-eco-green/90 text-white hidden sm:inline-flex"}>Seja parceiro</Link>
             </>
           )}
         </div>

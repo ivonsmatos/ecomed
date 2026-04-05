@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session";
+﻿import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
 import { BookOpen, CheckCircle2, ChevronDown, Lock, Star, Trophy } from "lucide-react";
@@ -8,7 +8,7 @@ import { CoinDisclaimer } from "@/components/coins/CoinDisclaimer";
 export const metadata = { title: "Quiz | EcoMed" };
 
 const DIFFICULTY_LABEL: Record<string, { label: string; color: string }> = {
-  FACIL: { label: "Fácil", color: "text-green-600 bg-green-50 border-green-200" },
+  FACIL: { label: "Fácil", color: "text-eco-green bg-eco-teal/10 border-eco-teal/20" },
   MEDIO: { label: "Médio", color: "text-yellow-700 bg-yellow-50 border-yellow-200" },
   DIFICIL: { label: "Difícil", color: "text-red-600 bg-red-50 border-red-200" },
 };
@@ -151,7 +151,7 @@ export default async function QuizListPage() {
                   {!desbloqueado ? (
                     <Lock className="size-4 text-muted-foreground" />
                   ) : concluido ? (
-                    <CheckCircle2 className="size-4 text-green-600" />
+                    <CheckCircle2 className="size-4 text-eco-green" />
                   ) : (
                     <span className="flex size-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                       {nivel}
@@ -178,7 +178,7 @@ export default async function QuizListPage() {
                     <div
                       className={cn(
                         "h-full rounded-full transition-all",
-                        concluido ? "bg-green-500" : "bg-primary",
+                        concluido ? "bg-eco-teal/100" : "bg-primary",
                       )}
                       style={{ width: `${Math.round((feitos / total) * 100)}%` }}
                     />
@@ -218,17 +218,17 @@ export default async function QuizListPage() {
                           href={`/app/quiz/${q.id}`}
                           className={cn(
                             "flex items-start gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/50",
-                            jáFez && !jáFezHoje && "border-green-100 dark:border-green-900/40",
-                            jáFezHoje && "border-green-200 bg-green-50/50 dark:bg-green-950/20",
+                            jáFez && !jáFezHoje && "border-eco-teal/10 dark:border-eco-teal/30/40",
+                            jáFezHoje && "border-eco-teal/20 bg-eco-teal/10/50 dark:bg-eco-teal/10",
                           )}
                         >
                           <div
                             className={cn(
                               "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border",
                               jáFezHoje
-                                ? "border-green-200 bg-green-100 text-green-700"
+                                ? "border-eco-teal/20 bg-eco-teal/10 text-eco-teal-dark"
                                 : jáFez
-                                  ? "border-green-200 bg-green-50 text-green-600"
+                                  ? "border-eco-teal/20 bg-eco-teal/10 text-eco-green"
                                   : "border-border bg-muted text-muted-foreground",
                             )}
                           >
@@ -251,7 +251,7 @@ export default async function QuizListPage() {
                                 {diff.label}
                               </span>
                               {jáFezHoje && (
-                                <span className="inline-flex items-center gap-1 text-xs text-green-700 dark:text-green-400 font-medium">
+                                <span className="inline-flex items-center gap-1 text-xs text-eco-teal-dark dark:text-eco-teal font-medium">
                                   <CheckCircle2 className="size-3" />
                                   Feito hoje
                                 </span>

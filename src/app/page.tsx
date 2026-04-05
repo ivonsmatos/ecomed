@@ -155,20 +155,20 @@ export default async function HomePage() {
           <div className="echofy-container">
             <div className="pt-36 relative">
               <div className="relative banner-content">
-                <h5 className="font-['Albert_Sans'] text-[#79b900] font-medium uppercase tracking-wider text-sm sm:text-base mb-3">
+                <h5 className="font-sans text-eco-lime font-medium uppercase tracking-wider text-sm sm:text-base mb-3">
                   Descarte certo, planeta saudável
                 </h5>
-                <h1 className="font-['Albert_Sans'] font-extrabold text-white
+                <h1 className="font-sans font-extrabold text-white
                                text-[32px] sm:text-[56px] md:text-[70px] lg:text-[52px] xl:text-[62px] 2xl:text-[70px]
                                leading-tight">
                   Proteja o Planeta.
                 </h1>
-                <h1 className="font-['Albert_Sans'] font-extrabold text-white
+                <h1 className="font-sans font-extrabold text-white
                                text-[32px] sm:text-[56px] md:text-[70px] lg:text-[52px] xl:text-[62px] 2xl:text-[70px]
                                leading-tight -mt-3 sm:-mt-5">
-                  <span className="text-[#79b900]">Descarte Certo.</span>
+                  <span className="text-eco-lime">Descarte Certo.</span>
                 </h1>
-                <p className="font-['Albert_Sans'] text-lg text-white/90 mb-10 max-w-xl">
+                <p className="font-sans text-lg text-white/90 mb-10 max-w-xl">
                   91% dos brasileiros descartam medicamentos errado — não por má vontade,
                   mas porque ninguém ensinou como fazer certo. O EcoMed muda isso.
                 </p>
@@ -187,26 +187,26 @@ export default async function HomePage() {
                 {/* Social vertical — visible on xl+ like Echofy */}
                 <div className="banner-share hidden xl:flex gap-[100px] items-center -rotate-90
                                 absolute top-full -translate-y-1/2 xl:-left-[16%] 2xl:-left-[23%]">
-                  <h5 className="font-['Albert_Sans'] text-white relative
+                  <h5 className="font-sans text-white relative
                                  before:absolute before:top-1/2 before:-right-[82px] before:w-16 before:h-[1px] before:bg-gray-500">
                     FOLLOW US
                   </h5>
                   <ul className="flex gap-7 items-center">
                     <li>
                       <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
-                         className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
+                         className="rotate-45 block text-white hover:text-eco-lime transition-colors">
                         <SvgInstagram />
                       </a>
                     </li>
                     <li>
                       <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
-                         className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
+                         className="rotate-45 block text-white hover:text-eco-lime transition-colors">
                         <SvgFacebook />
                       </a>
                     </li>
                     <li>
                       <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter/X"
-                         className="rotate-45 block text-white hover:text-[#79b900] transition-colors">
+                         className="rotate-45 block text-white hover:text-eco-lime transition-colors">
                         <SvgTwitter />
                       </a>
                     </li>
@@ -265,11 +265,11 @@ export default async function HomePage() {
 
               {/* Direita: texto */}
               <div className="relative">
-                <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 uppercase tracking-wider text-sm">
+                <h5 className="font-sans font-medium text-eco-lime flex items-center gap-2 uppercase tracking-wider text-sm">
                   <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
                   Sobre o EcoMed
                 </h5>
-                <h1 className="font-['Albert_Sans'] font-bold
+                <h1 className="font-sans font-bold
                                text-[22px] leading-8 sm:text-[38px] sm:leading-[48px]
                                md:text-[44px] md:leading-[54px] lg:text-[32px] lg:leading-[42px]
                                xl:text-[40px] xl:leading-[50px] 2xl:text-[46px] 2xl:leading-[56px]
@@ -284,10 +284,10 @@ export default async function HomePage() {
                     <Image src="/echofy/about-icon.png" alt="" width={56} height={56} draggable={false} />
                   </div>
                   <div className="flex-1">
-                    <h5 className="font-['Albert_Sans'] font-semibold text-2xl text-[#001819] -mt-2">
+                    <h5 className="font-sans font-semibold text-2xl text-[#001819] -mt-2">
                       Impacto Ambiental
                     </h5>
-                    <p className="font-['Albert_Sans'] text-gray-500 pt-3 leading-relaxed">
+                    <p className="font-sans text-gray-500 pt-3 leading-relaxed">
                       Medicamentos descartados no lixo ou esgoto contaminam rios e solos.
                       O descarte correto protege o ecossistema e a cadeia alimentar.
                     </p>
@@ -300,10 +300,10 @@ export default async function HomePage() {
                     <Image src="/echofy/about-icon2.png" alt="" width={56} height={56} draggable={false} />
                   </div>
                   <div className="flex-1">
-                    <h5 className="font-['Albert_Sans'] font-semibold text-2xl text-[#001819] -mt-2">
+                    <h5 className="font-sans font-semibold text-2xl text-[#001819] -mt-2">
                       Saúde Pública
                     </h5>
-                    <p className="font-['Albert_Sans'] text-gray-500 pt-3 leading-relaxed">
+                    <p className="font-sans text-gray-500 pt-3 leading-relaxed">
                       Antibióticos e hormônios no ambiente favorecem resistência bacteriana
                       e comprometem o abastecimento de água potável.
                     </p>
@@ -332,11 +332,11 @@ export default async function HomePage() {
         <section className="relative pt-28 pb-[120px] bg-[url('/echofy/service-bg.jpg')] bg-cover bg-no-repeat bg-center">
           <div className="echofy-container">
             <div className="md:-mb-[11.2rem]">
-              <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 uppercase tracking-wider text-sm">
+              <h5 className="font-sans font-medium text-eco-lime flex items-center gap-2 uppercase tracking-wider text-sm">
                 <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
                 Nossos Serviços
               </h5>
-              <h1 className="font-['Albert_Sans'] font-bold
+              <h1 className="font-sans font-bold
                              text-xl leading-6 sm:text-[38px] sm:leading-[48px]
                              md:text-[40px] md:leading-[54px] lg:text-[32px] lg:leading-[42px]
                              xl:text-[40px] xl:leading-[50px] 2xl:text-[46px] 2xl:leading-[56px]
@@ -366,15 +366,15 @@ export default async function HomePage() {
 
                   {/* Título */}
                   <Link href={s.href}>
-                    <h3 className="echofy-service-title font-['Albert_Sans'] font-semibold text-[22px] pb-[10px]
+                    <h3 className="echofy-service-title font-sans font-semibold text-[22px] pb-[10px]
                                    text-[#001819] transition-colors duration-500 relative
-                                   before:absolute before:bottom-0 before:left-0 before:w-8 before:h-[2px] before:bg-[#79b900]">
+                                   before:absolute before:bottom-0 before:left-0 before:w-8 before:h-[2px] before:bg-eco-lime">
                       {s.title}
                     </h3>
                   </Link>
 
                   {/* Descrição */}
-                  <p className="echofy-service-desc font-['Albert_Sans'] text-gray-500 pt-6 pb-[10px] transition-colors duration-500">
+                  <p className="echofy-service-desc font-sans text-gray-500 pt-6 pb-[10px] transition-colors duration-500">
                     {s.desc}
                   </p>
 
@@ -397,8 +397,8 @@ export default async function HomePage() {
               {counters.map((c) => (
                 <div key={c.label} className="text-center">
                   <Image src={c.icon} alt="" width={64} height={64} draggable={false} className="mx-auto" />
-                  <p className="font-['Albert_Sans'] text-[46px] text-white font-bold mt-3 -mb-1">{c.value}</p>
-                  <p className="font-['Albert_Sans'] text-white text-xl">{c.label}</p>
+                  <p className="font-sans text-[46px] text-white font-bold mt-3 -mb-1">{c.value}</p>
+                  <p className="font-sans text-white text-xl">{c.label}</p>
                 </div>
               ))}
             </div>
@@ -413,11 +413,11 @@ export default async function HomePage() {
         <section id="como-funciona" className="pb-10 relative z-10 pt-28 echofy-process-section">
           <div className="echofy-container">
             <div className="text-center">
-              <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 justify-center uppercase tracking-wider text-sm">
+              <h5 className="font-sans font-medium text-eco-lime flex items-center gap-2 justify-center uppercase tracking-wider text-sm">
                 <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
                 Como Descartar
               </h5>
-              <h1 className="font-['Albert_Sans'] font-bold
+              <h1 className="font-sans font-bold
                              text-[22px] leading-8 sm:text-[38px] sm:leading-[48px]
                              md:text-[44px] md:leading-[54px] lg:text-[32px] lg:leading-[42px]
                              xl:text-[40px] xl:leading-[50px] 2xl:text-[46px] 2xl:leading-[56px]
@@ -434,7 +434,7 @@ export default async function HomePage() {
                     <div className="inline-block m-auto relative z-10
                                     before:absolute before:top-[18px] before:-left-[10px]
                                     before:w-[200px] before:h-[200px]
-                                    before:border-2 before:border-dashed before:border-[#79b900]
+                                    before:border-2 before:border-dashed before:border-eco-lime
                                     before:rounded-full before:animate-echofy-rotate">
                       <Image src={step.icon} alt="" width={180} height={207} draggable={false} />
 
@@ -445,10 +445,10 @@ export default async function HomePage() {
                       )}
                     </div>
 
-                    <h5 className="font-['Albert_Sans'] font-semibold text-[#001819] text-2xl mt-6 mb-4">
+                    <h5 className="font-sans font-semibold text-[#001819] text-2xl mt-6 mb-4">
                       {step.title}
                     </h5>
-                    <p className="font-['Albert_Sans'] text-gray-500 sm:w-2/3 md:w-full 2xl:w-3/4 mx-auto">
+                    <p className="font-sans text-gray-500 sm:w-2/3 md:w-full 2xl:w-3/4 mx-auto">
                       {step.desc}
                     </p>
                   </div>
@@ -464,13 +464,13 @@ export default async function HomePage() {
         <section className="py-[80px] bg-[url('/brand-bg.jpg')] bg-cover bg-center bg-no-repeat relative">
           <div className="absolute inset-0 bg-[#001819]/75" />
           <div className="echofy-container relative z-10 text-center">
-            <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] text-sm uppercase tracking-widest mb-4">
+            <h5 className="font-sans font-medium text-eco-lime text-sm uppercase tracking-widest mb-4">
               Sua farmácia já coleta medicamentos?
             </h5>
-            <h2 className="font-['Albert_Sans'] font-bold text-white text-[28px] sm:text-[44px] leading-tight mb-6 max-w-2xl mx-auto">
+            <h2 className="font-sans font-bold text-white text-[28px] sm:text-[44px] leading-tight mb-6 max-w-2xl mx-auto">
               Cadastre gratuitamente e apareça no mapa do EcoMed
             </h2>
-            <p className="font-['Albert_Sans'] text-white/75 mb-10 max-w-lg mx-auto">
+            <p className="font-sans text-white/75 mb-10 max-w-lg mx-auto">
               Ajude sua comunidade com o descarte correto de medicamentos.
               Verificação rápida e visibilidade para milhares de cidadãos.
             </p>
@@ -489,11 +489,11 @@ export default async function HomePage() {
             <div className="echofy-container">
               {/* Cabeçalho */}
               <div className="flex items-center justify-between mb-10">
-                <h2 className="font-['Albert_Sans'] font-bold text-[28px] sm:text-[36px] text-[#001819]">
+                <h2 className="font-sans font-bold text-[28px] sm:text-[36px] text-[#001819]">
                   Últimos Artigos
                 </h2>
                 <Link href="/blog"
-                  className="font-['Albert_Sans'] text-green-700 font-medium hover:text-green-800 transition-colors text-sm sm:text-base">
+                  className="font-sans text-eco-teal-dark font-medium hover:text-eco-teal-dark transition-colors text-sm sm:text-base">
                   Ver todos &rarr;
                 </Link>
               </div>
@@ -526,7 +526,7 @@ export default async function HomePage() {
                           className="w-full h-44 object-cover"
                         />
                       ) : (
-                        <div className="w-full h-44 bg-green-50 flex items-center justify-center">
+                        <div className="w-full h-44 bg-eco-teal/10 flex items-center justify-center">
                           <span className="text-green-300 text-4xl">🌿</span>
                         </div>
                       )}
@@ -534,18 +534,18 @@ export default async function HomePage() {
                       {/* Conteúdo */}
                       <div className="flex flex-col flex-1 p-5">
                         {dateStr && (
-                          <p className="font-['Albert_Sans'] text-xs text-gray-400 mb-2">{dateStr}</p>
+                          <p className="font-sans text-xs text-gray-400 mb-2">{dateStr}</p>
                         )}
-                        <h3 className="font-['Albert_Sans'] font-bold text-[#001819] text-base leading-snug mb-2 line-clamp-2">
+                        <h3 className="font-sans font-bold text-[#001819] text-base leading-snug mb-2 line-clamp-2">
                           {article.title}
                         </h3>
                         {article.excerpt && (
-                          <p className="font-['Albert_Sans'] text-gray-500 text-sm leading-relaxed line-clamp-3 mb-3">
+                          <p className="font-sans text-gray-500 text-sm leading-relaxed line-clamp-3 mb-3">
                             {article.excerpt}
                           </p>
                         )}
                         {article.aiSummary && (
-                          <p className="font-['Albert_Sans'] text-xs text-green-700 italic line-clamp-2 mt-auto">
+                          <p className="font-sans text-xs text-eco-teal-dark italic line-clamp-2 mt-auto">
                             IA: {article.aiSummary}
                           </p>
                         )}
@@ -564,11 +564,11 @@ export default async function HomePage() {
         <section id="faq" className="py-[100px] bg-[url('/echofy/about-bg.jpg')] bg-cover bg-center bg-no-repeat">
           <div className="echofy-container max-w-3xl">
             <div className="text-center mb-14">
-              <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 justify-center text-sm uppercase tracking-wider">
+              <h5 className="font-sans font-medium text-eco-lime flex items-center gap-2 justify-center text-sm uppercase tracking-wider">
                 <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
                 Perguntas Frequentes
               </h5>
-              <h2 className="font-['Albert_Sans'] font-bold text-[28px] sm:text-[42px] text-[#001819] mt-4">
+              <h2 className="font-sans font-bold text-[28px] sm:text-[42px] text-[#001819] mt-4">
                 Tudo sobre descarte correto<br className="hidden sm:block" />
                 de medicamentos no Brasil
               </h2>
@@ -577,10 +577,10 @@ export default async function HomePage() {
               {faqItems.map((item) => (
                 <div key={item.question} className="bg-white/90 rounded-xl border border-gray-100 p-6 shadow-sm backdrop-blur-sm">
                   <dt className="flex items-start justify-between gap-4">
-                    <span className="font-['Albert_Sans'] font-semibold text-[#001819]">{item.question}</span>
-                    <ChevronDown className="size-5 shrink-0 text-[#79b900] mt-0.5" />
+                    <span className="font-sans font-semibold text-[#001819]">{item.question}</span>
+                    <ChevronDown className="size-5 shrink-0 text-eco-lime mt-0.5" />
                   </dt>
-                  <dd className="mt-3 font-['Albert_Sans'] text-gray-500 text-sm leading-relaxed">
+                  <dd className="mt-3 font-sans text-gray-500 text-sm leading-relaxed">
                     {item.answer}
                   </dd>
                 </div>

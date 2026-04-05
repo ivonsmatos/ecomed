@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect, useRef } from "react"
 import { useSession } from "next-auth/react"
@@ -131,10 +131,10 @@ export default function ScannerPage() {
       />
 
       {resultado && (
-        <div className="w-full max-w-sm bg-green-50 border border-green-200 rounded-xl p-5 text-center">
-          <p className="text-green-700 font-medium text-lg">Check-in registrado!</p>
-          <p className="text-green-600 mt-1 font-medium">{resultado.userName}</p>
-          <p className="text-green-600 text-sm mt-1">
+        <div className="w-full max-w-sm bg-eco-teal/10 border border-eco-teal/20 rounded-xl p-5 text-center">
+          <p className="text-eco-teal-dark font-medium text-lg">Check-in registrado!</p>
+          <p className="text-eco-green mt-1 font-medium">{resultado.userName}</p>
+          <p className="text-eco-green text-sm mt-1">
             +{resultado.coinsEarned} EcoCoins creditados
           </p>
           {resultado.levelUp && (
