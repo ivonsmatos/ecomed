@@ -24,7 +24,7 @@ export default async function BlogPage() {
   return (
     <>
       <Header />
-      <main className="container mx-auto max-w-4xl px-4 py-12 space-y-10">
+      <main className="container mx-auto max-w-6xl px-4 py-12 space-y-10">
         <div className="text-center space-y-3">
           <div className="mx-auto flex size-12 items-center justify-center rounded-xl bg-green-100 text-green-700">
             <BookOpen className="size-6" />
@@ -38,7 +38,7 @@ export default async function BlogPage() {
         {articles.length === 0 ? (
           <p className="text-center text-muted-foreground py-16">Nenhum artigo publicado ainda.</p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => {
               const coverSrc = article.coverImage
                 ? urlFor(article.coverImage).width(640).height(320).url()
