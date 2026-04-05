@@ -6,12 +6,18 @@ import type { PortableTextBlock } from "@portabletext/react";
 // Tipos
 // ---------------------------------------------------------------------------
 
+export interface Category {
+  _id: string;
+  title: string;
+  slug: string;
+}
+
 export interface ArticleListItem {
   _id: string;
   title: string;
   slug: string;
   excerpt?: string;
-  category?: string;
+  category?: Category;
   publishedAt?: string;
   coverImage?: {
     asset: { _ref: string };
@@ -20,7 +26,15 @@ export interface ArticleListItem {
 }
 
 export interface ArticleFull extends ArticleListItem {
+  author?: string;
   body: PortableTextBlock[];
+  // SEO
+  seoTitle?: string;
+  metaDescription?: string;
+  // GEO / IA
+  aiSummary?: string;
+  entities?: string[];
+  faqs?: Array<{ question: string; answer: string }>;
 }
 
 // ---------------------------------------------------------------------------
@@ -32,7 +46,7 @@ const articleListFields = groq`
   title,
   "slug": slug.current,
   excerpt,
-  category,
+  "category": category->{ _id, title, "slug": slug.current },
   publishedAt,
   coverImage { asset, alt }
 `;
@@ -51,7 +65,13 @@ export async function getArticleBySlug(slug: string): Promise<ArticleFull | null
   return sanityClient.fetch(
     groq`*[_type == "article" && slug.current == $slug && published == true][0] {
       ${articleListFields},
-      body
+      author,
+      body,
+      seoTitle,
+      metaDescription,
+      aiSummary,
+      entities,
+      faqs[] { question, answer }
     }`,
     { slug },
     { next: { revalidate: 3600 } },

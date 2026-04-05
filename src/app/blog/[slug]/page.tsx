@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!article) return {};
   const coverUrl = article.coverImage ? urlFor(article.coverImage).width(1200).height(630).url() : undefined;
   return {
-    title: `${article.title} | EcoMed`,
-    description: article.excerpt ?? undefined,
+    title: `${article.seoTitle ?? article.title} | EcoMed`,
+    description: article.metaDescription ?? article.excerpt ?? undefined,
     alternates: { canonical: `https://ecomed.eco.br/blog/${slug}` },
     openGraph: { images: coverUrl ? [coverUrl] : [] },
   };
@@ -43,17 +43,32 @@ export default async function ArticlePage({ params }: Params) {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.title,
-    description: article.excerpt ?? undefined,
+    description: article.metaDescription ?? article.excerpt ?? undefined,
     datePublished: article.publishedAt ?? undefined,
     image: coverUrl ?? "https://ecomed.eco.br/icons/icon-512.png",
-    author: { "@type": "Organization", name: "EcoMed", url: "https://ecomed.eco.br" },
+    author: article.author
+      ? { "@type": "Person", name: article.author }
+      : { "@type": "Organization", name: "EcoMed", url: "https://ecomed.eco.br" },
     publisher: {
       "@type": "Organization",
       name: "EcoMed",
       logo: { "@type": "ImageObject", url: "https://ecomed.eco.br/icons/icon-512.png" },
     },
     mainEntityOfPage: `https://ecomed.eco.br/blog/${slug}`,
+    keywords: article.entities?.join(", "),
   };
+
+  const faqSchema = article.faqs?.length
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: article.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: { "@type": "Answer", text: faq.answer },
+        })),
+      }
+    : null;
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -77,6 +92,9 @@ export default async function ArticlePage({ params }: Params) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      )}
       <Header />
       <main className="container mx-auto max-w-2xl px-4 py-12 space-y-8">
         <Link href="/blog" className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}>
@@ -95,7 +113,7 @@ export default async function ArticlePage({ params }: Params) {
         <div className="space-y-3">
           {article.category && (
             <Badge variant="secondary">
-              {CATEGORY_LABEL[article.category] ?? article.category}
+              {article.category.title}
             </Badge>
           )}
           <h1 className="text-3xl font-bold leading-tight">{article.title}</h1>

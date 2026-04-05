@@ -13,13 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://ecomed.eco.br/blog" },
 };
 
-const CATEGORY_LABEL: Record<string, string> = {
-  descarte: "Descarte",
-  legislacao: "Legislação",
-  "saude-ambiental": "Saúde Ambiental",
-  dicas: "Dicas",
-  ecomed: "EcoMed",
-};
+
 
 export default async function BlogPage() {
   const articles = await getArticles();
@@ -64,7 +58,7 @@ export default async function BlogPage() {
                   <div className="p-4 space-y-2">
                     {article.category && (
                       <Badge variant="secondary" className="text-xs">
-                        {CATEGORY_LABEL[article.category] ?? article.category}
+                        {article.category.title}
                       </Badge>
                     )}
                     <h2 className="font-semibold leading-snug group-hover:text-green-700 transition-colors">
