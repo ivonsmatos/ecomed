@@ -25,16 +25,28 @@ export async function Header() {
 
         <nav className="hidden items-center gap-6 text-sm md:flex">
           <Link
-            href="/mapa"
+            href="/#como-funciona"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Mapa
+            O que fazemos
+          </Link>
+          <Link
+            href="/sobre"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Quem somos
           </Link>
           <Link
             href="/blog"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            Educação
+            Blog
+          </Link>
+          <Link
+            href="/#contato"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Contato
           </Link>
         </nav>
 
@@ -78,8 +90,8 @@ export async function Header() {
             </DropdownMenu>
           ) : (
             <>
-              <Link href="/entrar" className={buttonVariants({ variant: "ghost", size: "sm" })}>Entrar</Link>
-              <Link href="/cadastrar" className={buttonVariants({ size: "sm" }) + " bg-green-700 hover:bg-green-800 text-white hidden sm:inline-flex"}>Cadastrar</Link>
+              <Link href="/entrar" className={buttonVariants({ variant: "ghost", size: "sm" })}>Acesse aqui</Link>
+              <Link href="/cadastrar" className={buttonVariants({ size: "sm" }) + " bg-green-700 hover:bg-green-800 text-white hidden sm:inline-flex"}>Seja parceiro</Link>
             </>
           )}
         </div>

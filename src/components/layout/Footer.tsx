@@ -11,7 +11,7 @@ const SvgLinkedin = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" he
 /* Fiel ao Echofy Footer.jsx — dark bg com footer-bg.jpg, social box, shapes */
 export function Footer() {
   return (
-    <footer className="bg-[url('/footer-bg-ecomed.jpg')] bg-no-repeat bg-center bg-cover relative z-10 pt-28 overflow-hidden">
+    <footer id="contato" className="bg-[url('/footer-bg-ecomed.jpg')] bg-no-repeat bg-center bg-cover relative z-10 pt-28 overflow-hidden">
 
       {/* footer-line.png — canto inferior direito, opacidade */}
       <Image

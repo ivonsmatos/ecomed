@@ -403,7 +403,7 @@ export default function HomePage() {
                Círculo tracejado rotacionando = animate-echofy-rotate
                Seta entre cards: process-arrow.png (xl+)
         ════════════════════════════════════════════════ */}
-        <section className="pb-10 relative z-10 pt-28 echofy-process-section">
+        <section id="como-funciona" className="pb-10 relative z-10 pt-28 echofy-process-section">
           <div className="echofy-container">
             <div className="text-center">
               <h5 className="font-['Albert_Sans'] font-medium text-[#79b900] flex items-center gap-2 justify-center uppercase tracking-wider text-sm">
