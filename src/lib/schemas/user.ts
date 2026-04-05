@@ -8,6 +8,7 @@ export const registerSchema = z.object({
     .min(8, "Mínimo 8 caracteres")
     .regex(/[A-Z]/, "Deve ter ao menos uma letra maiúscula")
     .regex(/[0-9]/, "Deve ter ao menos um número"),
+  referralCode: z.string().optional(),
 })
 
 export const loginSchema = z.object({

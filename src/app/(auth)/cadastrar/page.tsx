@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +27,7 @@ type FormData = z.infer<typeof registerSchema>;
 
 export default function CadastrarPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleGoogle() {
@@ -38,13 +39,19 @@ export default function CadastrarPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(registerSchema) });
+  } = useForm<FormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      referralCode: searchParams.get("ref") ?? "",
+    },
+  });
 
   async function onSubmit(data: FormData) {
+    const payload = { ...data, referralCode: data.referralCode || undefined };
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
@@ -127,6 +134,19 @@ export default function CadastrarPage() {
             {errors.password && (
               <p className="text-xs text-red-600">{errors.password.message}</p>
             )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="referralCode">
+              Código de indicação{" "}
+              <span className="text-muted-foreground font-normal">(opcional)</span>
+            </Label>
+            <Input
+              id="referralCode"
+              placeholder="Deixe em branco se não tiver"
+              autoComplete="off"
+              {...register("referralCode")}
+            />
           </div>
 
           <Button

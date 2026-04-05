@@ -8,6 +8,7 @@ import { PortableText } from "@portabletext/react";
 import { getArticleBySlug } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
 import { User, Calendar } from "lucide-react";
+import { ArticleReadTracker } from "@/components/blog/ArticleReadTracker";
 
 // O Header usa auth() que lê cookies — a página deve ser dinâmica (on-demand).
 // Os dados do Sanity ainda são cacheados 1h pelo next.revalidate no fetch.
@@ -169,6 +170,9 @@ export default async function ArticlePage({ params }: Params) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       )}
       <Header />
+
+      {/* Rastreador de leitura — credita +2 EcoCoins após 2min + scroll 90% */}
+      <ArticleReadTracker articleSlug={slug} />
 
       <main className="bg-white min-h-screen">
         <div className="container mx-auto max-w-3xl px-4 py-10">

@@ -92,6 +92,10 @@ model User {
   passwordHash      String?
   role              Role                @default(CITIZEN)
   active            Boolean             @default(true)
+  referralCode      String              @unique @default(cuid())
+  referredById      String?
+  referredBy        User?               @relation("Referrals", fields: [referredById], references: [id])
+  referrals         User[]              @relation("Referrals")
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   accounts          Account[]
