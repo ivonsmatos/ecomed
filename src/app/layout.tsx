@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieBanner } from "@/components/shared/CookieBanner";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -80,29 +81,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={inter.variable} suppressHydrationWarning>
       <head>
-        {/* Google Tag Manager */}
-        {process.env.NODE_ENV === "production" && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NQS3PK8S');`,
-            }}
-          />
-        )}
-        {/* Google Analytics */}
-        {process.env.NODE_ENV === "production" && (
-          <>
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-WY07TY58R1" />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-WY07TY58R1');`,
-              }}
-            />
-          </>
-        )}
-        {/* Plausible Analytics */}
-        {process.env.NODE_ENV === "production" && (
-          <script defer data-domain="ecomed.eco.br" src="https://plausible.io/js/script.js" />
-        )}
         {/* JSON-LD — Organization + WebSite schemas (GEO/AI citability) */}
         <script
           type="application/ld+json"
@@ -130,6 +108,22 @@ export default function RootLayout({
           <CookieBanner />
           <Toaster richColors position="top-right" />
         </ThemeProvider>
+        {/* Analytics — carregados após hidratação para evitar erros de hidratação (React #418) */}
+        {process.env.NODE_ENV === "production" && (
+          <>
+            {/* Google Tag Manager */}
+            <Script id="gtm" strategy="afterInteractive">
+              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NQS3PK8S');`}
+            </Script>
+            {/* Google Analytics */}
+            <Script src="https://www.googletagmanager.com/gtag/js?id=G-WY07TY58R1" strategy="afterInteractive" />
+            <Script id="ga" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-WY07TY58R1');`}
+            </Script>
+            {/* Plausible Analytics */}
+            <Script defer data-domain="ecomed.eco.br" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
+          </>
+        )}
       </body>
     </html>
   );

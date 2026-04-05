@@ -34,6 +34,7 @@ export const articleType = defineType({
       title: "Autor",
       type: "string",
       group: "content",
+      initialValue: "EcoMed",
     }),
     defineField({
       name: "category",
