@@ -21,41 +21,46 @@ app.get("/proximos", zValidator("query", querySchema), async (c) => {
 
   const { lat, lng, raio } = c.req.valid("query");
 
-  const points = await prisma.$queryRaw<
-    Array<{
-      id: string;
-      name: string;
-      address: string;
-      city: string;
-      state: string;
-      latitude: number;
-      longitude: number;
-      phone: string | null;
-      photoUrl: string | null;
-      residueTypes: string[];
-      distancia_metros: number;
-    }>
-  >`
-    SELECT
-      id, name, address, city, state, latitude, longitude, phone, "photoUrl", "residueTypes",
-      ROUND(
-        ST_Distance(
+  try {
+    const points = await prisma.$queryRaw<
+      Array<{
+        id: string;
+        name: string;
+        address: string;
+        city: string;
+        state: string;
+        latitude: number;
+        longitude: number;
+        phone: string | null;
+        photoUrl: string | null;
+        residueTypes: string[];
+        distancia_metros: number;
+      }>
+    >`
+      SELECT
+        id, name, address, city, state, latitude, longitude, phone, "photoUrl", "residueTypes",
+        ROUND(
+          ST_Distance(
+            ST_MakePoint(${lng}, ${lat})::geography,
+            ST_MakePoint(longitude, latitude)::geography
+          )::numeric
+        ) AS distancia_metros
+      FROM "Point"
+      WHERE status = 'APPROVED'
+        AND ST_DWithin(
           ST_MakePoint(${lng}, ${lat})::geography,
-          ST_MakePoint(longitude, latitude)::geography
+          ST_MakePoint(longitude, latitude)::geography,
+          ${raio}
         )
-      ) AS distancia_metros
-    FROM "Point"
-    WHERE status = 'APPROVED'
-      AND ST_DWithin(
-        ST_MakePoint(${lng}, ${lat})::geography,
-        ST_MakePoint(longitude, latitude)::geography,
-        ${raio}
-      )
-    ORDER BY distancia_metros
-    LIMIT 30
-  `;
+      ORDER BY distancia_metros
+      LIMIT 30
+    `;
 
-  return c.json(points);
+    return c.json(points);
+  } catch (err) {
+    console.error("[pontos/proximos] query error:", err);
+    return c.json([], 200);
+  }
 });
 
 // GET /api/pontos/:id

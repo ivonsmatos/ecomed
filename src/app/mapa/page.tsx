@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
+import { SideNav } from "@/components/layout/SideNav";
+import { BottomNav } from "@/components/layout/BottomNav";
 import { MapContainer } from "@/components/map/MapContainer";
 
 export const metadata: Metadata = {
@@ -12,10 +14,13 @@ export default function MapaPage() {
   return (
     <div className="flex h-dvh flex-col">
       <Header />
-      {/* O mapa ocupa todo o espaço restante */}
-      <div className="flex-1 relative">
-        <MapContainer />
+      <div className="flex flex-1 overflow-hidden">
+        <SideNav />
+        <div className="relative flex-1">
+          <MapContainer />
+        </div>
       </div>
+      <BottomNav />
     </div>
   );
 }
