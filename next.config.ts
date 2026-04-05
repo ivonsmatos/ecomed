@@ -22,6 +22,23 @@ const csp = [
   "form-action 'self'",
 ].join("; ");
 
+// CSP permissiva apenas para /studio — o Sanity Studio requer acesso a core.sanity-cdn.com
+// e ao cluster *.api.sanity.io (API REST + WebSocket)
+const studioCsp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://core.sanity-cdn.com https://cdn.sanity.io",
+  "style-src 'self' 'unsafe-inline' https://core.sanity-cdn.com https://cdn.sanity.io https://fonts.googleapis.com",
+  "font-src 'self' data: https://core.sanity-cdn.com https://cdn.sanity.io https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://lh3.googleusercontent.com",
+  "connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://api.sanity.io https://cdn.sanity.io https://core.sanity-cdn.com",
+  "worker-src 'self' blob:",
+  "frame-src 'self' https://cdn.sanity.io",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
@@ -50,6 +67,7 @@ const nextConfig: NextConfig = {
           { key: "Service-Worker-Allowed", value: "/" },
         ],
       },
+      // CSP geral para todas as rotas
       {
         source: "/(.*)",
         headers: [
@@ -61,6 +79,15 @@ const nextConfig: NextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
           { key: "Content-Security-Policy", value: csp },
         ],
+      },
+      // CSP permissiva para o Sanity Studio embutido (/studio e sub-rotas)
+      {
+        source: "/studio",
+        headers: [{ key: "Content-Security-Policy", value: studioCsp }],
+      },
+      {
+        source: "/studio/(.*)",
+        headers: [{ key: "Content-Security-Policy", value: studioCsp }],
       },
     ];
   },
