@@ -125,7 +125,10 @@ quiz.post(
 
     // Creditar EcoCoins (respeita limites diários)
     const event = perfect ? ("QUIZ_PERFECT" as const) : ("QUIZ" as const)
-    const coinResult = await creditCoins(userId, event, id)
+    const label = perfect
+      ? `Quiz perfeito: ${q.title}`
+      : `Quiz: ${q.title}`
+    const coinResult = await creditCoins(userId, event, id, undefined, label)
     const coinsEarned = coinResult.ok ? (perfect ? 10 : 5) : 0
 
     // Salvar tentativa

@@ -25,7 +25,39 @@ const NIVEL_MIN_ANTERIOR: Record<string, number> = {
   SEMENTE: 0, BROTO: 101, ARVORE: 501, GUARDIAO: 2001, LENDA_ECO: 5001,
 };
 
-export default async function PerfilPage() {
+const EVENT_LABEL: Record<string, string> = {
+  SIGNUP: "Cadastro realizado",
+  ONBOARDING_PROFILE: "Perfil completado",
+  ONBOARDING_SCREENS: "Tutorial concluído",
+  ONBOARDING_GEO: "Localização ativada",
+  ONBOARDING_PUSH: "Notificações ativadas",
+  CHECKIN: "Check-in em ponto de coleta",
+  CHECKIN_FIRST_MONTH: "Primeiro check-in do mês",
+  CHECKIN_NEW_POINT: "Check-in em novo ponto",
+  ARTICLE_READ: "Artigo lido",
+  QUIZ: "Quiz respondido",
+  QUIZ_PERFECT: "Quiz com nota perfeita",
+  ECOBOT_QUESTION: "Pergunta ao EcoBot",
+  ECOBOT_RATING: "Avaliação do EcoBot",
+  REFERRAL: "Indicação de amigo",
+  SHARE_ARTICLE: "Artigo compartilhado",
+  SHARE_BADGE: "Badge compartilhado",
+  STREAK_3_DAYS: "Streak de 3 dias",
+  STREAK_7_DAYS: "Streak de 7 dias",
+  STREAK_30_DAYS: "Streak de 30 dias",
+  REDEMPTION: "Resgate de recompensa",
+};
+
+function labelTransacao(note: string | null, event: string): string {
+  if (!note) return EVENT_LABEL[event] ?? event;
+  // Transações antigas: "QUIZ · cuid" ou "QUIZ_PERFECT · cuid" — mostrar label limpo
+  const eventLabel = EVENT_LABEL[event];
+  if (eventLabel && /^[A-Z_]+ · c[a-z0-9]+$/.test(note)) return eventLabel;
+  // Nota legível gravada após o fix
+  return note;
+}
+
+
   const session = await requireSession();
   const userId = session.user!.id!;
 
@@ -136,7 +168,7 @@ export default async function PerfilPage() {
             <ul className="divide-y text-sm">
               {wallet.transactions.map((t) => (
                 <li key={t.id} className="py-2 flex items-center justify-between gap-2">
-                  <span className="text-muted-foreground truncate">{t.note ?? t.event}</span>
+                  <span className="text-muted-foreground truncate">{labelTransacao(t.note, t.event)}</span>
                   <span className={cn("font-semibold shrink-0", t.amount > 0 ? "text-green-600" : "text-red-500")}>
                     {t.amount > 0 ? "+" : ""}{t.amount}
                   </span>

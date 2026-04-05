@@ -183,6 +183,7 @@ export async function creditCoins(
   event: string,
   reference?: string,
   customAmount?: number,
+  label?: string,
 ): Promise<{ ok: boolean; newBalance: number; levelUp?: string; streakBonus?: string }> {
   let amount = customAmount ?? COIN_VALUES[event] ?? 0
   if (amount <= 0) return { ok: false, newBalance: 0 }
@@ -241,7 +242,7 @@ export async function creditCoins(
         amount,
         event: event as never,
         reference: reference ?? null,
-        note: `${event}${reference ? ` · ${reference}` : ""}`,
+        note: label ?? `${event}${reference ? ` · ${reference}` : ""}`,
       },
     }),
   ])
