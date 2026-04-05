@@ -96,7 +96,7 @@ export const articleType = defineType({
       title: "Publicado",
       type: "boolean",
       group: "content",
-      initialValue: false,
+      initialValue: true,
     }),
 
     // ── SEO ─────────────────────────────────────────────────────────────────

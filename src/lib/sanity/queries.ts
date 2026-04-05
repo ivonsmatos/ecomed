@@ -55,17 +55,17 @@ const articleListFields = groq`
 
 export async function getArticles(): Promise<ArticleListItem[]> {
   return sanityClient.fetch(
-    groq`*[_type == "article" && published == true] | order(publishedAt desc) [0...20] {
+    groq`*[_type == "article" && published != false] | order(publishedAt desc) [0...20] {
       ${articleListFields}
     }`,
     {},
-    { next: { revalidate: 3600 } }, // ISR 1 hora
+    { next: { revalidate: 3600 } },
   );
 }
 
 export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
   return sanityClient.fetch(
-    groq`*[_type == "article" && published == true] | order(publishedAt desc) [0...$limit] {
+    groq`*[_type == "article" && published != false] | order(publishedAt desc) [0...$limit] {
       ${articleListFields}
     }`,
     { limit },
@@ -75,7 +75,7 @@ export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
 
 export async function getArticleBySlug(slug: string): Promise<ArticleFull | null> {
   return sanityClient.fetch(
-    groq`*[_type == "article" && slug.current == $slug && published == true][0] {
+    groq`*[_type == "article" && slug.current == $slug && published != false][0] {
       ${articleListFields},
       author,
       body,
@@ -92,7 +92,7 @@ export async function getArticleBySlug(slug: string): Promise<ArticleFull | null
 
 export async function getArticleSlugs(): Promise<{ slug: string }[]> {
   return sanityClient.fetch(
-    groq`*[_type == "article" && published == true] { "slug": slug.current }`,
+    groq`*[_type == "article" && published != false] { "slug": slug.current }`,
     {},
     { next: { revalidate: 3600 } },
   );
