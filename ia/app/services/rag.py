@@ -60,7 +60,7 @@ class RAGService:
 
         embeddings = OllamaEmbeddings(model="nomic-embed-text", base_url=base_url)
         llm = OllamaLLM(
-            model=model, base_url=base_url, temperature=0.1, num_predict=512
+            model=model, base_url=base_url, temperature=0.1, num_predict=256
         )
 
         # PGVector em modo síncrono — evita incompatibilidade asyncpg+pgbouncer no Windows
@@ -70,7 +70,7 @@ class RAGService:
             connection=db_url,
             use_jsonb=True,
         )
-        retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
         prompt = PromptTemplate(
             input_variables=["context", "question"],
