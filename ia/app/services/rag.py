@@ -1,8 +1,9 @@
 import asyncio
 import os
-from langchain_ollama import OllamaLLM, OllamaEmbeddings
+from langchain_ollama import OllamaEmbeddings
+from langchain_groq import ChatGroq
 from langchain_postgres import PGVector
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
@@ -10,7 +11,7 @@ from app.services.guardrails import verificar_guardrails
 
 load_dotenv()
 
-SYSTEM_PROMPT = """Você é o assistente educativo do EcoMed, uma plataforma brasileira
+SYSTEM_PROMPT = """Você é o EcoBot, assistente educativo do EcoMed, uma plataforma brasileira
 dedicada ao descarte correto de medicamentos.
 
 VOCÊ PODE ajudar com:
@@ -52,18 +53,25 @@ class RAGService:
 
     async def initialize(self):
         base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-        model = os.getenv("OLLAMA_MODEL", "llama3.2:latest")
+        groq_api_key = os.getenv("GROQ_API_KEY", "")
+        groq_model = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
         db_url = os.getenv("DATABASE_URL", "").strip('"')
         # langchain-postgres exige driver psycopg3 explícito na URL
         if db_url.startswith("postgresql://"):
             db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
+        # Embeddings continuam locais via Ollama (nomic-embed-text é rápido)
         embeddings = OllamaEmbeddings(model="nomic-embed-text", base_url=base_url)
-        llm = OllamaLLM(
-            model=model, base_url=base_url, temperature=0.1, num_predict=256
+
+        # LLM: Groq (< 2s) em vez de Ollama CPU (> 100s)
+        llm = ChatGroq(
+            model=groq_model,
+            api_key=groq_api_key,
+            temperature=0.1,
+            max_tokens=512,
         )
 
-        # PGVector em modo síncrono — evita incompatibilidade asyncpg+pgbouncer no Windows
+        # PGVector em modo síncrono
         vectorstore = PGVector(
             embeddings=embeddings,
             collection_name="ecomed_docs",
@@ -72,10 +80,7 @@ class RAGService:
         )
         retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
-        prompt = PromptTemplate(
-            input_variables=["context", "question"],
-            template=SYSTEM_PROMPT,
-        )
+        prompt = ChatPromptTemplate.from_template(SYSTEM_PROMPT)
 
         def formatar_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
@@ -86,7 +91,7 @@ class RAGService:
             | llm
             | StrOutputParser()
         )
-        print(f"RAG pronto — modelo: {model}")
+        print(f"RAG pronto — LLM: Groq/{groq_model}")
 
     async def perguntar(self, pergunta: str) -> str:
         # 1. Guardrails antes do LLM (sem custo de tokens)
