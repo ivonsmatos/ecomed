@@ -2,7 +2,10 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const adapter = new PrismaPg({ connectionString: process.env.DIRECT_URL! });
+const adapter = new PrismaPg({
+  connectionString: process.env.DIRECT_URL!,
+  ssl: { rejectUnauthorized: false },
+});
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
