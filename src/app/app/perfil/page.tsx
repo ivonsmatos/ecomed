@@ -57,7 +57,7 @@ function labelTransacao(note: string | null, event: string): string {
   return note;
 }
 
-
+export default async function PerfilPage() {
   const session = await requireSession();
   const userId = session.user!.id!;
 
