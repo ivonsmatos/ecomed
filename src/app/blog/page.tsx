@@ -7,6 +7,9 @@ import type { Metadata } from "next";
 import { getArticles } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
 
+// Header usa auth() (lê cookies) → página deve ser dinâmica
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Blog Educativo | EcoMed",
   description: "Aprenda sobre descarte correto de medicamentos e saúde ambiental.",

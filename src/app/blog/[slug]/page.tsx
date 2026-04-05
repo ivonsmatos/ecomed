@@ -6,15 +6,14 @@ import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
-import { getArticleBySlug, getArticleSlugs } from "@/lib/sanity/queries";
+import { getArticleBySlug } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
 
-interface Params { params: Promise<{ slug: string }> }
+// O Header usa auth() que lê cookies — a página deve ser dinâmica (on-demand).
+// Os dados do Sanity ainda são cacheados 1h pelo next.revalidate no fetch.
+export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  const slugs = await getArticleSlugs();
-  return slugs.map(({ slug }) => ({ slug }));
-}
+interface Params { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
