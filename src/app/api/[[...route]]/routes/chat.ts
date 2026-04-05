@@ -21,26 +21,38 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
   const iaToken = process.env.IA_SERVICE_TOKEN;
 
   if (!iaUrl || !iaToken) {
-    return c.json({ resposta: "Serviço de IA não configurado." }, 503);
+    return c.json({ error: "Serviço de IA não configurado." }, 503);
   }
 
-  const res = await fetch(`${iaUrl}/chat`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${iaToken}`,
-    },
-    body: JSON.stringify({ pergunta }),
-    signal: AbortSignal.timeout(55_000),
-  });
+  try {
+    const res = await fetch(`${iaUrl}/chat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${iaToken}`,
+      },
+      body: JSON.stringify({ pergunta }),
+      signal: AbortSignal.timeout(55_000),
+    });
 
-  if (!res.ok) {
-    const status = res.status === 503 ? 503 : 502;
-    return c.json({ error: "Erro ao consultar o EcoBot. Tente novamente." }, status);
+    if (!res.ok) {
+      const status = res.status === 503 ? 503 : 502;
+      return c.json({ error: "Erro ao consultar o EcoBot. Tente novamente." }, status);
+    }
+
+    const data: { resposta: string } = await res.json();
+    return c.json(data);
+  } catch (err) {
+    const isTimeout =
+      err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError");
+    if (isTimeout) {
+      return c.json(
+        { error: "O EcoBot demorou para responder. Tente uma pergunta mais curta." },
+        504,
+      );
+    }
+    return c.json({ error: "Erro de conexão com o EcoBot. Tente novamente." }, 502);
   }
-
-  const data: { resposta: string } = await res.json();
-  return c.json(data);
 });
 
 export const chatRouter = app;
