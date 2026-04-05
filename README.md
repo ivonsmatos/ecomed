@@ -150,19 +150,19 @@ Serviços Externos:
 
 ## Infraestrutura e Deploy
 
-| Componente             | Serviço                                           | URL                   |
-| ---------------------- | ------------------------------------------------- | --------------------- |
-| Frontend / App Next.js | VPS Oracle Cloud — Docker :3010 + Nginx :443      | ecomed.eco.br         |
-| DNS / WAF / CDN        | Cloudflare (proxy reverso)                        | ecomed.eco.br         |
-| Banco principal        | AWS Lightsail (PostgreSQL + PostGIS)               | :5432                 |
-| Rate limiting          | Upstash Redis                                     | REST API              |
-| Imagens                | Cloudflare R2                                     | uploads.ecomed.eco.br |
-| Blog / CMS             | Sanity.io                                         | sanity.io/manage      |
-| Emails                 | Resend                                            | resend.com            |
-| IA API                 | VPS Oracle Cloud Ubuntu 22.04                     | :8002                 |
-| Embeddings / LLM       | Ollama (Docker)                                   | :11434                |
-| Vetores                | PGVector (Docker)                                 | :5432                 |
-| Monitoramento          | Sentry                                            | sentry.io             |
+| Componente             | Serviço                                      | URL                   |
+| ---------------------- | -------------------------------------------- | --------------------- |
+| Frontend / App Next.js | VPS Oracle Cloud — Docker :3010 + Nginx :443 | ecomed.eco.br         |
+| DNS / WAF / CDN        | Cloudflare (proxy reverso)                   | ecomed.eco.br         |
+| Banco principal        | AWS Lightsail (PostgreSQL + PostGIS)         | :5432                 |
+| Rate limiting          | Upstash Redis                                | REST API              |
+| Imagens                | Cloudflare R2                                | uploads.ecomed.eco.br |
+| Blog / CMS             | Sanity.io                                    | sanity.io/manage      |
+| Emails                 | Resend                                       | resend.com            |
+| IA API                 | VPS Oracle Cloud Ubuntu 22.04                | :8002                 |
+| Embeddings / LLM       | Ollama (Docker)                              | :11434                |
+| Vetores                | PGVector (Docker)                            | :5432                 |
+| Monitoramento          | Sentry                                       | sentry.io             |
 
 **VPS:** `45.151.122.234` — containers Docker: `ecomed-app` (:3010), `ecomed-ia` (:8002), `ecomed-pgvector`, `ecomed-ollama`
 
@@ -362,19 +362,19 @@ Todas as rotas de API ficam em `src/app/api/[[...route]]/route.ts`, roteadas via
 
 #### Gamificação — EcoCoins
 
-| Método | Endpoint                        | Auth    | Descrição                                                      |
-| ------ | ------------------------------- | ------- | -------------------------------------------------------------- |
-| `GET`  | `/api/coins`                    | CITIZEN | Saldo, nível, streak e histórico de transações                 |
-| `POST` | `/api/coins/article-read`       | CITIZEN | Credita ARTICLE_READ (≥120s lido + ≥90% scroll)               |
-| `POST` | `/api/coins/ecobot-question`    | CITIZEN | Credita ECOBOT_QUESTION (pergunta ≥10 chars)                   |
-| `POST` | `/api/coins/ecobot-rating`      | CITIZEN | Credita ECOBOT_RATING após avaliação da resposta               |
-| `POST` | `/api/coins/share`              | CITIZEN | Credita SHARE_ARTICLE ou SHARE_BADGE                           |
-| `GET`  | `/api/missions`                 | CITIZEN | Lista missões do dia e da semana (auto-gera se não existirem)  |
-| `POST` | `/api/missions/:id/progress`    | CITIZEN | Avança progresso; credita bônus ao completar todas as missões  |
-| `GET`  | `/api/rewards`                  | CITIZEN | Catálogo com flags `podeResgatar` e `emCooldown`               |
-| `GET`  | `/api/rewards/my`               | CITIZEN | Histórico de resgates do usuário                               |
-| `POST` | `/api/rewards/:id/redeem`       | CITIZEN | Resgata recompensa (valida nível, saldo, estoque e cooldown)   |
-| `POST` | `/api/checkin`                  | PARTNER | Registra check-in via QR (+15 GPS / +10 sem GPS)               |
+| Método | Endpoint                     | Auth    | Descrição                                                     |
+| ------ | ---------------------------- | ------- | ------------------------------------------------------------- |
+| `GET`  | `/api/coins`                 | CITIZEN | Saldo, nível, streak e histórico de transações                |
+| `POST` | `/api/coins/article-read`    | CITIZEN | Credita ARTICLE_READ (≥120s lido + ≥90% scroll)               |
+| `POST` | `/api/coins/ecobot-question` | CITIZEN | Credita ECOBOT_QUESTION (pergunta ≥10 chars)                  |
+| `POST` | `/api/coins/ecobot-rating`   | CITIZEN | Credita ECOBOT_RATING após avaliação da resposta              |
+| `POST` | `/api/coins/share`           | CITIZEN | Credita SHARE_ARTICLE ou SHARE_BADGE                          |
+| `GET`  | `/api/missions`              | CITIZEN | Lista missões do dia e da semana (auto-gera se não existirem) |
+| `POST` | `/api/missions/:id/progress` | CITIZEN | Avança progresso; credita bônus ao completar todas as missões |
+| `GET`  | `/api/rewards`               | CITIZEN | Catálogo com flags `podeResgatar` e `emCooldown`              |
+| `GET`  | `/api/rewards/my`            | CITIZEN | Histórico de resgates do usuário                              |
+| `POST` | `/api/rewards/:id/redeem`    | CITIZEN | Resgata recompensa (valida nível, saldo, estoque e cooldown)  |
+| `POST` | `/api/checkin`               | PARTNER | Registra check-in via QR (+15 GPS / +10 sem GPS)              |
 
 #### Admin
 
@@ -561,11 +561,11 @@ Sistema de engajamento gamificado implementado em `src/lib/coins/index.ts`.
 **Função principal:**
 
 ```typescript
-import { creditCoins } from "@/lib/coins"
+import { creditCoins } from "@/lib/coins";
 
 // Credita coins ao usuário — retorna {ok, newBalance, levelUp?, streakBonus?}
-await creditCoins(userId, "CHECKIN", pointId, 15) // 15 coins com GPS
-await creditCoins(userId, "ARTICLE_READ", articleSlug)
+await creditCoins(userId, "CHECKIN", pointId, 15); // 15 coins com GPS
+await creditCoins(userId, "ARTICLE_READ", articleSlug);
 ```
 
 **Regras de negócio:**
@@ -578,11 +578,11 @@ await creditCoins(userId, "ARTICLE_READ", articleSlug)
 
 **Componentes UI:**
 
-| Componente | Localização | Função |
-|---|---|---|
-| `CoinDisclaimer` | `components/coins/` | Disclaimer legal (EcoCoins ≠ moeda) |
-| `RedeemButton` | `components/coins/` | Botão de resgate com feedback de estado |
-| BottomNav | `components/layout/` | Link "Missões" com ícone Trophy |
+| Componente       | Localização          | Função                                  |
+| ---------------- | -------------------- | --------------------------------------- |
+| `CoinDisclaimer` | `components/coins/`  | Disclaimer legal (EcoCoins ≠ moeda)     |
+| `RedeemButton`   | `components/coins/`  | Botão de resgate com feedback de estado |
+| BottomNav        | `components/layout/` | Link "Missões" com ícone Trophy         |
 
 ---
 
@@ -719,28 +719,28 @@ User ──< DailyLimitTracker    (teto diário por categoria de evento)
 
 ### Modelos de Gamificação
 
-| Model                | Campos principais                                                                 | Descrição                                           |
-| -------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `Wallet`             | userId, balance, totalEarned, level, streakCurrent, streakBest, weeklyCoins       | Carteira de EcoCoins por usuário                    |
-| `CoinTransaction`    | walletId, amount (+/-), event (CoinEvent), note, reference                        | Histórico de créditos e débitos                     |
-| `Badge`              | slug, name, description, coinReward                                               | Conquistas / troféus                                |
-| `UserBadge`          | userId, badgeId, earnedAt                                                         | Conquistas do usuário (idempotente por slug)        |
-| `Mission`            | slug, title, type (DAILY/WEEKLY), event, targetCount, coinReward                  | Definição de missão                                 |
-| `UserMission`        | userId, missionId, date, progress, completed, completedAt                         | Progresso do usuário na missão no dia/semana        |
-| `Checkin`            | userId, pointId, coinsEarned, hasGps                                              | Registro de descarte via QR Code                   |
-| `DailyLimitTracker`  | userId, date, category, count, coins  `@@unique([userId, date, category])`        | Controle de teto diário por categoria de evento     |
-| `RewardCatalog`      | slug, name, tier, cost, minLevel, stock?, cooldownDays, active                    | Catálogo de recompensas resgatáveis                 |
-| `UserReward`         | userId, rewardId, status (PENDING/DELIVERED/CANCELLED)                            | Histórico de resgates do usuário                    |
+| Model               | Campos principais                                                           | Descrição                                       |
+| ------------------- | --------------------------------------------------------------------------- | ----------------------------------------------- |
+| `Wallet`            | userId, balance, totalEarned, level, streakCurrent, streakBest, weeklyCoins | Carteira de EcoCoins por usuário                |
+| `CoinTransaction`   | walletId, amount (+/-), event (CoinEvent), note, reference                  | Histórico de créditos e débitos                 |
+| `Badge`             | slug, name, description, coinReward                                         | Conquistas / troféus                            |
+| `UserBadge`         | userId, badgeId, earnedAt                                                   | Conquistas do usuário (idempotente por slug)    |
+| `Mission`           | slug, title, type (DAILY/WEEKLY), event, targetCount, coinReward            | Definição de missão                             |
+| `UserMission`       | userId, missionId, date, progress, completed, completedAt                   | Progresso do usuário na missão no dia/semana    |
+| `Checkin`           | userId, pointId, coinsEarned, hasGps                                        | Registro de descarte via QR Code                |
+| `DailyLimitTracker` | userId, date, category, count, coins `@@unique([userId, date, category])`   | Controle de teto diário por categoria de evento |
+| `RewardCatalog`     | slug, name, tier, cost, minLevel, stock?, cooldownDays, active              | Catálogo de recompensas resgatáveis             |
+| `UserReward`        | userId, rewardId, status (PENDING/DELIVERED/CANCELLED)                      | Histórico de resgates do usuário                |
 
 ### Níveis (Level)
 
-| Nível        | Total Ganho   | Bônus                    |
-| ------------ | ------------- | ------------------------ |
-| `SEMENTE`    | 0–100 coins   | —                        |
-| `BROTO`      | 101–500       | Missões semanais         |
-| `ARVORE`     | 501–2.000     | —                        |
-| `GUARDIAO`   | 2.001–5.000   | ×1.2 multiplicador       |
-| `LENDA_ECO`  | 5.001+        | ×1.5 multiplicador       |
+| Nível       | Total Ganho | Bônus              |
+| ----------- | ----------- | ------------------ |
+| `SEMENTE`   | 0–100 coins | —                  |
+| `BROTO`     | 101–500     | Missões semanais   |
+| `ARVORE`    | 501–2.000   | —                  |
+| `GUARDIAO`  | 2.001–5.000 | ×1.2 multiplicador |
+| `LENDA_ECO` | 5.001+      | ×1.5 multiplicador |
 
 **Teto diário global:** 120 EcoCoins/dia (exceto onboarding, admin, redemption e bônus de streak).
 
