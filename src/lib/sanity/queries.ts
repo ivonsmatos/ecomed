@@ -59,7 +59,7 @@ export async function getArticles(): Promise<ArticleListItem[]> {
       ${articleListFields}
     }`,
     {},
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 60 } }, // 1 minuto
   );
 }
 
@@ -69,7 +69,7 @@ export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
       ${articleListFields}
     }`,
     { limit },
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 60 } }, // 1 minuto
   );
 }
 
