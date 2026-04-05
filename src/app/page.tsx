@@ -1,6 +1,8 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
 import { MapPin, ArrowRight, ArrowUpRight, ChevronDown } from "lucide-react";
+import { getLatestArticles } from "@/lib/sanity/queries";
+import { urlFor } from "@/lib/sanity/image";
 
 /* Ícones sociais inline (lucide-react v1.x removeu brand icons) */
 const SvgInstagram = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>);
@@ -127,7 +129,8 @@ const steps = [
 ];
 
 /* ─── Page Component ────────────────────────────────────────────────────────── */
-export default function HomePage() {
+export default async function HomePage() {
+  const latestArticles = await getLatestArticles(3);
   return (
     <>
       <script
@@ -475,7 +478,84 @@ export default function HomePage() {
         </section>
 
         {/* ════════════════════════════════════════════════
-            8. FAQ — bg:about-bg.jpg
+            8. ÚLTIMOS ARTIGOS — bg:gray-50
+        ════════════════════════════════════════════════ */}
+        {latestArticles.length > 0 && (
+          <section className="py-20 bg-gray-50">
+            <div className="echofy-container">
+              {/* Cabeçalho */}
+              <div className="flex items-center justify-between mb-10">
+                <h2 className="font-['Albert_Sans'] font-bold text-[28px] sm:text-[36px] text-[#001819]">
+                  Últimos Artigos
+                </h2>
+                <Link href="/blog"
+                  className="font-['Albert_Sans'] text-green-700 font-medium hover:text-green-800 transition-colors text-sm sm:text-base">
+                  Ver todos &rarr;
+                </Link>
+              </div>
+
+              {/* Grid de cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {latestArticles.map((article) => {
+                  const coverUrl = article.coverImage
+                    ? urlFor(article.coverImage).width(600).height(340).url()
+                    : null;
+                  const dateStr = article.publishedAt
+                    ? new Date(article.publishedAt).toLocaleDateString("pt-BR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : null;
+                  return (
+                    <Link
+                      key={article._id}
+                      href={`/blog/${article.slug}`}
+                      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow"
+                    >
+                      {/* Imagem */}
+                      {coverUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={coverUrl}
+                          alt={article.coverImage?.alt ?? article.title}
+                          className="w-full h-44 object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-44 bg-green-50 flex items-center justify-center">
+                          <span className="text-green-300 text-4xl">🌿</span>
+                        </div>
+                      )}
+
+                      {/* Conteúdo */}
+                      <div className="flex flex-col flex-1 p-5">
+                        {dateStr && (
+                          <p className="font-['Albert_Sans'] text-xs text-gray-400 mb-2">{dateStr}</p>
+                        )}
+                        <h3 className="font-['Albert_Sans'] font-bold text-[#001819] text-base leading-snug mb-2 line-clamp-2">
+                          {article.title}
+                        </h3>
+                        {article.excerpt && (
+                          <p className="font-['Albert_Sans'] text-gray-500 text-sm leading-relaxed line-clamp-3 mb-3">
+                            {article.excerpt}
+                          </p>
+                        )}
+                        {article.aiSummary && (
+                          <p className="font-['Albert_Sans'] text-xs text-green-700 italic line-clamp-2 mt-auto">
+                            IA: {article.aiSummary}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ════════════════════════════════════════════════
+            9. FAQ — bg:about-bg.jpg
         ════════════════════════════════════════════════ */}
         <section id="faq" className="py-[100px] bg-[url('/echofy/about-bg.jpg')] bg-cover bg-center bg-no-repeat">
           <div className="echofy-container max-w-3xl">

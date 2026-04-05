@@ -17,6 +17,7 @@ export interface ArticleListItem {
   title: string;
   slug: string;
   excerpt?: string;
+  aiSummary?: string;
   category?: Category;
   publishedAt?: string;
   coverImage?: {
@@ -46,6 +47,7 @@ const articleListFields = groq`
   title,
   "slug": slug.current,
   excerpt,
+  aiSummary,
   "category": category->{ _id, title, "slug": slug.current },
   publishedAt,
   coverImage { asset, alt }
@@ -58,6 +60,16 @@ export async function getArticles(): Promise<ArticleListItem[]> {
     }`,
     {},
     { next: { revalidate: 3600 } }, // ISR 1 hora
+  );
+}
+
+export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
+  return sanityClient.fetch(
+    groq`*[_type == "article" && published == true] | order(publishedAt desc) [0...$limit] {
+      ${articleListFields}
+    }`,
+    { limit },
+    { next: { revalidate: 3600 } },
   );
 }
 
