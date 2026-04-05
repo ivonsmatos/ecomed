@@ -16,6 +16,7 @@ import indexnow from "./routes/indexnow";
 import coins from "./routes/coins";
 import missions from "./routes/missions";
 import rewards from "./routes/rewards";
+import quiz from "./routes/quiz";
 
 const app = new Hono().basePath("/api");
 
@@ -39,6 +40,7 @@ app.route("/indexnow", indexnow);
 app.route("/coins", coins);
 app.route("/missions", missions);
 app.route("/rewards", rewards);
+app.route("/quiz", quiz);
 
 export const GET = handle(app);
 export const POST = handle(app);

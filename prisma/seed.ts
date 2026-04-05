@@ -431,6 +431,223 @@ A **RDC ANVISA nº 222/2018** obriga estabelecimentos de saúde a implantarem si
   }
   console.log(`✅ ${rewardsData.length} recompensas criadas no catálogo`)
 
+  // ---- Quizzes ----
+  const quizzesData = [
+    {
+      slug: "descarte-basico",
+      title: "Descarte Básico de Medicamentos",
+      description: "Teste seus conhecimentos sobre como descartar medicamentos de forma correta e segura.",
+      category: "DESCARTE",
+      difficulty: "FACIL",
+      questions: [
+        {
+          order: 1,
+          text: "Qual é a forma correta de descartar medicamentos vencidos no Brasil?",
+          options: JSON.stringify([
+            "Jogar no lixo doméstico comum",
+            "Despejar no vaso sanitário ou pia",
+            "Levar a um ponto de coleta autorizado (farmácia ou UBS)",
+            "Enterrar no quintal",
+          ]),
+          correct: 2,
+        },
+        {
+          order: 2,
+          text: "Quais riscos o descarte incorreto de medicamentos pode causar?",
+          options: JSON.stringify([
+            "Nenhum risco — o meio ambiente degrada naturalmente os remédios",
+            "Contaminação de solo, rios e lençóis freáticos",
+            "Apenas riscos para animais domésticos",
+            "Apenas riscos econômicos para a indústria farmacêutica",
+          ]),
+          correct: 1,
+        },
+        {
+          order: 3,
+          text: "O que é logística reversa de medicamentos?",
+          options: JSON.stringify([
+            "Processo de devolução de medicamentos ao fabricante para reaproveitamento",
+            "Transporte de medicamentos do fabricante ao ponto de venda",
+            "Importação de medicamentos de outros países",
+            "Venda de medicamentos por entrega em domicílio",
+          ]),
+          correct: 0,
+        },
+        {
+          order: 4,
+          text: "Qual lei estabelece a Política Nacional de Resíduos Sólidos (PNRS) no Brasil?",
+          options: JSON.stringify([
+            "Lei nº 9.605/1998 (Lei de Crimes Ambientais)",
+            "Lei nº 12.305/2010",
+            "Lei nº 8.080/1990 (Lei Orgânica da Saúde)",
+            "Lei nº 6.938/1981 (Política Nacional do Meio Ambiente)",
+          ]),
+          correct: 1,
+        },
+        {
+          order: 5,
+          text: "Antes de levar ao ponto de coleta, o que você deve fazer com os medicamentos?",
+          options: JSON.stringify([
+            "Triturá-los para reduzir o volume",
+            "Misturá-los com café ou sal para neutralizar",
+            "Mantê-los nas embalagens originais ou em sacos plásticos fechados",
+            "Remover os rótulos para proteger sua privacidade",
+          ]),
+          correct: 2,
+        },
+      ],
+    },
+    {
+      slug: "legislacao-anvisa",
+      title: "Legislação e ANVISA",
+      description: "Aprofunde seus conhecimentos sobre a regulamentação do descarte de medicamentos e o papel da ANVISA.",
+      category: "LEGISLACAO",
+      difficulty: "MEDIO",
+      questions: [
+        {
+          order: 1,
+          text: "Qual é o papel da ANVISA no sistema de descarte de medicamentos?",
+          options: JSON.stringify([
+            "Fabricar os medicamentos coletados para redistribuição",
+            "Regular e fiscalizar o sistema de logística reversa de medicamentos",
+            "Financiar os pontos de coleta com recursos federais",
+            "Aplicar multas exclusivamente aos cidadãos que descartam errado",
+          ]),
+          correct: 1,
+        },
+        {
+          order: 2,
+          text: "O Decreto nº 10.388/2020 trata de qual tema?",
+          options: JSON.stringify([
+            "Vacinação obrigatória de trabalhadores da saúde",
+            "Criação do Sistema Nacional de Saúde Único (SUS)",
+            "Implantação do sistema de logística reversa de medicamentos domiciliares",
+            "Regulamentação da importação de medicamentos genéricos",
+          ]),
+          correct: 2,
+        },
+        {
+          order: 3,
+          text: "Quem tem a responsabilidade de criar e manter os pontos de coleta de medicamentos, segundo a legislação?",
+          options: JSON.stringify([
+            "Exclusivamente o governo federal",
+            "Apenas os municípios com mais de 100 mil habitantes",
+            "A cadeia produtiva: fabricantes, importadores, distribuidores e varejistas (farmácias)",
+            "As organizações não governamentais (ONGs) ambientais",
+          ]),
+          correct: 2,
+        },
+        {
+          order: 4,
+          text: "Medicamentos psicotrópicos e antibióticos vencidos devem ser descartados como?",
+          options: JSON.stringify([
+            "Da mesma forma que qualquer outro medicamento — em pontos de coleta autorizados",
+            "Entregues diretamente à delegacia local",
+            "Incinerados em casa",
+            "Devolvidos à farmácia onde foram comprados, exclusivamente",
+          ]),
+          correct: 0,
+        },
+        {
+          order: 5,
+          text: "O que significa a sigla RSS no contexto de resíduos farmacêuticos?",
+          options: JSON.stringify([
+            "Resíduos Sólidos Sustentáveis",
+            "Resíduos de Serviços de Saúde",
+            "Rede de Saúde e Saneamento",
+            "Regulamentação Sanitária e Social",
+          ]),
+          correct: 1,
+        },
+      ],
+    },
+    {
+      slug: "impacto-ambiental",
+      title: "Impacto Ambiental dos Medicamentos",
+      description: "Entenda como os medicamentos descartados incorretamente afetam o meio ambiente e os ecossistemas.",
+      category: "MEIO_AMBIENTE",
+      difficulty: "MEDIO",
+      questions: [
+        {
+          order: 1,
+          text: "Qual é o principal risco de jogar medicamentos no vaso sanitário?",
+          options: JSON.stringify([
+            "Entupimento dos canos de esgoto",
+            "Contaminação química de rios, lençóis freáticos e organismos aquáticos",
+            "Explosão nas estações de tratamento de esgoto",
+            "Aumento da conta de água",
+          ]),
+          correct: 1,
+        },
+        {
+          order: 2,
+          text: "Antibióticos presentes na água podem causar qual problema grave?",
+          options: JSON.stringify([
+            "Aumento da temperatura da água",
+            "Desenvolvimento de bactérias resistentes a antibióticos (superbactérias)",
+            "Extinção de todos os peixes de água doce",
+            "Desertificação do leito dos rios",
+          ]),
+          correct: 1,
+        },
+        {
+          order: 3,
+          text: "Hormônios presentes em medicamentos descartados incorretamente podem afetar:",
+          options: JSON.stringify([
+            "Apenas o solo agrícola, sem impacto na fauna",
+            "A reprodução de peixes e anfíbios, causando feminilização de machos",
+            "Exclusivamente humanos que consomem água não tratada",
+            "Apenas animais domésticos como cães e gatos",
+          ]),
+          correct: 1,
+        },
+        {
+          order: 4,
+          text: "Por que as estações de tratamento de água convencionais não resolvem o problema dos medicamentos?",
+          options: JSON.stringify([
+            "Porque o tratamento convencional não é eficiente para remover compostos farmacêuticos",
+            "Porque as estações são proibidas de tratar água contaminada por remédios",
+            "Porque os medicamentos tornam a água mais limpa no tratamento",
+            "Porque o custo do tratamento avançado seria pago pelos cidadãos",
+          ]),
+          correct: 0,
+        },
+        {
+          order: 5,
+          text: "Considerando que uma embalagem típica de medicamentos pesa em média 150g, quantos litros de água podem ser contaminados por descarte incorreto?",
+          options: JSON.stringify([
+            "Até 10 litros",
+            "Até 100 litros",
+            "Até 1.000 litros",
+            "Centenas de milhares de litros — a contaminação farmacêutica é altamente persistente",
+          ]),
+          correct: 3,
+        },
+      ],
+    },
+  ] as const
+
+  for (const quizData of quizzesData) {
+    const { questions, ...quizFields } = quizData
+    const existingQuiz = await prisma.quiz.findUnique({ where: { slug: quizFields.slug } })
+    if (!existingQuiz) {
+      await prisma.quiz.create({
+        data: {
+          ...quizFields,
+          questions: {
+            create: questions.map((q) => ({
+              order: q.order,
+              text: q.text,
+              options: q.options,
+              correct: q.correct,
+            })),
+          },
+        },
+      })
+    }
+  }
+  console.log(`✅ ${quizzesData.length} quizzes criados`)
+
   console.log("\n🌿 Seed concluído com sucesso!");
   console.log("\nContas criadas:");
   console.log("  Admin:    admin@ecomed.eco.br   / Admin@123");

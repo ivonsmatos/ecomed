@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
-import { MapPin, Heart, MessageCircle, Leaf, Coins, Trophy, Gift, ChevronRight } from "lucide-react";
+import { MapPin, Heart, MessageCircle, Leaf, Coins, Trophy, Gift, ChevronRight, BookOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
@@ -61,6 +61,14 @@ export default async function AppPage() {
       href: "/app/chat",
       cta: "Conversar",
       color: "text-blue-600",
+    },
+    {
+      title: "Quiz Ambiental",
+      description: "Responda quizzes e ganhe EcoCoins. Até 10 Coins por quiz!",
+      icon: BookOpen,
+      href: "/app/quiz",
+      cta: "Jogar",
+      color: "text-purple-600",
     },
   ];
 

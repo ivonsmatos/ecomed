@@ -107,6 +107,7 @@ model User {
   checkins          Checkin[]
   userRewards       UserReward[]
   dailyLimits       DailyLimitTracker[]
+  quizAttempts      QuizAttempt[]
 }
 
 model Account {
@@ -398,4 +399,44 @@ model UserReward {
   reward    RewardCatalog @relation(fields: [rewardId], references: [id])
 
   @@index([userId, createdAt])
+}
+
+// ---- Quiz / Educação gamificada ----
+
+model Quiz {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  title       String
+  description String
+  category    String? // ex: "LEGISLACAO", "DESCARTE", "ANVISA"
+  difficulty  String         @default("FACIL") // FACIL | MEDIO | DIFICIL
+  active      Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+}
+
+model QuizQuestion {
+  id      String @id @default(cuid())
+  quizId  String
+  order   Int
+  text    String
+  options String // JSON array serializado: ["opção A", "opção B", ...]
+  correct Int // índice da resposta correta no array options
+  quiz    Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  quizId      String
+  score       Int // número de acertos
+  total       Int // total de questões
+  perfect     Boolean  @default(false)
+  coinsEarned Int      @default(0)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz        Quiz     @relation(fields: [quizId], references: [id])
+
+  @@index([userId, quizId])
 }
