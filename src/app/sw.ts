@@ -17,8 +17,13 @@ const silentFallbackPlugin = {
     new Response(null, { status: 204, statusText: "No Content" }),
 };
 
-// Origens externas de analytics/telemetria — NetworkOnly sem cache
+// Origens externas que o SW nunca deve interceptar:
+// - api.sanity.io: SSE streams (listen) + REST — não podem ser cacheados
+// - cloudflareinsights: script externo sem CORS header
+// - analytics: telemetria
 const PASSTHROUGH_ORIGINS = [
+  "api.sanity.io",
+  "q9uk6qff.api.sanity.io",
   "static.cloudflareinsights.com",
   "cloudflareinsights.com",
   "plausible.io",
