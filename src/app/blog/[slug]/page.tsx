@@ -80,14 +80,6 @@ export default async function ArticlePage({ params }: Params) {
     ],
   };
 
-  const CATEGORY_LABEL: Record<string, string> = {
-    descarte: "Descarte",
-    legislacao: "Legislação",
-    "saude-ambiental": "Saúde Ambiental",
-    dicas: "Dicas",
-    ecomed: "EcoMed",
-  };
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />

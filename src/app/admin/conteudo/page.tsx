@@ -7,14 +7,6 @@ import Link from "next/link";
 
 export const metadata = { title: "Conteúdo | Admin EcoMed" };
 
-const CATEGORY_LABEL: Record<string, string> = {
-  descarte: "Descarte",
-  legislacao: "Legislação",
-  "saude-ambiental": "Saúde Ambiental",
-  dicas: "Dicas",
-  ecomed: "EcoMed",
-};
-
 export default async function AdminConteudoPage() {
   await requireAdmin();
 
@@ -64,7 +56,7 @@ export default async function AdminConteudoPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   {article.category && (
                     <Badge variant="secondary" className="text-xs">
-                      {CATEGORY_LABEL[article.category] ?? article.category}
+                      {article.category.title}
                     </Badge>
                   )}
                   {article.publishedAt && (
