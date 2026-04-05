@@ -1,7 +1,7 @@
 import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
-import { BookOpen, CheckCircle2, Lock, Star, Trophy } from "lucide-react";
+import { BookOpen, CheckCircle2, ChevronDown, Lock, Star, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CoinDisclaimer } from "@/components/coins/CoinDisclaimer";
 
@@ -88,6 +88,11 @@ export default async function QuizListPage() {
     return { feitos, total: qs.length };
   }
 
+  const primeiroAtivo =
+    nivelNums.find((n) => isDesbloqueado(n) && progressoNivel(n).feitos < progressoNivel(n).total) ??
+    nivelNums.filter((n) => isDesbloqueado(n)).at(-1) ??
+    nivelNums[0];
+
   return (
     <div className="max-w-lg space-y-8">
       <div>
@@ -127,7 +132,7 @@ export default async function QuizListPage() {
       )}
 
       {/* Níveis */}
-      <div className="space-y-6">
+      <div className="space-y-3">
         {nivelNums.map((nivel) => {
           const desbloqueado = isDesbloqueado(nivel);
           const { feitos, total } = progressoNivel(nivel);
@@ -135,15 +140,14 @@ export default async function QuizListPage() {
           const label = LEVEL_LABEL[nivel] ?? `Nível ${nivel}`;
 
           return (
-            <section key={nivel}>
-              {/* Cabeçalho do nível */}
-              <div
-                className={cn(
-                  "flex items-center justify-between mb-3 px-1",
-                  !desbloqueado && "opacity-50",
-                )}
-              >
-                <div className="flex items-center gap-2">
+            <details
+              key={nivel}
+              open={nivel === primeiroAtivo}
+              className="group rounded-xl border bg-card"
+            >
+              {/* Cabeçalho clicável */}
+              <summary className="flex cursor-pointer select-none list-none items-center justify-between p-4 [&::-webkit-details-marker]:hidden">
+                <div className={cn("flex items-center gap-2", !desbloqueado && "opacity-50")}>
                   {!desbloqueado ? (
                     <Lock className="size-4 text-muted-foreground" />
                   ) : concluido ? (
@@ -157,114 +161,120 @@ export default async function QuizListPage() {
                     Nível {nivel} — {label}
                   </h2>
                 </div>
-                <span className="text-xs text-muted-foreground">
-                  {feitos}/{total}
-                  {!desbloqueado && " · Bloqueado"}
-                </span>
-              </div>
-
-              {/* Barra de progresso */}
-              {desbloqueado && total > 0 && (
-                <div className="mb-3 h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                  <div
-                    className={cn(
-                      "h-full rounded-full transition-all",
-                      concluido ? "bg-green-500" : "bg-primary",
-                    )}
-                    style={{ width: `${Math.round((feitos / total) * 100)}%` }}
-                  />
+                <div className="flex items-center gap-2">
+                  <span className={cn("text-xs text-muted-foreground", !desbloqueado && "opacity-50")}>
+                    {feitos}/{total}
+                    {!desbloqueado && " · Bloqueado"}
+                  </span>
+                  <ChevronDown className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
                 </div>
-              )}
+              </summary>
 
-              {/* Cards dos quizzes */}
-              <ul className="space-y-2">
-                {(niveis[nivel] ?? []).map((q) => {
-                  const qWithLevel = q as typeof q & { level: number; levelOrder: number };
-                  const diff = DIFFICULTY_LABEL[q.difficulty] ?? DIFFICULTY_LABEL.FACIL;
-                  const jáFezHoje = quizzesHoje.has(q.id);
-                  const jáFez = quizzesFeitos.has(q.id);
+              {/* Conteúdo expansível */}
+              <div className="px-4 pb-4">
+                {/* Barra de progresso */}
+                {desbloqueado && total > 0 && (
+                  <div className="mb-3 h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                    <div
+                      className={cn(
+                        "h-full rounded-full transition-all",
+                        concluido ? "bg-green-500" : "bg-primary",
+                      )}
+                      style={{ width: `${Math.round((feitos / total) * 100)}%` }}
+                    />
+                  </div>
+                )}
 
-                  if (!desbloqueado) {
+                {/* Cards dos quizzes */}
+                <ul className="space-y-2">
+                  {(niveis[nivel] ?? []).map((q) => {
+                    const qWithLevel = q as typeof q & { level: number; levelOrder: number };
+                    const diff = DIFFICULTY_LABEL[q.difficulty] ?? DIFFICULTY_LABEL.FACIL;
+                    const jáFezHoje = quizzesHoje.has(q.id);
+                    const jáFez = quizzesFeitos.has(q.id);
+
+                    if (!desbloqueado) {
+                      return (
+                        <li
+                          key={q.id}
+                          className="flex items-center gap-3 rounded-xl border border-dashed p-3 opacity-40 cursor-not-allowed"
+                        >
+                          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-muted-foreground">
+                            <Lock className="size-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{q.title}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Complete o nível {nivel - 1} para desbloquear
+                            </p>
+                          </div>
+                        </li>
+                      );
+                    }
+
                     return (
-                      <li
-                        key={q.id}
-                        className="flex items-center gap-3 rounded-xl border border-dashed p-3 opacity-40 cursor-not-allowed"
-                      >
-                        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-muted-foreground">
-                          <Lock className="size-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{q.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Complete o nível {nivel - 1} para desbloquear
-                          </p>
-                        </div>
-                      </li>
-                    );
-                  }
-
-                  return (
-                    <li key={q.id}>
-                      <Link
-                        href={`/app/quiz/${q.id}`}
-                        className={cn(
-                          "flex items-start gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/50",
-                          jáFez && !jáFezHoje && "border-green-100 dark:border-green-900/40",
-                          jáFezHoje && "border-green-200 bg-green-50/50 dark:bg-green-950/20",
-                        )}
-                      >
-                        <div
+                      <li key={q.id}>
+                        <Link
+                          href={`/app/quiz/${q.id}`}
                           className={cn(
-                            "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border",
-                            jáFezHoje
-                              ? "border-green-200 bg-green-100 text-green-700"
-                              : jáFez
-                                ? "border-green-200 bg-green-50 text-green-600"
-                                : "border-border bg-muted text-muted-foreground",
+                            "flex items-start gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/50",
+                            jáFez && !jáFezHoje && "border-green-100 dark:border-green-900/40",
+                            jáFezHoje && "border-green-200 bg-green-50/50 dark:bg-green-950/20",
                           )}
                         >
-                          {jáFez ? (
-                            <CheckCircle2 className="size-4" />
-                          ) : (
-                            <BookOpen className="size-4" />
-                          )}
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className="font-medium text-sm">{q.title}</p>
-                            <span
-                              className={cn(
-                                "inline-flex items-center rounded-full border px-1.5 py-0.5 text-xs font-medium",
-                                diff.color,
-                              )}
-                            >
-                              {diff.label}
-                            </span>
-                            {jáFezHoje && (
-                              <span className="inline-flex items-center gap-1 text-xs text-green-700 dark:text-green-400 font-medium">
-                                <CheckCircle2 className="size-3" />
-                                Feito hoje
-                              </span>
+                          <div
+                            className={cn(
+                              "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border",
+                              jáFezHoje
+                                ? "border-green-200 bg-green-100 text-green-700"
+                                : jáFez
+                                  ? "border-green-200 bg-green-50 text-green-600"
+                                  : "border-border bg-muted text-muted-foreground",
+                            )}
+                          >
+                            {jáFez ? (
+                              <CheckCircle2 className="size-4" />
+                            ) : (
+                              <BookOpen className="size-4" />
                             )}
                           </div>
-                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                            {q.description}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                            <span>{q._count.questions} questões</span>
-                            <span className="ml-auto flex items-center gap-1 text-yellow-600 font-medium">
-                              <Star className="size-3 fill-yellow-400 text-yellow-400" />
-                              {jáFez ? "Refazer" : "+5 / +10 Coins"}
-                            </span>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <p className="font-medium text-sm">{q.title}</p>
+                              <span
+                                className={cn(
+                                  "inline-flex items-center rounded-full border px-1.5 py-0.5 text-xs font-medium",
+                                  diff.color,
+                                )}
+                              >
+                                {diff.label}
+                              </span>
+                              {jáFezHoje && (
+                                <span className="inline-flex items-center gap-1 text-xs text-green-700 dark:text-green-400 font-medium">
+                                  <CheckCircle2 className="size-3" />
+                                  Feito hoje
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                              {q.description}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                              <span>{q._count.questions} questões</span>
+                              <span className="ml-auto flex items-center gap-1 text-yellow-600 font-medium">
+                                <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                                {jáFez ? "Refazer" : "+5 / +10 Coins"}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </details>
           );
         })}
       </div>

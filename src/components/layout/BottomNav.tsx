@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MapPin, Heart, MessageCircle, User, Trophy } from "lucide-react";
+import { Home, MapPin, BookOpen, MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
+  { href: "/app", label: "Início", icon: Home, exact: true },
   { href: "/mapa", label: "Mapa", icon: MapPin },
-  { href: "/app/favoritos", label: "Favoritos", icon: Heart },
-  { href: "/app/missoes", label: "Missões", icon: Trophy },
-  { href: "/app/chat", label: "Assistente", icon: MessageCircle },
+  { href: "/app/quiz", label: "Quiz", icon: BookOpen },
+  { href: "/app/chat", label: "EcoBot", icon: MessageCircle },
   { href: "/app/perfil", label: "Perfil", icon: User },
 ];
 
@@ -19,8 +19,8 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background md:hidden">
       <ul className="flex h-16 items-center justify-around">
-        {links.map(({ href, label, icon: Icon }) => {
-          const active = pathname.startsWith(href);
+        {links.map(({ href, label, icon: Icon, exact }) => {
+          const active = exact ? pathname === href : pathname.startsWith(href);
           return (
             <li key={href} className="flex-1">
               <Link
