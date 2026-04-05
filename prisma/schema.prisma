@@ -408,8 +408,10 @@ model Quiz {
   slug        String         @unique
   title       String
   description String
-  category    String? // ex: "LEGISLACAO", "DESCARTE", "ANVISA"
+  category    String? // ex: "LEGISLACAO", "DESCARTE", "MEIO_AMBIENTE", "FORMAS_FARMACEUTICAS"
   difficulty  String         @default("FACIL") // FACIL | MEDIO | DIFICIL
+  level       Int            @default(1) // nível do quiz (1–100)
+  levelOrder  Int            @default(1) // ordem dentro do nível
   active      Boolean        @default(true)
   createdAt   DateTime       @default(now())
   questions   QuizQuestion[]

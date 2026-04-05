@@ -24,9 +24,11 @@ quiz.get("/", async (c) => {
         description: true,
         category: true,
         difficulty: true,
+        level: true,
+        levelOrder: true,
         _count: { select: { questions: true } },
       },
-      orderBy: { createdAt: "asc" },
+      orderBy: [{ level: "asc" }, { levelOrder: "asc" }],
     }),
     prisma.quizAttempt.findMany({
       where: { userId },
@@ -44,6 +46,8 @@ quiz.get("/", async (c) => {
       description: q.description,
       category: q.category,
       difficulty: q.difficulty,
+      level: q.level,
+      levelOrder: q.levelOrder,
       totalQuestions: q._count.questions,
       tentativa,
     }
