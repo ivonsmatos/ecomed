@@ -13,35 +13,38 @@ export function FaqAccordion({ faqs }: { faqs: FaqItem[] }) {
 
   return (
     <section className="mt-12">
-      <h2 className="text-2xl font-bold text-[#1e3a5f] mb-6">Perguntas Frequentes</h2>
+      <h2 className="text-2xl font-bold text-green-800 mb-6">Perguntas Frequentes</h2>
       <div className="flex flex-col gap-3">
-        {faqs.map((faq, i) => (
+        {faqs.map((faq, i) => {
+          const isOpen = open === i;
+          return (
           <div
             key={i}
-            className="border-l-4 border-amber-400 bg-white rounded-r-lg shadow-sm overflow-hidden"
+            className="border-l-4 border-green-500 bg-white rounded-r-lg shadow-sm overflow-hidden"
           >
             <button
-              onClick={() => setOpen(open === i ? null : i)}
+              onClick={() => setOpen(isOpen ? null : i)}
               className="w-full flex items-center justify-between px-5 py-4 text-left gap-4"
-              aria-expanded={open === i}
+              aria-expanded={isOpen}
             >
-              <span className="font-semibold text-[#1e3a5f] text-sm leading-snug">
+              <span className="font-semibold text-green-800 text-sm leading-snug">
                 {faq.question}
               </span>
               <ChevronDown
-                className={`shrink-0 text-amber-500 transition-transform duration-200 ${
-                  open === i ? "rotate-180" : ""
+                className={`shrink-0 text-green-600 transition-transform duration-200 ${
+                  isOpen ? "rotate-180" : ""
                 }`}
                 size={18}
               />
             </button>
-            {open === i && (
+            {isOpen && (
               <div className="px-5 pb-5 text-sm text-gray-700 leading-relaxed border-t border-gray-100">
                 {faq.answer}
               </div>
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

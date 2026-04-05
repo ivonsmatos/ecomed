@@ -32,19 +32,19 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 const portableComponents = {
   block: {
     h2: ({ children }: { children?: React.ReactNode }) => (
-      <h2 className="text-2xl font-bold text-[#1e3a5f] mt-10 mb-4 leading-snug">{children}</h2>
+      <h2 className="text-2xl font-bold text-green-800 mt-10 mb-4 leading-snug">{children}</h2>
     ),
     h3: ({ children }: { children?: React.ReactNode }) => (
-      <h3 className="text-xl font-bold text-[#1e3a5f] mt-8 mb-3 leading-snug">{children}</h3>
+      <h3 className="text-xl font-bold text-green-800 mt-8 mb-3 leading-snug">{children}</h3>
     ),
     h4: ({ children }: { children?: React.ReactNode }) => (
-      <h4 className="text-lg font-semibold text-[#1e3a5f] mt-6 mb-2">{children}</h4>
+      <h4 className="text-lg font-semibold text-green-700 mt-6 mb-2">{children}</h4>
     ),
     normal: ({ children }: { children?: React.ReactNode }) => (
       <p className="text-gray-800 leading-relaxed mb-5 text-[1.0625rem]">{children}</p>
     ),
     blockquote: ({ children }: { children?: React.ReactNode }) => (
-      <blockquote className="border-l-4 border-amber-400 pl-5 py-1 my-6 bg-amber-50 text-gray-700 italic rounded-r">
+      <blockquote className="border-l-4 border-green-500 pl-5 py-1 my-6 bg-green-50 text-gray-700 italic rounded-r">
         {children}
       </blockquote>
     ),
@@ -73,14 +73,14 @@ const portableComponents = {
       <em className="italic">{children}</em>
     ),
     code: ({ children }: { children?: React.ReactNode }) => (
-      <code className="bg-gray-100 text-[#1e3a5f] px-1.5 py-0.5 rounded text-sm font-mono">{children}</code>
+      <code className="bg-gray-100 text-green-700 px-1.5 py-0.5 rounded text-sm font-mono">{children}</code>
     ),
     link: ({ value, children }: { value?: { href?: string }; children?: React.ReactNode }) => (
       <a
         href={value?.href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-amber-600 underline underline-offset-2 hover:text-amber-700"
+        className="text-green-700 underline underline-offset-2 hover:text-green-800"
       >
         {children}
       </a>
@@ -175,15 +175,15 @@ export default async function ArticlePage({ params }: Params) {
 
           {/* Breadcrumb */}
           <nav className="text-xs text-gray-500 mb-6 flex items-center gap-1 flex-wrap">
-            <Link href="/" className="hover:text-amber-600">Início</Link>
+            <Link href="/" className="hover:text-green-700">Início</Link>
             <span>/</span>
-            <Link href="/blog" className="hover:text-amber-600">Blog</Link>
+            <Link href="/blog" className="hover:text-green-700">Blog</Link>
             <span>/</span>
             <span className="text-gray-700 font-medium line-clamp-1">{article.title}</span>
           </nav>
 
           {/* Título */}
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1e3a5f] leading-tight mb-5">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-green-800 leading-tight mb-5">
             {article.title}
           </h1>
 
@@ -210,7 +210,7 @@ export default async function ArticlePage({ params }: Params) {
 
           {/* Resumo IA */}
           {article.aiSummary && (
-            <div className="border-l-4 border-amber-400 bg-gray-50 rounded-r-lg px-5 py-4 mb-6">
+            <div className="border-l-4 border-green-500 bg-green-50 rounded-r-lg px-5 py-4 mb-6">
               <p className="text-sm text-gray-700 leading-relaxed">
                 <span className="font-bold text-gray-900">📌 Resumo IA: </span>
                 {article.aiSummary}
@@ -224,7 +224,7 @@ export default async function ArticlePage({ params }: Params) {
               {article.entities.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs text-gray-600 border border-gray-300 rounded-full px-3 py-1 bg-white hover:border-amber-400 hover:text-amber-700 transition-colors"
+                  className="text-xs text-gray-600 border border-gray-300 rounded-full px-3 py-1 bg-white hover:border-green-600 hover:text-green-700 transition-colors"
                 >
                   {tag}
                 </span>
