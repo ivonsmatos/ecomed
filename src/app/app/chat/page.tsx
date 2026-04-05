@@ -14,7 +14,7 @@ interface Message {
 const INITIAL: Message = {
   role: "assistant",
   content:
-    "Olá! Sou o assistente EcoMed. Posso ajudar com informações sobre descarte correto de medicamentos, pontos de coleta e dúvidas sobre resíduos de saúde. Como posso ajudar você hoje?",
+    "Olá! Sou o EcoBot. Posso ajudar com informações sobre descarte correto de medicamentos, pontos de coleta e dúvidas sobre resíduos de saúde. Como posso ajudar você hoje?",
 };
 
 export default function ChatPage() {
@@ -57,9 +57,9 @@ export default function ChatPage() {
         {
           role: "assistant",
           content:
-            err instanceof Error
+            err instanceof Error && err.message !== "Erro ao consultar o assistente"
               ? err.message
-              : "Desculpe, ocorreu um erro. Tente novamente em instantes.",
+              : "Desculpe, o EcoBot demorou para responder. Tente novamente com uma pergunta mais curta.",
         },
       ]);
     } finally {
@@ -82,7 +82,7 @@ export default function ChatPage() {
           <Bot className="h-5 w-5 text-green-600" />
         </div>
         <div>
-          <p className="font-semibold text-sm">Assistente EcoMed</p>
+          <p className="font-semibold text-sm">EcoBot</p>
           <p className="text-xs text-muted-foreground">Especialista em descarte de medicamentos</p>
         </div>
       </div>

@@ -18,6 +18,8 @@ import missions from "./routes/missions";
 import rewards from "./routes/rewards";
 import quiz from "./routes/quiz";
 
+export const maxDuration = 60;
+
 const app = new Hono().basePath("/api");
 
 app.get("/health", (c) =>

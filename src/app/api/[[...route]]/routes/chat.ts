@@ -31,10 +31,12 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
       Authorization: `Bearer ${iaToken}`,
     },
     body: JSON.stringify({ pergunta }),
+    signal: AbortSignal.timeout(55_000),
   });
 
   if (!res.ok) {
-    return c.json({ resposta: "Erro ao consultar o assistente. Tente novamente." }, 502);
+    const status = res.status === 503 ? 503 : 502;
+    return c.json({ error: "Erro ao consultar o EcoBot. Tente novamente." }, status);
   }
 
   const data: { resposta: string } = await res.json();
