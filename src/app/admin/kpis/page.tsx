@@ -592,7 +592,7 @@ export default function KPIsPage() {
       </div>
 
       {/* Content */}
-      <div style={{ padding: "20px 24px", maxWidth: 900, margin: "0 auto" }}>
+      <div style={{ padding: "20px 24px" }}>
         {content}
         <div style={{ marginTop: 32, paddingTop: 16, borderTop: `1px solid ${colors.border}`, textAlign: "center" }}>
           <p style={{ fontSize: 11, color: "#999" }}>
