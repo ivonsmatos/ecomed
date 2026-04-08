@@ -7,7 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
-from app.services.guardrails import verificar_guardrails
+from app.services.guardrails import verificar_guardrails, filtrar_saida
 
 load_dotenv()
 
@@ -103,4 +103,8 @@ class RAGService:
         if not self.chain:
             return "Serviço iniciando. Tente em alguns instantes."
 
-        return await asyncio.to_thread(self.chain.invoke, pergunta)
+        resposta_bruta = await asyncio.to_thread(self.chain.invoke, pergunta)
+
+        # 3. Filtro de saída (Camada 4) — verifica resposta gerada pelo LLM
+        resultado_saida = filtrar_saida(resposta_bruta)
+        return resultado_saida.resposta_final

@@ -212,3 +212,107 @@ def verificar_guardrails(pergunta: str) -> GuardrailResult:
         )
 
     return GuardrailResult(bloqueada=False, categoria=None, resposta=None)
+
+
+# ---------------------------------------------------------------------------
+# Filtro de Saída (Camada 4) — verifica a resposta GERADA pelo LLM
+# ---------------------------------------------------------------------------
+
+# Nomes de marcas comerciais comuns
+_MARCAS = re.compile(
+    r"\b("
+    r"tylenol|paracetamol|dipirona|ibuprofeno|rivotril|ritalina|gardenal"
+    r"|voltaren|cataflan|nimesulida|omeprazol|pantoprazol|losartana"
+    r"|sinvastatina|metformina|amoxicilina|azitromicina|ciprofloxacino"
+    r"|dorflex|buscopan|maalox|engov|benegrip|coristina|neosaldina"
+    r"|sempre livre|vick|fluimucil|acetilcisteína"
+    r")\b",
+    re.IGNORECASE | re.UNICODE,
+)
+
+# Dosagens e posologias na saída
+_DOSAGEM_SAIDA = re.compile(
+    r"\b("
+    r"\d+\s*(mg|mcg|µg|ml|g|comprimidos?|cápsulas?|gotas?)\b"
+    r"|de \d+ em \d+ horas"
+    r"|por \d+ dias"
+    r"|dose (diária|máxima|recomendada)"
+    r")\b",
+    re.IGNORECASE | re.UNICODE,
+)
+
+# Conselhos médicos implícitos na saída
+_CONSELHO_MEDICO_SAIDA = re.compile(
+    r"\b("
+    r"você (deve|pode|deveria) tomar"
+    r"|é recomendável (usar|tomar|ingerir)"
+    r"|recomendo que (tome|use|ingira)"
+    r"|tome \d+ comprimido"
+    r"|aplicar \d+ (vez|vezes) ao dia"
+    r")\b",
+    re.IGNORECASE | re.UNICODE,
+)
+
+# Disclaimer obrigatório para saídas que tocam em saúde
+DISCLAIMER_SAUDE = (
+    "\n\n⚠️ *O EcoBot é um assistente educativo e não substitui orientação "
+    "médica ou farmacêutica.*"
+)
+
+# Marcas no texto — substituição genérica
+_AVISO_MARCA = " [nome do medicamento omitido — consulte um farmacêutico para orientações específicas]"
+
+
+@dataclass
+class FiltroSaidaResult:
+    resposta_final: str
+    modificada: bool
+    motivo: str | None
+
+
+def filtrar_saida(resposta: str) -> FiltroSaidaResult:
+    """
+    Camada 4 — Filtro de Saída.
+
+    Analisa a resposta gerada pelo LLM e:
+    1. Substitui nomes de marcas comerciais (não remove, avisa)
+    2. Insere disclaimer quando detecta menção a dosagem ou área de saúde
+    3. Bloqueia respostas com conselho médico explícito, substituindo por fallback
+
+    Retorna sempre uma resposta segura.
+    """
+    texto = resposta.strip()
+    modificada = False
+    motivos: list[str] = []
+
+    # 1. Conselho médico explícito → bloquear e substituir
+    if _CONSELHO_MEDICO_SAIDA.search(texto):
+        return FiltroSaidaResult(
+            resposta_final=(
+                "Para orientações sobre uso de medicamentos, consulte um farmacêutico "
+                "ou médico. Posso ajudar com o descarte correto de medicamentos! 🌿"
+                + DISCLAIMER_SAUDE
+            ),
+            modificada=True,
+            motivo="conselho_medico_implicito",
+        )
+
+    # 2. Dosagem detectada → inserir disclaimer
+    if _DOSAGEM_SAIDA.search(texto):
+        texto = texto + DISCLAIMER_SAUDE
+        modificada = True
+        motivos.append("dosagem_detectada")
+
+    # 3. Nome de marca → adicionar aviso (sem remover o contexto de descarte)
+    if _MARCAS.search(texto):
+        # Só adiciona disclaimer se ainda não foi adicionado
+        if not modificada:
+            texto = texto + DISCLAIMER_SAUDE
+            modificada = True
+        motivos.append("marca_comercial")
+
+    return FiltroSaidaResult(
+        resposta_final=texto,
+        modificada=modificada,
+        motivo=", ".join(motivos) if motivos else None,
+    )
