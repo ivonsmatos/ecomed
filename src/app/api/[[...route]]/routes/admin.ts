@@ -267,5 +267,75 @@ app.post(
   },
 );
 
+// ---- Feedback de IA (Governança) ----
+
+// GET /api/admin/feedback — métricas do dashboard de feedback do EcoBot
+app.get("/feedback", async (c) => {
+  const r = await requireAdminSession(c);
+  if (r && typeof r === "object" && "json" in r) return r;
+
+  const hoje = new Date();
+  hoje.setUTCHours(0, 0, 0, 0);
+
+  const seteDiasAtras = new Date(hoje);
+  seteDiasAtras.setUTCDate(seteDiasAtras.getUTCDate() - 6);
+
+  const [totalHoje, positiveHoje, negativeHoje, totalGeral, naoRevisados, serie] =
+    await Promise.all([
+      prisma.chatFeedback.count({ where: { createdAt: { gte: hoje } } }),
+      prisma.chatFeedback.count({ where: { createdAt: { gte: hoje }, rating: "positive" } }),
+      prisma.chatFeedback.count({ where: { createdAt: { gte: hoje }, rating: "negative" } }),
+      prisma.chatFeedback.count(),
+      prisma.chatFeedback.count({ where: { rating: "negative", reviewed: false } }),
+      prisma.chatFeedback.groupBy({
+        by: ["createdAt"],
+        where: { createdAt: { gte: seteDiasAtras } },
+        _count: { _all: true },
+      }),
+    ]);
+
+  // Top 10 feedbacks negativos não revisados (mais recentes)
+  const topNegativos = await prisma.chatFeedback.findMany({
+    where: { rating: "negative", reviewed: false },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+    select: {
+      id: true,
+      pergunta: true,
+      resposta: true,
+      comment: true,
+      createdAt: true,
+      reviewed: true,
+      actionTaken: true,
+    },
+  });
+
+  return c.json({
+    hoje: { total: totalHoje, positive: positiveHoje, negative: negativeHoje },
+    totalGeral,
+    naoRevisados,
+    topNegativos,
+    serie,
+  });
+});
+
+// PATCH /api/admin/feedback/:id/revisar — marca feedback como revisado
+app.patch(
+  "/feedback/:id/revisar",
+  zValidator("json", z.object({ actionTaken: z.string().min(3).max(500) })),
+  async (c) => {
+    const r = await requireAdminSession(c);
+    if (r && typeof r === "object" && "json" in r) return r;
+
+    const { actionTaken } = c.req.valid("json");
+    await prisma.chatFeedback.update({
+      where: { id: c.req.param("id") },
+      data: { reviewed: true, actionTaken },
+    });
+
+    return c.json({ ok: true });
+  },
+);
+
 export { app as adminRouter };
 

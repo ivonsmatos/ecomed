@@ -3,11 +3,21 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { auth } from "@/../auth";
 import { checkRateLimit } from "@/lib/ratelimit";
+import { prisma } from "@/lib/db/prisma";
+import { creditCoins } from "@/lib/coins";
 
 const app = new Hono();
 
 const chatSchema = z.object({
   pergunta: z.string().min(3).max(1000),
+});
+
+const feedbackSchema = z.object({
+  messageId: z.string().min(1).max(36),
+  pergunta: z.string().min(1).max(1000),
+  resposta: z.string().min(1).max(5000),
+  rating: z.enum(["positive", "negative"]),
+  comment: z.string().max(500).optional(),
 });
 
 // POST /api/chat
@@ -41,7 +51,8 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
     }
 
     const data: { resposta: string } = await res.json();
-    return c.json(data);
+    const messageId = crypto.randomUUID();
+    return c.json({ resposta: data.resposta, messageId });
   } catch (err) {
     const isTimeout =
       err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError");
@@ -53,6 +64,40 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
     }
     return c.json({ error: "Erro de conexão com o EcoBot. Tente novamente." }, 502);
   }
+});
+
+// POST /api/chat/feedback — registra avaliação 👍/👎 e credita EcoCoin
+app.post("/feedback", zValidator("json", feedbackSchema), async (c) => {
+  const ip = c.req.header("CF-Connecting-IP") ?? "unknown";
+  const { success } = await checkRateLimit("chat", ip);
+  if (!success) return c.json({ error: "Muitas requisições. Tente em instantes." }, 429);
+
+  const session = await auth();
+  const { messageId, pergunta, resposta, rating, comment } = c.req.valid("json");
+
+  // Impedir avaliação duplicada da mesma mensagem
+  const jaAvaliou = await prisma.chatFeedback.findFirst({ where: { messageId } });
+  if (jaAvaliou) return c.json({ ok: false, reason: "ja_avaliado" });
+
+  await prisma.chatFeedback.create({
+    data: {
+      userId: session?.user?.id ?? null,
+      messageId,
+      pergunta,
+      resposta,
+      rating,
+      comment: comment ?? null,
+    },
+  });
+
+  // Creditar ECOBOT_RATING apenas para usuários autenticados
+  let coinsEarned = 0;
+  if (session?.user?.id) {
+    const result = await creditCoins(session.user.id, "ECOBOT_RATING", messageId);
+    if (result.ok) coinsEarned = 1;
+  }
+
+  return c.json({ ok: true, coinsEarned });
 });
 
 export const chatRouter = app;

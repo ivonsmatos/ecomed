@@ -112,6 +112,7 @@ model User {
   userRewards       UserReward[]
   dailyLimits       DailyLimitTracker[]
   quizAttempts      QuizAttempt[]
+  chatFeedbacks     ChatFeedback[]
 }
 
 model Account {
@@ -445,4 +446,24 @@ model QuizAttempt {
   quiz        Quiz     @relation(fields: [quizId], references: [id])
 
   @@index([userId, quizId])
+}
+
+// ---- Governança de IA — Feedback do EcoBot ----
+
+model ChatFeedback {
+  id          String   @id @default(cuid())
+  userId      String?
+  messageId   String // ID gerado no cliente para rastrear a mensagem
+  pergunta    String   @db.Text
+  resposta    String   @db.Text
+  rating      String // "positive" | "negative"
+  comment     String?
+  ragScore    Float? // score de similaridade do RAG (enviado pela IA futuramente)
+  reviewed    Boolean  @default(false) // equipe já revisou?
+  actionTaken String? // o que foi feito após revisão
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([rating, reviewed])
 }
