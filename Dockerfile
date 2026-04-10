@@ -32,7 +32,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Gerar Prisma client e fazer build
 RUN pnpm prisma generate
-RUN pnpm run build
+RUN pnpm exec next build --webpack
 
 # ─── Runner ───────────────────────────────────────────────────────────────────
 FROM base AS runner

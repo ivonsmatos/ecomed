@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db/prisma"
 
-export const revalidate = 60
+export const dynamic = "force-dynamic"
 export const metadata = { title: "Ranking EcoMed" }
 
 export default async function RankingPage() {
