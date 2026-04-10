@@ -1,9 +1,13 @@
 import crypto from "crypto"
 
-const SECRET =
-  process.env.QR_HMAC_SECRET ??
-  process.env.NEXTAUTH_SECRET ??
-  "fallback-dev-secret"
+const _secret = process.env.QR_HMAC_SECRET ?? process.env.NEXTAUTH_SECRET
+if (!_secret) {
+  throw new Error(
+    "QR_HMAC_SECRET ou NEXTAUTH_SECRET deve estar definido. " +
+    "Defina uma das variáveis de ambiente."
+  )
+}
+const SECRET = _secret
 
 /**
  * Gera um token HMAC assinado para o QR Code do cidadão.
@@ -17,7 +21,7 @@ export function gerarTokenQR(userId: string): string {
     .createHmac("sha256", SECRET)
     .update(payload)
     .digest("hex")
-    .slice(0, 16)
+    .slice(0, 32)
   return `${payload}:${hmac}`
 }
 
@@ -41,7 +45,7 @@ export function validarTokenQR(token: string): { userId: string } | null {
     .createHmac("sha256", SECRET)
     .update(payload)
     .digest("hex")
-    .slice(0, 16)
+    .slice(0, 32)
 
   // Comparação segura contra timing attacks
   if (

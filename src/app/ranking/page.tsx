@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/db/prisma"
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 export const metadata = { title: "Ranking EcoMed" }
 
 export default async function RankingPage() {
   const top = await prisma.wallet.findMany({
     take: 10,
-    orderBy: { totalEarned: "desc" },
+    orderBy: { weeklyCoins: "desc" },
     include: {
       user: { select: { name: true, image: true } },
     },
@@ -44,9 +44,9 @@ export default async function RankingPage() {
             </div>
             <div className="text-right">
               <p className="font-medium text-sm text-amber-600">
-                {wallet.totalEarned.toLocaleString("pt-BR")}
+                {wallet.weeklyCoins.toLocaleString("pt-BR")}
               </p>
-              <p className="text-xs text-muted-foreground">EcoCoins</p>
+              <p className="text-xs text-muted-foreground">EcoCoins (semana)</p>
             </div>
           </div>
         ))}

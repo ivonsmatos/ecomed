@@ -3,7 +3,6 @@ import { zValidator } from "@hono/zod-validator"
 import { z } from "zod"
 import { auth } from "@/../auth"
 import { prisma } from "@/lib/db/prisma"
-import { debitCoins } from "@/lib/coins"
 
 const rewards = new Hono()
 
@@ -140,24 +139,60 @@ rewards.post(
       }
     }
 
-    // Debitar coins
-    const debit = await debitCoins(userId, reward.cost, `Resgate: ${reward.name}`)
-    if (!debit.ok) return c.json({ error: "Saldo insuficiente." }, 402)
+    // Transação atômica: re-verificar estoque/saldo, debitar, criar registro, decrementar estoque
+    let newBalance: number
+    let userRewardId: string
+    try {
+      await prisma.$transaction(async (tx) => {
+        const [latestReward, latestWallet] = await Promise.all([
+          tx.rewardCatalog.findUnique({ where: { id, active: true } }),
+          tx.wallet.findUnique({ where: { userId } }),
+        ])
 
-    // Criar registro de resgate e decrementar estoque
-    const [userReward] = await Promise.all([
-      prisma.userReward.create({ data: { userId, rewardId: id, status: "PENDING" } }),
-      reward.stock !== null
-        ? prisma.rewardCatalog.update({ where: { id }, data: { stock: { decrement: 1 } } })
-        : Promise.resolve(),
-    ])
+        if (!latestReward || (latestReward.stock !== null && latestReward.stock <= 0)) {
+          throw Object.assign(new Error("Recompensa esgotada."), { statusCode: 409 })
+        }
+        if (!latestWallet || latestWallet.balance < reward.cost) {
+          throw Object.assign(new Error("Saldo insuficiente."), { statusCode: 402 })
+        }
+
+        const updatedWallet = await tx.wallet.update({
+          where: { userId },
+          data: { balance: { decrement: reward.cost } },
+          select: { balance: true, id: true },
+        })
+        newBalance = updatedWallet.balance
+
+        await tx.coinTransaction.create({
+          data: {
+            walletId: updatedWallet.id,
+            amount: -reward.cost,
+            event: "REDEMPTION" as never,
+            note: `Resgate: ${reward.name}`,
+          },
+        })
+
+        const created = await tx.userReward.create({
+          data: { userId, rewardId: id, status: "PENDING" },
+        })
+        userRewardId = created.id
+
+        if (latestReward.stock !== null) {
+          await tx.rewardCatalog.update({ where: { id }, data: { stock: { decrement: 1 } } })
+        }
+      })
+    } catch (err) {
+      const e = err as Error & { statusCode?: number }
+      const status = (e.statusCode ?? 500) as 402 | 409 | 500
+      return c.json({ error: e.message ?? "Erro ao processar resgate." }, status)
+    }
 
     return c.json({
       ok: true,
       rewardName: reward.name,
       coinsSpent: reward.cost,
-      newBalance: debit.newBalance,
-      userRewardId: userReward.id,
+      newBalance: newBalance!,
+      userRewardId: userRewardId!,
       status: "PENDING",
     })
   },

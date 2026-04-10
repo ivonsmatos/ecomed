@@ -83,6 +83,12 @@ enum MissionType {
   WEEKLY // reseta toda segunda-feira
 }
 
+enum RewardStatus {
+  PENDING
+  DELIVERED
+  CANCELLED
+}
+
 model User {
   id                String              @id @default(cuid())
   name              String?
@@ -398,7 +404,7 @@ model UserReward {
   id        String        @id @default(cuid())
   userId    String
   rewardId  String
-  status    String        @default("PENDING") // PENDING | DELIVERED | CANCELLED
+  status    RewardStatus  @default(PENDING)
   createdAt DateTime      @default(now())
   user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   reward    RewardCatalog @relation(fields: [rewardId], references: [id])

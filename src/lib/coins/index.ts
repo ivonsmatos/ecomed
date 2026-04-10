@@ -226,8 +226,8 @@ export async function creditCoins(
     prisma.wallet.update({
       where: { userId },
       data: {
-        balance: novoBalance,
-        totalEarned: novoTotal,
+        balance: { increment: amount },
+        totalEarned: { increment: amount },
         level: novoNivel as never,
         streakCurrent: novoStreak,
         streakBest: novoStreakBest,
@@ -279,7 +279,7 @@ export async function debitCoins(
     }),
     prisma.wallet.update({
       where: { id: wallet.id },
-      data: { balance: newBalance },
+      data: { balance: { decrement: amount } },
     }),
   ])
 
