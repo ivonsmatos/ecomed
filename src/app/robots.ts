@@ -28,4 +28,3 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: "https://ecomed.eco.br/sitemap.xml",
   };
 }
-
