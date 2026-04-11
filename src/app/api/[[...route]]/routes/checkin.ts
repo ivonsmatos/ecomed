@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db/prisma"
 import { validarTokenQR } from "@/lib/qr/token"
 import { creditCoins } from "@/lib/coins"
 import { checkRateLimit } from "@/lib/ratelimit"
+import { verificarMilestonesDescarte } from "@/lib/goals/milestones"
 
 const checkin = new Hono()
 
@@ -116,6 +117,9 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
     prisma.wallet.findUnique({ where: { userId }, select: { balance: true } }),
   ])
 
+  // Verificar e conceder badges de milestones (fire-and-forget não bloqueia a resposta)
+  const novosSelosDescarte = await verificarMilestonesDescarte(userId).catch(() => [] as string[])
+
   return c.json({
     ok: true,
     coinsEarned: coinsBase,
@@ -128,6 +132,7 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
     },
     userName: usuario?.name ?? "Usuário",
     pointName: point.name,
+    novosSelosDescarte,
   })
 })
 

@@ -62,6 +62,9 @@ src/
 │   ├── sw.ts               # Service Worker (Serwist/Workbox)
 │   ├── (auth)/             # login, cadastro, reset senha
 │   ├── app/                # área cidadão (/app/*)
+│   │   ├── conquistas/     # Conquistas estilo Apple Fitness (metas acumuladas)
+│   │   ├── quiz/[id]/      # Quiz com alternativas embaralhadas por sessão
+│   │   └── perfil/         # Perfil, EcoCoins, histórico e link p/ Conquistas
 │   ├── parceiro/           # painel parceiro (/parceiro/*)
 │   ├── admin/              # painel admin (/admin/*)
 │   │   └── kpis/           # dashboard KPIs real-time (Server + Client)
@@ -86,6 +89,8 @@ src/
 │   ├── db/prisma.ts        # singleton Prisma Client (SSL AWS Lightsail)
 │   ├── auth/session.ts     # requireSession, requireAdmin, requirePartner
 │   ├── coins/index.ts      # creditCoins, debitCoins (operações atômicas)
+│   ├── quiz/shuffle.ts     # Fisher-Yates + token HMAC-SHA256 (embaralhamento stateless)
+│   ├── goals/milestones.ts # verificarMilestonesDescarte/Quiz + GRUPOS_METAS
 │   ├── qr/token.ts         # gerarTokenQR, validarTokenQR (HMAC-SHA256)
 │   ├── email/              # Resend + templates React Email
 │   ├── push/               # web-push VAPID
@@ -126,7 +131,9 @@ Em desenvolvimento o SW é desabilitado automaticamente (`disable: process.env.N
 - Zod em todas as rotas de entrada (auth, parceiro, rewards, check-in, QR)
 - CNPJ validado por Módulo 11 (dígitos verificadores) no schema do parceiro
 - QR Code: HMAC-SHA256 32 chars + expiração 30 min — `QR_HMAC_SECRET` obrigatório
+- Quiz: alternativas embaralhadas com Fisher-Yates por sessão; token HMAC-SHA256 assinado mapeia índices embaralhados → originais no server (stateless — adulteração do token é detectada via `timingSafeEqual`)
 - `creditCoins`/`debitCoins`: operações atômicas Prisma (`{ increment }`/`{ decrement }`)
 - Resgates de recompensas: `prisma.$transaction()` — valida estoque + saldo atomicamente
 - CSP via `middleware.ts` — restritiva para todas as rotas, permissiva apenas para `/studio`
+- `x-pathname` encaminhado como request header (`NextResponse.next({ request: { headers } })`) para leitura correta em Server Components
 - Rate limiting Upstash em todas as rotas públicas

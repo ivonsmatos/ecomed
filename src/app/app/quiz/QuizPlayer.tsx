@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { CheckCircle2, XCircle, Trophy, ArrowRight, RotateCcw } from "lucide-react";
+import { CheckCircle2, XCircle, Trophy, Share2, RotateCcw, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,7 @@ interface Question {
 interface QuizPlayerProps {
   quizId: string;
   questions: Question[];
+  shuffleToken: string;
 }
 
 type Phase = "playing" | "submitting" | "result";
@@ -29,9 +30,12 @@ interface Result {
   newBalance: number;
   levelUp: string | null;
   streakBonus: string | null;
+  levelBadgeEarned: boolean;
+  levelBadgeSlug: string | null;
+  quizLevel: number;
 }
 
-export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
+export function QuizPlayer({ quizId, questions, shuffleToken }: QuizPlayerProps) {
   const [phase, setPhase] = useState<Phase>("playing");
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<number[]>(Array(questions.length).fill(-1));
@@ -63,7 +67,7 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
       const res = await fetch(`/api/quiz/${quizId}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers }),
+        body: JSON.stringify({ answers, shuffleToken }),
       });
       const data = (await res.json()) as Result & { error?: string };
       if (!res.ok) {
@@ -117,20 +121,22 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
 
         {/* Coins ganhos */}
         <div className="rounded-xl border p-4 text-center space-y-1">
-          {result.limiteDiario ? (
+          {result.perfect && result.limiteDiario ? (
             <p className="text-sm text-muted-foreground">
-              Você atingiu o limite de Coins para quizzes hoje (3/dia).
+              Nota perfeita! Mas você já atingiu o limite de {3} quizzes hoje. Volte amanhã! 🗓️
             </p>
-          ) : result.coinsEarned > 0 ? (
+          ) : result.perfect && result.coinsEarned > 0 ? (
             <>
-              <p className="text-2xl font-bold text-yellow-600">+{result.coinsEarned} Coins</p>
+              <p className="text-2xl font-bold text-yellow-600">+{result.coinsEarned} EcoCoins</p>
               <p className="text-xs text-muted-foreground">
                 Saldo atual: {result.newBalance} EcoCoins
               </p>
             </>
-          ) : (
-            <p className="text-sm text-muted-foreground">Sem Coins desta vez.</p>
-          )}
+          ) : !result.perfect ? (
+            <p className="text-sm text-muted-foreground">
+              Estude mais e tente de novo! Só a nota perfeita (100%) gera EcoCoins. 💡
+            </p>
+          ) : null}
           {result.levelUp && (
             <p className="text-eco-teal-dark dark:text-eco-teal text-sm font-semibold mt-1">
               🎉 Novo nível desbloqueado: {result.levelUp}!
@@ -142,6 +148,41 @@ export function QuizPlayer({ quizId, questions }: QuizPlayerProps) {
             </p>
           )}
         </div>
+
+        {/* Selo de nível conquistado */}
+        {result.levelBadgeEarned && (
+          <div className="rounded-xl border border-yellow-200 bg-yellow-50 dark:bg-yellow-950/40 dark:border-yellow-900 p-4 text-center space-y-3">
+            <p className="text-2xl">🏅</p>
+            <p className="font-bold text-yellow-800 dark:text-yellow-200">
+              Nível {result.quizLevel} concluído com perfeição!
+            </p>
+            <p className="text-xs text-yellow-700 dark:text-yellow-400">
+              Você ganhou o selo deste nível. Compartilhe sua conquista!
+            </p>
+            <button
+              type="button"
+              onClick={async () => {
+                const texto = `Concluí o Nível ${result.quizLevel} do Quiz Ambiental do EcoMed com 100%! 🌿 Descarte correto salva vidas. ecomed.eco.br`;
+                try {
+                  if (navigator.share) {
+                    await navigator.share({ title: "EcoMed — Conquista de Quiz", text: texto, url: "https://ecomed.eco.br" });
+                  } else {
+                    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`, "_blank");
+                  }
+                  await fetch("/api/coins/share", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ type: "badge" }),
+                  });
+                } catch { /* cancelado */ }
+              }}
+              className="inline-flex items-center gap-2 rounded-lg bg-yellow-600 text-white px-4 py-2 text-sm font-medium hover:bg-yellow-700 transition-colors"
+            >
+              <Share2 className="size-4" />
+              Compartilhar selo
+            </button>
+          </div>
+        )}
 
         {/* Gabarito */}
         <div className="space-y-3">

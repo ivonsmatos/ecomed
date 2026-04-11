@@ -300,6 +300,42 @@ A **RDC ANVISA nº 222/2018** obriga estabelecimentos de saúde a implantarem si
     { slug: "guardiao",           name: "Guardião do Planeta",  coinReward: 50, description: "Atingiu o nível mais alto" },
     { slug: "streak-7",           name: "Constante",            coinReward: 0,  description: "Acessou o app por 7 dias seguidos" },
     { slug: "indicador",          name: "Embaixador",           coinReward: 0,  description: "Indicou um amigo que se cadastrou" },
+    // Selos de conclusão por nível de Quiz (quiz-nivel-1 … quiz-nivel-10)
+    { slug: "quiz-nivel-1",  name: "Iniciante do Descarte",    coinReward: 10, description: "Completou todos os quizzes do Nível 1 com 100%" },
+    { slug: "quiz-nivel-2",  name: "Básico do Descarte",       coinReward: 15, description: "Completou todos os quizzes do Nível 2 com 100%" },
+    { slug: "quiz-nivel-3",  name: "Intermediário",            coinReward: 20, description: "Completou todos os quizzes do Nível 3 com 100%" },
+    { slug: "quiz-nivel-4",  name: "Avançado",                 coinReward: 25, description: "Completou todos os quizzes do Nível 4 com 100%" },
+    { slug: "quiz-nivel-5",  name: "Expert Ambiental",         coinReward: 30, description: "Completou todos os quizzes do Nível 5 com 100%" },
+    { slug: "quiz-nivel-6",  name: "Mestre da Ciência",        coinReward: 35, description: "Completou todos os quizzes do Nível 6 com 100%" },
+    { slug: "quiz-nivel-7",  name: "Guardião da Biodiversidade", coinReward: 40, description: "Completou todos os quizzes do Nível 7 com 100%" },
+    { slug: "quiz-nivel-8",  name: "Especialista em Casos",    coinReward: 45, description: "Completou todos os quizzes do Nível 8 com 100%" },
+    { slug: "quiz-nivel-9",  name: "Analista Econômico",       coinReward: 50, description: "Completou todos os quizzes do Nível 9 com 100%" },
+    { slug: "quiz-nivel-10", name: "Mestre do Descarte",       coinReward: 100, description: "Completou todos os quizzes do Nível 10 com 100%" },
+
+    // ── Metas de Descarte — check-ins acumulados ─────────────────────────────
+    { slug: "descarte-1",    name: "Primeiro Descarte",       coinReward: 5,   description: "Realizou o primeiro descarte correto de medicamentos" },
+    { slug: "descarte-5",    name: "5 Descartes",             coinReward: 10,  description: "Realizou 5 descartes corretos de medicamentos" },
+    { slug: "descarte-10",   name: "10 Descartes",            coinReward: 15,  description: "Realizou 10 descartes corretos de medicamentos" },
+    { slug: "descarte-25",   name: "25 Descartes",            coinReward: 25,  description: "Realizou 25 descartes corretos de medicamentos" },
+    { slug: "descarte-50",   name: "50 Descartes",            coinReward: 40,  description: "Realizou 50 descartes corretos de medicamentos" },
+    { slug: "descarte-100",  name: "100 Descartes",           coinReward: 75,  description: "Realizou 100 descartes corretos de medicamentos" },
+    { slug: "descarte-365",  name: "365 Descartes",           coinReward: 200, description: "Realizou 365 descartes corretos — 1 ano de compromisso!" },
+    { slug: "descarte-500",  name: "500 Descartes",           coinReward: 300, description: "Realizou 500 descartes corretos de medicamentos" },
+    { slug: "descarte-1000", name: "1.000 Descartes",         coinReward: 500, description: "Realizou 1.000 descartes — herói ambiental!" },
+
+    // ── Metas de Pontos — diversidade de locais visitados ────────────────────
+    { slug: "pontos-5",      name: "Explorador",              coinReward: 10,  description: "Visitou 5 pontos de coleta diferentes" },
+    { slug: "pontos-10",     name: "Mapeador Eco",            coinReward: 20,  description: "Visitou 10 pontos de coleta diferentes" },
+    { slug: "pontos-25",     name: "Navegador EcoMed",        coinReward: 50,  description: "Visitou 25 pontos de coleta diferentes" },
+
+    // ── Metas de Quiz — quizzes completados (qualquer nota) ──────────────────
+    { slug: "quiz-10-feitos",      name: "Estudante",         coinReward: 15,  description: "Completou 10 quizzes educativos" },
+    { slug: "quiz-25-feitos",      name: "Pesquisador",       coinReward: 30,  description: "Completou 25 quizzes educativos" },
+    { slug: "quiz-50-feitos",      name: "Doutor Ambiental",  coinReward: 60,  description: "Completou 50 quizzes educativos" },
+
+    // ── Metas de Quiz — notas perfeitas acumuladas ────────────────────────────
+    { slug: "quiz-10-perfeitos",   name: "Gênio Ambiental",  coinReward: 50,  description: "Obteve 10 notas perfeitas em quizzes" },
+    { slug: "quiz-25-perfeitos",   name: "Nota 100",          coinReward: 100, description: "Obteve 25 notas perfeitas em quizzes" },
   ]
 
   for (const badge of badgesData) {

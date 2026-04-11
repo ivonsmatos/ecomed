@@ -108,16 +108,16 @@ export default async function QuizListPage() {
           <Trophy className="size-5 text-yellow-500 shrink-0" />
           <div className="text-sm">
             <p className="font-medium text-yellow-800 dark:text-yellow-200">
-              +5 Coins por quiz · +10 Coins por nota perfeita
+              +10 EcoCoins com nota perfeita (100% de acertos)
             </p>
             <p className="text-yellow-700 dark:text-yellow-400 text-xs mt-0.5">
-              Limite: 3 quizzes por dia · {attemptsHoje.length}/3 realizados hoje
+              Respostas erradas não geram EcoCoins · Limite: 3 quizzes por dia · {attemptsHoje.length}/3 realizados hoje
             </p>
           </div>
         </div>
         {limiteAtingido && (
           <p className="mt-2 text-xs text-yellow-700 dark:text-yellow-400 font-medium">
-            ✓ Você atingiu o limite diário de Coins para quizzes. Volte amanhã!
+            ✓ Você atingiu o limite diário de quizzes. Volte amanhã!
           </p>
         )}
       </div>

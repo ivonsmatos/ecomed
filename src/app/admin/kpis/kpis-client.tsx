@@ -98,20 +98,29 @@ function MetricCard({ label, value, unit, icon, target, invert, small, color: cu
 }
 
 function SparkBar({ data, color, height = 50 }: { data: { v: number; l: string }[]; color: string; height?: number }) {
-  const max = Math.max(...data.map(d => d.v))
+  const max = Math.max(...data.map(d => d.v), 1)
+  const minBarH = Math.max(8, Math.floor(height * 0.22))
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height }}>
-      {data.map((d, i) => (
-        <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
-          <div style={{
-            width: "100%", borderRadius: 3,
-            background: color, opacity: 0.3 + 0.7 * (d.v / max),
-            height: Math.max(4, (d.v / max) * height),
-            transition: "height 0.6s ease",
-          }} />
-          <span style={{ fontSize: 9, color: "#999", lineHeight: 1 }}>{d.l}</span>
-        </div>
-      ))}
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 3 }}>
+      {data.map((d, i) => {
+        const barH = d.v === 0 ? 2 : Math.max(minBarH, Math.round((d.v / max) * height))
+        const isLatest = i === data.length - 1
+        return (
+          <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+            <span style={{ fontSize: 8, fontWeight: 700, color: d.v > 0 ? color : "transparent", lineHeight: 1 }}>
+              {d.v > 0 ? fmt(d.v) : "0"}
+            </span>
+            <div style={{
+              width: "100%", borderRadius: 3,
+              background: color,
+              opacity: d.v === 0 ? 0.12 : isLatest ? 1 : 0.65,
+              height: barH,
+              transition: "height 0.6s ease",
+            }} />
+            <span style={{ fontSize: 9, color: "#999", lineHeight: 1 }}>{d.l}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }

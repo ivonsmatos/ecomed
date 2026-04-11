@@ -3,8 +3,19 @@ import { zValidator } from "@hono/zod-validator"
 import { z } from "zod"
 import { auth } from "@/../auth"
 import { prisma } from "@/lib/db/prisma"
-import { creditCoins } from "@/lib/coins"
+import { creditCoins, concederBadge } from "@/lib/coins"
 import { checkRateLimit } from "@/lib/ratelimit"
+import { verifyShuffleMaps } from "@/lib/quiz/shuffle"
+import { verificarMilestonesQuiz } from "@/lib/goals/milestones"
+
+const QUIZ_DIARIO_MAXIMO = 3
+
+/** Retorna o início do dia UTC (00:00:00.000) */
+function diaUTC(): Date {
+  const d = new Date()
+  d.setUTCHours(0, 0, 0, 0)
+  return d
+}
 
 const quiz = new Hono()
 
@@ -90,11 +101,14 @@ quiz.get("/:id", async (c) => {
   })
 })
 
-// POST /api/quiz/:id/submit — submete respostas e credita EcoCoins
+// POST /api/quiz/:id/submit — submete respostas e credita EcoCoins apenas se perfeito
 quiz.post(
   "/:id/submit",
   zValidator("param", z.object({ id: z.string().min(1) })),
-  zValidator("json", z.object({ answers: z.array(z.number().int().min(0)) })),
+  zValidator("json", z.object({
+    answers: z.array(z.number().int().min(0)),
+    shuffleToken: z.string().optional(),
+  })),
   async (c) => {
     const ip = c.req.header("CF-Connecting-IP") ?? "anon"
     const { success } = await checkRateLimit("map", ip)
@@ -105,7 +119,27 @@ quiz.post(
     const userId = session.user.id
 
     const { id } = c.req.valid("param")
-    const { answers } = c.req.valid("json")
+    const { answers, shuffleToken } = c.req.valid("json")
+
+    // Decodificar token de embaralhamento (stateless, signed HMAC)
+    // Se presente e válido: converter respostas do índice embaralhado → índice original
+    const shuffleMaps = shuffleToken ? verifyShuffleMaps(shuffleToken, id) : null
+
+    // ── Hard limit: máximo QUIZ_DIARIO_MAXIMO tentativas por dia ──────────────
+    const hoje = diaUTC()
+    const amanha = new Date(hoje)
+    amanha.setUTCDate(amanha.getUTCDate() + 1)
+
+    const totalHoje = await prisma.quizAttempt.count({
+      where: { userId, createdAt: { gte: hoje, lt: amanha } },
+    })
+
+    if (totalHoje >= QUIZ_DIARIO_MAXIMO) {
+      return c.json(
+        { error: `Limite de ${QUIZ_DIARIO_MAXIMO} quizzes por dia atingido. Volte amanhã!` },
+        429,
+      )
+    }
 
     const q = await prisma.quiz.findUnique({
       where: { id, active: true },
@@ -114,41 +148,98 @@ quiz.post(
 
     if (!q) return c.json({ error: "Quiz não encontrado." }, 404)
 
-    // Calcular pontuação
+    // ── Calcular pontuação ─────────────────────────────────────────────────────
     const total = q.questions.length
     let score = 0
     for (let i = 0; i < total; i++) {
-      if (answers[i] !== undefined && answers[i] === q.questions[i].correct) score++
+      // Se shuffleToken válido: converter índice embaralhado → original antes de comparar
+      const rawAnswer = answers[i]
+      const originalAnswer =
+        shuffleMaps && shuffleMaps[i] && rawAnswer !== undefined
+          ? shuffleMaps[i][rawAnswer]
+          : rawAnswer
+      if (originalAnswer !== undefined && originalAnswer === q.questions[i].correct) score++
     }
 
     const perfect = score === total
 
-    // Creditar EcoCoins (respeita limites diários)
-    const event = perfect ? ("QUIZ_PERFECT" as const) : ("QUIZ" as const)
-    const label = perfect
-      ? `Quiz perfeito: ${q.title}`
-      : `Quiz: ${q.title}`
-    const coinResult = await creditCoins(userId, event, id, undefined, label)
-    const coinsEarned = coinResult.ok ? (perfect ? 10 : 5) : 0
+    // ── Creditar EcoCoins APENAS se resposta perfeita (100%) ─────────────────
+    // Respostas erradas (mesmo parcialmente corretas) não geram coins.
+    let coinResult: Awaited<ReturnType<typeof creditCoins>> = { ok: false, newBalance: 0 }
+    if (perfect) {
+      coinResult = await creditCoins(userId, "QUIZ_PERFECT", id, undefined, `Quiz perfeito: ${q.title}`)
+    }
+    const coinsEarned = coinResult.ok ? 10 : 0
 
-    // Salvar tentativa
+    // ── Salvar tentativa ───────────────────────────────────────────────────────
     await prisma.quizAttempt.create({
       data: { userId, quizId: id, score, total, perfect, coinsEarned },
     })
 
-    // Retornar respostas corretas para exibir feedback
-    const correctAnswers = q.questions.map((quest) => quest.correct)
+    // ── Badge de nível: conceder ao completar TODOS os quizzes do nível com 100% ──
+    let levelBadgeEarned = false
+    let levelBadgeSlug: string | null = null
+
+    if (perfect) {
+      const quizzesDoNivel = await prisma.quiz.findMany({
+        where: { level: q.level, active: true },
+        select: { id: true },
+      })
+
+      // Quizzes do nível com pelo menos uma tentativa perfeita do usuário
+      const niveisPerfeitos = await prisma.quizAttempt.findMany({
+        where: {
+          userId,
+          quizId: { in: quizzesDoNivel.map((qz) => qz.id) },
+          perfect: true,
+        },
+        select: { quizId: true },
+        distinct: ["quizId"],
+      })
+
+      // Incluir o quiz atual (acabou de ser salvo como perfeito)
+      const completedIds = new Set([...niveisPerfeitos.map((a) => a.quizId), id])
+
+      if (completedIds.size >= quizzesDoNivel.length && quizzesDoNivel.length > 0) {
+        const slug = `quiz-nivel-${q.level}`
+        const earned = await concederBadge(userId, slug)
+        if (earned) {
+          levelBadgeEarned = true
+          levelBadgeSlug = slug
+        }
+      }
+    }
+
+    // ── Retornar feedback completo ─────────────────────────────────────────────
+    // correctAnswers: retorna os índices no espaço em que o cliente viu as opções
+    // (embaralhado se shuffleMaps presente, original caso contrário)
+    const correctAnswers = q.questions.map((quest, i) => {
+      if (shuffleMaps && shuffleMaps[i]) {
+        // Índice embaralhado da resposta certa = posição de quest.correct no mapa
+        return shuffleMaps[i].indexOf(quest.correct)
+      }
+      return quest.correct
+    })
+
+    // ── Verificar milestones de quiz (fire-and-forget) ───────────────────────
+    const novosSelosQuiz = await verificarMilestonesQuiz(userId, perfect).catch(() => [] as string[])
 
     return c.json({
       score,
       total,
       perfect,
       coinsEarned,
-      limiteDiario: !coinResult.ok,
+      // limiteDiario=true apenas quando não ganhou coins por ser perfeito mas atingiu o limite
+      // (perfeito mas limite = ainda aparece como perfeito, sem coins)
+      limiteDiario: perfect && !coinResult.ok,
       correctAnswers,
       newBalance: coinResult.newBalance,
       levelUp: coinResult.levelUp ?? null,
       streakBonus: coinResult.streakBonus ?? null,
+      levelBadgeEarned,
+      levelBadgeSlug,
+      quizLevel: q.level,
+      novosSelosQuiz,
     })
   },
 )

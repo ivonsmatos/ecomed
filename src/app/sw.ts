@@ -75,6 +75,18 @@ const serwist = new Serwist({
         url.pathname === "/sitemap.xml",
       handler: new NetworkOnly(),
     },
+    // Rotas protegidas (auth required) — NUNCA cachear respostas de navegação.
+    // O middleware Next.js retorna 302 → /entrar para usuários não autenticados.
+    // Se o SW tentar usar essa resposta opaqueredirect como respondWith() de um
+    // FetchEvent com redirect:"follow", o browser lança TypeError e mostra
+    // chrome-error://chromewebdata/ em vez da página normal.
+    {
+      matcher: ({ url }: { url: URL }) =>
+        ["/app", "/admin", "/parceiro"].some(
+          (p) => url.pathname === p || url.pathname.startsWith(p + "/")
+        ),
+      handler: new NetworkOnly(),
+    },
     // Pontos próximos: network-first com fallback de 5 minutos
     {
       matcher: /^\/api\/pontos\/proximos/,

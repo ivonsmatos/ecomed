@@ -49,9 +49,20 @@ export default auth((req: NextAuthRequest) => {
   const isStudio = pathname === "/studio" || pathname.startsWith("/studio/");
   const cspValue = isStudio ? studioCsp : csp;
 
+  // Encaminha pathname para Server Components via request header
+  const forwardedHeaders = new Headers(req.headers);
+  forwardedHeaders.set("x-pathname", pathname);
+
   function withCsp(res: NextResponse): NextResponse {
     res.headers.set("Content-Security-Policy", cspValue);
     res.headers.set("x-pathname", pathname);
+    return res;
+  }
+
+  // Para NextResponse.next(), encaminha x-pathname como request header (legível via headers())
+  function nextWithCsp(): NextResponse {
+    const res = NextResponse.next({ request: { headers: forwardedHeaders } });
+    res.headers.set("Content-Security-Policy", cspValue);
     return res;
   }
 
@@ -66,7 +77,7 @@ export default auth((req: NextAuthRequest) => {
   const isAdminRoute = ADMIN_ROUTES.some((r) => pathname.startsWith(r));
 
   if (!isAuthRoute && !isPartnerRoute && !isAdminRoute) {
-    return withCsp(NextResponse.next());
+    return nextWithCsp();
   }
 
   const session = req.auth;
@@ -87,7 +98,7 @@ export default auth((req: NextAuthRequest) => {
     return withCsp(NextResponse.redirect(new URL("/app", req.url)));
   }
 
-  return withCsp(NextResponse.next());
+  return nextWithCsp();
 });
 
 export const config = {

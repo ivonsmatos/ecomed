@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
-import { Heart, Flag, Calendar, ShieldCheck, Building2, Coins, Flame, Trophy, ChevronRight } from "lucide-react";
+import { Heart, Flag, Calendar, ShieldCheck, Building2, Coins, Flame, Trophy, ChevronRight, Medal } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { QRCodeDisplay } from "@/components/coins/QRCodeDisplay";
@@ -62,7 +62,7 @@ export default async function PerfilPage() {
   const session = await requireSession();
   const userId = session.user!.id!;
 
-  const [user, favoritesCount, reportsCount, wallet] = await Promise.all([
+  const [user, favoritesCount, reportsCount, wallet, top10] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: { name: true, email: true, image: true, role: true, createdAt: true, partner: { select: { id: true } } },
@@ -73,6 +73,16 @@ export default async function PerfilPage() {
       where: { userId },
       include: {
         transactions: { orderBy: { createdAt: "desc" }, take: 5 },
+      },
+    }),
+    // Top 10 por totalEarned (lifetime)
+    prisma.wallet.findMany({
+      orderBy: { totalEarned: "desc" },
+      take: 10,
+      select: {
+        totalEarned: true,
+        level: true,
+        user: { select: { id: true, name: true, image: true } },
       },
     }),
   ]);
@@ -189,6 +199,12 @@ export default async function PerfilPage() {
 
         <div className="flex gap-2 pt-1">
           <Link
+            href="/app/conquistas"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "flex-1 justify-between")}
+          >
+            <Medal className="size-4" /> Conquistas <ChevronRight className="size-4" />
+          </Link>
+          <Link
             href="/app/missoes"
             className={cn(buttonVariants({ variant: "outline", size: "sm" }), "flex-1 justify-between")}
           >
@@ -269,6 +285,54 @@ export default async function PerfilPage() {
           <QRCodeDisplay />
         </section>
       )}
+
+      {/* ---- Top 10 EcoCoins ---- */}
+      <section className="rounded-xl border p-5 space-y-4">
+        <h2 className="font-semibold flex items-center gap-2">
+          <Medal className="size-5 text-yellow-500" />
+          Top 10 EcoWarriors
+        </h2>
+        <ol className="space-y-2">
+          {top10.map((entry, i) => {
+            const isMe = entry.user.id === userId;
+            const initials = entry.user.name
+              ?.split(" ").slice(0, 2).map((n) => n[0]).join("").toUpperCase() ?? "?";
+            const medalColor =
+              i === 0 ? "text-yellow-500" :
+              i === 1 ? "text-slate-400" :
+              i === 2 ? "text-amber-600" : "text-muted-foreground";
+            const nivelEmoji = NIVEL_INFO[entry.level]?.icon ?? "🌱";
+
+            return (
+              <li
+                key={entry.user.id}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm",
+                  isMe
+                    ? "bg-eco-teal/10 border border-eco-teal/30 font-semibold"
+                    : "border border-transparent",
+                )}
+              >
+                <span className={cn("w-5 text-center font-bold shrink-0", medalColor)}>
+                  {i < 3 ? ["🥇", "🥈", "🥉"][i] : `${i + 1}º`}
+                </span>
+                <Avatar className="size-7 shrink-0">
+                  <AvatarImage src={entry.user.image ?? undefined} />
+                  <AvatarFallback className="text-[10px] bg-eco-teal/10">{initials}</AvatarFallback>
+                </Avatar>
+                <span className="flex-1 truncate">
+                  {isMe ? "Você" : (entry.user.name ?? "Eco-Cidadão")}
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground">{nivelEmoji}</span>
+                <span className="shrink-0 font-semibold text-yellow-600">{entry.totalEarned}</span>
+              </li>
+            );
+          })}
+        </ol>
+        <p className="text-xs text-muted-foreground text-center">
+          Ranking por total de EcoCoins ganhos ao longo do tempo
+        </p>
+      </section>
     </div>
   );
 }

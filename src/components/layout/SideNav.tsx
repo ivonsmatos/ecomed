@@ -19,7 +19,7 @@ export function SideNav() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex w-52 shrink-0 flex-col border-r bg-background/95">
+    <aside className="hidden md:flex w-64 shrink-0 flex-col border-r bg-background/95">
       <nav className="sticky top-14 flex flex-col gap-1 p-3">
         {links.map(({ href, label, icon: Icon, exact }) => {
           const active = exact ? pathname === href : pathname.startsWith(href);
