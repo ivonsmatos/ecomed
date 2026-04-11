@@ -23,30 +23,32 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
           password: ${{ secrets.VPS_PASSWORD }}
           command_timeout: 18m
-          envs: GH_TOKEN,DB_URL,AUTH_SEC,AUTH_U,GG_ID,GG_SEC,VAPID_K,SANITY_ID,SANITY_DS
+          # Sem envs — token git e build-args lidos diretamente do VPS
           script: |
             set -e
             cd /opt/ecomed/app
 
             echo "📥 Atualizando código..."
+            GH_TOKEN=$(cat /opt/ecomed/.github_token)
             git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/ivonsmatos/ecomed.git"
-            git fetch origin master
-            git reset --hard origin/master
+            git fetch --no-tags origin master
+            git checkout -B master -f origin/master
             git remote set-url origin "https://github.com/ivonsmatos/ecomed.git"
+            unset GH_TOKEN
 
             echo "🔨 Build Docker (com cache de camadas)..."
+            source /opt/ecomed/.env
             docker build \
-              --build-arg "DATABASE_URL=${DB_URL}" \
-              --build-arg "AUTH_SECRET=${AUTH_SEC}" \
-              --build-arg "AUTH_URL=${AUTH_U}" \
-              --build-arg "GOOGLE_CLIENT_ID=${GG_ID}" \
-              --build-arg "GOOGLE_CLIENT_SECRET=${GG_SEC}" \
-              --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${VAPID_K}" \
-              --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${SANITY_ID}" \
-              --build-arg "NEXT_PUBLIC_SANITY_DATASET=${SANITY_DS:-production}" \
+              --build-arg "DATABASE_URL=${DATABASE_URL}" \
+              --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
+              --build-arg "AUTH_URL=${NEXTAUTH_URL}" \
+              --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
+              --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
+              --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
+              --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
+              --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
               -t ecomed-app:latest .
 
             echo "🔄 Reiniciando container ecomed-web..."
@@ -60,14 +62,4 @@ jobs:
               ecomed-app:latest
 
             echo "✅ Deploy concluído!"
-            docker ps --filter name=ecomed-web --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DB_URL: ${{ secrets.DATABASE_URL }}
-          AUTH_SEC: ${{ secrets.NEXTAUTH_SECRET }}
-          AUTH_U: ${{ secrets.NEXTAUTH_URL }}
-          GG_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GG_SEC: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          VAPID_K: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
-          SANITY_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-          SANITY_DS: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+            docker ps --filter name=ecomed-web
