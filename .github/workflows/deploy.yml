@@ -66,6 +66,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          password: ${{ secrets.VPS_PASSWORD }}
           command_timeout: 4m
           envs: GHCR_TOKEN,GH_OWNER
           script: |
@@ -92,5 +93,5 @@ jobs:
             echo "✅ Deploy concluído!"
             docker ps --filter name=ecomed-web --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
         env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
           GH_OWNER: ${{ github.repository_owner }}
