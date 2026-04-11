@@ -37,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/ecomed
+          images: ghcr.io/${{ github.repository_owner }}/ecomed-app
           tags: |
             type=raw,value=latest
             type=sha,prefix=sha-
@@ -69,6 +69,9 @@ jobs:
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_ACTOR: ${{ github.repository_owner }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: root
@@ -78,7 +81,7 @@ jobs:
           script: |
             set -e
 
-            IMAGE="ghcr.io/$GH_ACTOR/ecomed:latest"
+            IMAGE="ghcr.io/${GH_ACTOR}/ecomed-app:latest"
 
             echo "🔐 Autenticando no GHCR..."
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
@@ -99,6 +102,3 @@ jobs:
 
             echo "✅ Deploy concluído — status:"
             docker ps --filter name=ecomed-web --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-        env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
-          GH_ACTOR: ${{ github.repository_owner }}
