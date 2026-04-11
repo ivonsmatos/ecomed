@@ -20,18 +20,18 @@ pnpm dev                     # http://localhost:3000 (Turbopack)
 
 ## Scripts
 
-| Comando               | Descrição                                               |
-| --------------------- | ------------------------------------------------------- |
+| Comando               | Descrição                                                  |
+| --------------------- | ---------------------------------------------------------- |
 | `pnpm dev`            | Dev server com Turbopack (sem PWA — usa --webpack em prod) |
-| `pnpm build`          | Build de produção (`next build --webpack` — req. serwist) |
-| `pnpm lint`           | ESLint                                                  |
-| `pnpm test`           | Vitest (unitários)                                      |
-| `pnpm test:e2e`       | Playwright (E2E)                                        |
-| `pnpm db:migrate`     | Criar migration Prisma e aplicar em dev                 |
-| `pnpm db:generate`    | Regenerar Prisma Client (após mudanças no schema)       |
-| `pnpm db:studio`      | Prisma Studio — UI gráfica para o banco                 |
-| `pnpm db:seed`        | Popular banco com dados de dev                          |
-| `pnpm db:seed:logmed` | Popular banco com pontos de coleta reais                |
+| `pnpm build`          | Build de produção (`next build --webpack` — req. serwist)  |
+| `pnpm lint`           | ESLint                                                     |
+| `pnpm test`           | Vitest (unitários)                                         |
+| `pnpm test:e2e`       | Playwright (E2E)                                           |
+| `pnpm db:migrate`     | Criar migration Prisma e aplicar em dev                    |
+| `pnpm db:generate`    | Regenerar Prisma Client (após mudanças no schema)          |
+| `pnpm db:studio`      | Prisma Studio — UI gráfica para o banco                    |
+| `pnpm db:seed`        | Popular banco com dados de dev                             |
+| `pnpm db:seed:logmed` | Popular banco com pontos de coleta reais                   |
 
 ## Stack
 

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { QRCodeDisplay } from "@/components/coins/QRCodeDisplay";
 import { CoinDisclaimer } from "@/components/coins/CoinDisclaimer";
+import { ShareBadgeButton } from "@/components/coins/ShareBadgeButton";
 
 export const metadata = { title: "Meu Perfil | EcoMed" };
 
@@ -179,6 +180,13 @@ export default async function PerfilPage() {
         )}
 
         {/* Links rápidos */}
+        {/* Compartilhar conquista */}
+        <ShareBadgeButton
+          nome={user.name ?? "Eco-Cidadão"}
+          nivel={nivel}
+          nivelLabel={nivelInfo.label}
+        />
+
         <div className="flex gap-2 pt-1">
           <Link
             href="/app/missoes"

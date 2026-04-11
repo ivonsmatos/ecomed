@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { MapPin, Heart, MessageCircle, Leaf, Coins, Trophy, Gift, ChevronRight, BookOpen } from "lucide-react";
@@ -20,6 +21,13 @@ const NIVEL_INFO: Record<string, { label: string; icon: string }> = {
 export default async function AppPage() {
   const session = await requireSession();
   const userId = session.user!.id!;
+
+  // Redirecionar usuários novos (sem carteira) para o onboarding
+  const walletExists = await prisma.wallet.findUnique({
+    where: { userId },
+    select: { id: true },
+  });
+  if (!walletExists) redirect("/app/onboarding");
 
   const [favoritesCount, reportsCount, wallet, missoesHoje] = await Promise.all([
     prisma.favorite.count({ where: { userId } }),

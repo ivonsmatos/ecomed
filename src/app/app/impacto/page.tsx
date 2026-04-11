@@ -1,6 +1,7 @@
 ﻿import { requireSession } from "@/lib/auth/session"
 import { prisma } from "@/lib/db/prisma"
 import { calcularImpacto } from "@/lib/impacto"
+import { DownloadPdfButton } from "@/components/coins/DownloadPdfButton"
 
 export const metadata = { title: "Meu Impacto Ambiental" }
 
@@ -66,6 +67,16 @@ export default async function ImpactoPage() {
       <p className="text-xs text-muted-foreground text-center">
         Cálculos baseados em dados ANVISA e estudos de logística reversa (PNRS 2020)
       </p>
+
+      {wallet && wallet.balance >= 200 && (
+        <div className="rounded-xl border border-eco-teal/20 bg-eco-teal/5 p-4 text-center space-y-2">
+          <p className="text-sm font-medium">Gere seu certificado oficial</p>
+          <p className="text-xs text-muted-foreground">
+            Baixe um PDF com seus dados de impacto ambiental — custa 200 EcoCoins
+          </p>
+          <DownloadPdfButton balance={wallet.balance} />
+        </div>
+      )}
     </main>
   )
 }
