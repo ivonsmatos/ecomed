@@ -3,6 +3,7 @@ import { Leaf } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { auth } from "@/../auth";
 import { signOut } from "@/../auth";
+import { PwaInstallButton } from "@/components/shared/PwaInstallButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -16,7 +17,7 @@ export async function Header() {
   const session = await auth();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 font-bold text-eco-teal-dark">
           <Leaf className="size-5" />
@@ -51,6 +52,8 @@ export async function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <PwaInstallButton />
+
           {session?.user ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="relative size-9 rounded-full bg-transparent border-0 p-0 cursor-pointer inline-flex items-center justify-center hover:bg-muted transition-colors">
