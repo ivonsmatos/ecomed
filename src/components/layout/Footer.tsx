@@ -51,9 +51,9 @@ export function Footer() {
                 <ul className="flex gap-3">
                   {[
                     { icon: <SvgFacebook />, href: "https://facebook.com", label: "Facebook" },
-                    { icon: <SvgInstagram />, href: "https://instagram.com", label: "Instagram" },
+                    { icon: <SvgInstagram />, href: "https://www.instagram.com/ecomed.eco/", label: "Instagram" },
                     { icon: <SvgTwitter />, href: "https://twitter.com", label: "Twitter" },
-                    { icon: <SvgLinkedin />, href: "https://linkedin.com", label: "LinkedIn" },
+                    { icon: <SvgLinkedin />, href: "https://www.linkedin.com/company/ecomed-eco-br", label: "LinkedIn" },
                   ].map(({ icon, href, label }) => (
                     <li key={label}>
                       <a

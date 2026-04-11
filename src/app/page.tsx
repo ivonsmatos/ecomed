@@ -193,7 +193,7 @@ export default async function HomePage() {
                   </h5>
                   <ul className="flex gap-7 items-center">
                     <li>
-                      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                      <a href="https://www.instagram.com/ecomed.eco/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
                          className="rotate-45 block text-white hover:text-eco-lime transition-colors">
                         <SvgInstagram />
                       </a>

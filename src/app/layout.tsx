@@ -48,9 +48,9 @@ const organizationSchema = {
   areaServed: { "@type": "Country", name: "Brasil" },
   sameAs: [
     "https://github.com/ivonsmatos/ecomed",
-    "https://www.instagram.com/ecomed.eco.br",
+    "https://www.instagram.com/ecomed.eco/",
     "https://www.facebook.com/ecomed.eco.br",
-    "https://www.linkedin.com/company/ecomed-brasil",
+    "https://www.linkedin.com/company/ecomed-eco-br",
     "https://twitter.com/ecomed_eco_br",
   ],
   contactPoint: {
