@@ -189,7 +189,7 @@ export default function ContatoPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {contatosInstitucionais.map((contato) => {
                 const Icon = contato.icon;
 
