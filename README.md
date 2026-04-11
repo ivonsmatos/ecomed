@@ -1,12 +1,18 @@
 # EcoMed — App Next.js
 
-> Front-end PWA e API do EcoMed. Documentação completa do projeto em [../README.md](../README.md).
+PWA educativa que mapeia pontos de coleta de medicamentos no Brasil. Cidadãos localizam farmácias e UBS para descarte correto. Parceiros gerenciam seus pontos. Admins aprovam e moderam. Chatbot com IA (RAG) responde dúvidas sobre legislação e impacto ambiental.
 
-## Desenvolvimento
+**Produção:** [ecomed.eco.br](https://ecomed.eco.br)  
+**Documentação completa do monorepo:** [../README.md](../README.md)
+
+---
+
+## Início Rápido
 
 ```bash
+cd app
 pnpm install
-cp .env.example .env.local   # preencher credenciais
+cp .env.example .env.local   # preencher credenciais (ver ../README.md#variáveis-de-ambiente)
 pnpm db:generate             # gerar Prisma Client
 pnpm db:migrate              # aplicar migrations
 pnpm dev                     # http://localhost:3000 (Turbopack)
@@ -14,101 +20,113 @@ pnpm dev                     # http://localhost:3000 (Turbopack)
 
 ## Scripts
 
-| Comando               | Descrição                          |
-| --------------------- | ---------------------------------- |
-| `pnpm dev`            | Dev server com Turbopack           |
-| `pnpm build`          | Build de produção                  |
-| `pnpm lint`           | ESLint                             |
-| `pnpm test`           | Vitest (unitários)                 |
-| `pnpm test:e2e`       | Playwright (E2E)                   |
-| `pnpm db:migrate`     | Criar migration Prisma             |
-| `pnpm db:studio`      | Prisma Studio                      |
-| `pnpm db:seed`        | Popular banco com dados de dev     |
-| `pnpm db:seed:logmed` | Popular banco com pontos de coleta |
-| `pnpm db:generate`    | Regenerar Prisma Client            |
+| Comando               | Descrição                                               |
+| --------------------- | ------------------------------------------------------- |
+| `pnpm dev`            | Dev server com Turbopack (sem PWA — usa --webpack em prod) |
+| `pnpm build`          | Build de produção (`next build --webpack` — req. serwist) |
+| `pnpm lint`           | ESLint                                                  |
+| `pnpm test`           | Vitest (unitários)                                      |
+| `pnpm test:e2e`       | Playwright (E2E)                                        |
+| `pnpm db:migrate`     | Criar migration Prisma e aplicar em dev                 |
+| `pnpm db:generate`    | Regenerar Prisma Client (após mudanças no schema)       |
+| `pnpm db:studio`      | Prisma Studio — UI gráfica para o banco                 |
+| `pnpm db:seed`        | Popular banco com dados de dev                          |
+| `pnpm db:seed:logmed` | Popular banco com pontos de coleta reais                |
 
 ## Stack
 
-- **Next.js 16** — App Router, Server Components, standalone output
-- **Prisma 7** — ORM + migrations, PostgreSQL + PostGIS (Supabase)
-- **NextAuth v5** — autenticação JWT (Google OAuth + credenciais)
-- **Hono** — API Routes tipadas com Zod
-- **Serwist v9** — Service Worker PWA (Workbox)
-- **Tailwind CSS v4** — estilização
-- **shadcn/ui** — design system (@base-ui/react)
-- **Leaflet + react-leaflet** — mapas interativos
-- **Recharts** — gráficos de estatísticas
+- **Next.js 16** — App Router, Server Components, standalone output, `--webpack` em prod
+- **Prisma 7** — ORM + migrations, PostgreSQL AWS Lightsail + PostGIS
+- **NextAuth v5 (beta)** — autenticação JWT (Google OAuth + credenciais e-mail/senha)
+- **Hono** — API Routes tipadas e validadas com Zod (`@hono/zod-validator`)
+- **Serwist v9** — Service Worker PWA (Workbox-based) — requer webpack no build
+- **Tailwind CSS v4** — estilização utility-first
+- **shadcn/ui** — design system baseado em Radix UI / base-ui
+- **Leaflet + react-leaflet** — mapas interativos com OpenStreetMap
+- **Recharts** — gráficos do painel admin KPIs
 - **Resend + React Email** — emails transacionais
-- **Cloudflare R2** — storage de imagens
-- **Upstash Redis** — rate limiting
+- **Cloudflare R2** — storage de imagens (resize via Sharp → WebP)
+- **Upstash Redis** — rate limiting (sliding window)
+- **Sanity.io** — CMS headless para o blog
 
 ## Estrutura
 
 ```
 src/
-├── app/                # App Router (rotas = pastas)
-│   ├── (auth)/         # login, cadastro, reset senha
-│   ├── app/            # área cidadão (/app/*)
-│   ├── parceiro/       # painel parceiro (/parceiro/*)
-│   ├── admin/          # painel admin (/admin/*)
-│   ├── mapa/           # mapa público
-│   ├── blog/           # artigos Sanity
-│   ├── offline/        # fallback PWA offline
-│   ├── studio/         # Sanity Studio embutido
-│   └── api/[[...route]]/ # API catch-all (Hono)
-├── components/         # componentes React
-├── lib/                # utilitários (db, auth, email, push, r2)
-├── hooks/              # React hooks customizados
-└── generated/prisma/   # Prisma Client (gerado automaticamente)
+├── app/                    # App Router (rotas = pastas)
+│   ├── layout.tsx          # root layout (fontes, providers)
+│   ├── page.tsx            # landing page pública
+│   ├── manifest.ts         # Web App Manifest (PWA)
+│   ├── robots.ts           # robots.txt dinâmico
+│   ├── sitemap.ts          # sitemap XML dinâmico
+│   ├── sw.ts               # Service Worker (Serwist/Workbox)
+│   ├── (auth)/             # login, cadastro, reset senha
+│   ├── app/                # área cidadão (/app/*)
+│   ├── parceiro/           # painel parceiro (/parceiro/*)
+│   ├── admin/              # painel admin (/admin/*)
+│   │   └── kpis/           # dashboard KPIs real-time (Server + Client)
+│   ├── mapa/               # mapa público de pontos
+│   ├── blog/               # artigos Sanity CMS
+│   ├── ranking/            # ranking semanal de EcoCoins
+│   ├── ai/                 # chat com IA (cidadão)
+│   ├── offline/            # fallback PWA offline
+│   └── api/[[...route]]/   # API catch-all (Hono)
+├── components/
+│   ├── admin/              # PartnerCandidateActions, KPI widgets
+│   ├── app/                # componentes da área do cidadão
+│   ├── chat/               # interface do chatbot (EcoBot)
+│   ├── coins/              # CoinDisclaimer, RedeemButton
+│   ├── layout/             # Header, Footer, BottomNav, Sidebar
+│   ├── map/                # MapView, PointCard, MapFilters
+│   ├── parceiro/           # PartnerRegistrationForm
+│   ├── points/             # PointForm, PointList
+│   ├── shared/             # componentes reutilizáveis
+│   └── ui/                 # design system (shadcn)
+├── lib/
+│   ├── db/prisma.ts        # singleton Prisma Client (SSL AWS Lightsail)
+│   ├── auth/session.ts     # requireSession, requireAdmin, requirePartner
+│   ├── coins/index.ts      # creditCoins, debitCoins (operações atômicas)
+│   ├── qr/token.ts         # gerarTokenQR, validarTokenQR (HMAC-SHA256)
+│   ├── email/              # Resend + templates React Email
+│   ├── push/               # web-push VAPID
+│   ├── ratelimit/          # Upstash sliding window
+│   ├── storage/r2.ts       # upload + resize Sharp → WebP → R2
+│   ├── sanity/             # client, queries, image builder
+│   └── schemas/            # Zod schemas compartilhados front+back
+│       └── partner.ts      # inclui validação CNPJ Módulo 11
+├── hooks/
+│   ├── useGeolocation.ts
+│   ├── useOffline.ts
+│   └── usePushNotifications.ts
+└── generated/prisma/       # Prisma Client gerado (não editar)
 ```
 
-## Deploy
+## Banco de Dados
 
-**Cloudflare Pages (principal):**
+**AWS Lightsail Managed PostgreSQL** + extensão PostGIS.
 
 ```bash
-git push origin main   # CI/CD automático
+# Aplicar migrations em produção
+pnpm exec prisma migrate deploy
+
+# Inspecionar banco (GUI)
+pnpm db:studio
 ```
 
-**Docker (VPS alternativo):**
+> **SSL:** `src/lib/db/prisma.ts` usa `ssl: { rejectUnauthorized: false }` em `NODE_ENV=production` — necessário para conectar ao AWS Lightsail a partir do Alpine Linux (certificado CA da AWS não está no bundle padrão do Node.js).
 
-```bash
-docker build --no-cache -t ecomed-app:latest .
-docker run -d --name ecomed-app -p 3010:3010 \
-  --env-file .env.production ecomed-app:latest
-```
+## PWA
 
-## Getting Started
+Build de produção usa `next build --webpack` — **não remover a flag** enquanto `@serwist/next` não suportar Turbopack (tracking: [serwist/serwist#54](https://github.com/serwist/serwist/issues/54)).
 
-First, run the development server:
+Em desenvolvimento o SW é desabilitado automaticamente (`disable: process.env.NODE_ENV === "development"`).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Segurança
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Zod em todas as rotas de entrada (auth, parceiro, rewards, check-in, QR)
+- CNPJ validado por Módulo 11 (dígitos verificadores) no schema do parceiro
+- QR Code: HMAC-SHA256 32 chars + expiração 30 min — `QR_HMAC_SECRET` obrigatório
+- `creditCoins`/`debitCoins`: operações atômicas Prisma (`{ increment }`/`{ decrement }`)
+- Resgates de recompensas: `prisma.$transaction()` — valida estoque + saldo atomicamente
+- CSP via `middleware.ts` — restritiva para todas as rotas, permissiva apenas para `/studio`
+- Rate limiting Upstash em todas as rotas públicas
