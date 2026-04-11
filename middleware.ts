@@ -14,16 +14,16 @@ const ADMIN_ROUTES = ["/admin"];
 // CSP geral para todas as rotas (exceto /studio)
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://plausible.io https://static.cloudflareinsights.com",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://plausible.io https://static.cloudflareinsights.com https://accounts.google.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob: https://cdn.sanity.io https://uploads.ecomed.eco.br https://*.r2.dev https://www.google-analytics.com https://www.googletagmanager.com https://lh3.googleusercontent.com https://*.tile.openstreetmap.org https://unpkg.com",
-  "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://plausible.io https://api.indexnow.org https://static.cloudflareinsights.com https://fonts.googleapis.com https://fonts.gstatic.com https://*.tile.openstreetmap.org https://unpkg.com wss:",
-  "frame-src https://www.googletagmanager.com",
+  "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://plausible.io https://api.indexnow.org https://static.cloudflareinsights.com https://fonts.googleapis.com https://fonts.gstatic.com https://*.tile.openstreetmap.org https://unpkg.com https://accounts.google.com https://oauth2.googleapis.com wss:",
+  "frame-src https://www.googletagmanager.com https://accounts.google.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self'",
+  "form-action 'self' https://accounts.google.com",
 ].join("; ");
 
 // CSP permissiva apenas para /studio — o Sanity Studio requer unsafe-eval e acesso a
