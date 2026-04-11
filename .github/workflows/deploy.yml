@@ -30,8 +30,7 @@ jobs:
             cd /opt/ecomed/app
 
             echo "📥 Atualizando código..."
-            git fetch --no-tags origin master
-            git reset --hard origin/master
+            git pull origin master
 
             echo "🔨 Build Docker (com cache de camadas)..."
             source /opt/ecomed/.env
