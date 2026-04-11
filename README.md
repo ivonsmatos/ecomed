@@ -2,7 +2,9 @@
 
 > PWA educativa que mapeia pontos de coleta de medicamentos no Brasil. Cidadãos encontram farmácias e UBS para descarte correto. Parceiros se cadastram. Admins aprovam. Um chatbot com RAG responde dúvidas sobre legislação e impacto ambiental.
 
-**Produção:** [ecomed.eco.br](https://ecomed.eco.br)
+**Produção:** [ecomed.eco.br](https://ecomed.eco.br)  
+**Repositório:** [github.com/ivonsmatos/ecomed](https://github.com/ivonsmatos/ecomed)  
+**Stack:** Next.js 16 · Prisma 7 · PostgreSQL (AWS Lightsail) · FastAPI · Docker · Cloudflare
 
 ---
 
@@ -23,6 +25,8 @@
   - [Rate Limiting](#rate-limiting)
   - [Emails](#emails)
   - [Gamificação EcoCoins](#gamificação-ecocoins)
+  - [QR Code e Check-in Presencial](#qr-code-e-check-in-presencial)
+  - [Painel Admin KPIs](#painel-admin-kpis)
 - [IA — FastAPI + RAG](#ia--fastapi--rag)
   - [Pipeline RAG](#pipeline-rag)
   - [Guardrails](#guardrails)
@@ -32,6 +36,7 @@
 - [Variáveis de Ambiente](#variáveis-de-ambiente)
 - [Desenvolvimento Local](#desenvolvimento-local)
 - [Deploy em Produção](#deploy-em-produção)
+- [CI/CD](#cicd)
 - [Segurança](#segurança)
 - [Convenções](#convenções)
 
@@ -154,17 +159,30 @@ Serviços Externos:
 | ---------------------- | -------------------------------------------- | --------------------- |
 | Frontend / App Next.js | VPS Oracle Cloud — Docker :3010 + Nginx :443 | ecomed.eco.br         |
 | DNS / WAF / CDN        | Cloudflare (proxy reverso)                   | ecomed.eco.br         |
-| Banco principal        | AWS Lightsail (PostgreSQL + PostGIS)         | :5432                 |
+| Banco principal        | AWS Lightsail Managed PostgreSQL + PostGIS   | :5432                 |
 | Rate limiting          | Upstash Redis                                | REST API              |
 | Imagens                | Cloudflare R2                                | uploads.ecomed.eco.br |
 | Blog / CMS             | Sanity.io                                    | sanity.io/manage      |
 | Emails                 | Resend                                       | resend.com            |
 | IA API                 | VPS Oracle Cloud Ubuntu 22.04                | :8002                 |
-| Embeddings / LLM       | Ollama (Docker)                              | :11434                |
+| Embeddings / LLM       | Ollama (Docker) — Groq API (produção)        | :11434                |
 | Vetores                | PGVector (Docker)                            | :5432                 |
-| Monitoramento          | Sentry                                       | sentry.io             |
+| Monitoramento          | Beszel (agent + hub)                         | VPS :8080             |
 
-**VPS:** `45.151.122.234` — containers Docker: `ecomed-app` (:3010), `ecomed-ia` (:8002), `ecomed-pgvector`, `ecomed-ollama`
+**VPS Oracle Cloud** (`45.151.122.234`) — containers Docker ativos:
+
+| Container         | Imagem                   | Porta | Função                      |
+| ----------------- | ------------------------ | ----- | --------------------------- |
+| `ecomed-web`      | `ecomed-app`             | 3010  | Next.js standalone (app)    |
+| `ecomed-ia`       | `ia-api`                 | 8002  | FastAPI RAG                 |
+| `ecomed-ollama`   | `ollama/ollama:latest`   | 11434 | LLM local (fallback)        |
+| `ecomed-pgvector` | `pgvector/pgvector:pg16` | —     | Banco vetorial da IA        |
+| `beszel-agent`    | `henrygd/beszel-agent`   | —     | Agente de monitoramento VPS |
+| `beszel-hub`      | `henrygd/beszel`         | —     | Hub de monitoramento        |
+
+> **Importante:** o banco de dados principal é o **AWS Lightsail Managed PostgreSQL** — não o pgvector acima. O pgvector é exclusivo para embeddings da IA.
+
+> **SSL no Prisma:** a conexão com o AWS Lightsail usa `ssl: { rejectUnauthorized: false }` em produção porque o certificado CA da AWS não está no bundle padrão do Node.js/Alpine. A criptografia TLS permanece ativa.
 
 ---
 
@@ -429,10 +447,15 @@ await requirePartner(); // redireciona para /app se não for PARTNER/ADMIN
 
 **Conexão:**
 
-- **Runtime:** pooler Supabase (`DATABASE_URL`, porta 6543, pgBouncer)
-- **Migrations:** conexão direta Supabase (`DIRECT_URL`, porta 5432)
+- **Runtime:** AWS Lightsail Managed PostgreSQL (`DATABASE_URL`, porta 5432)
+- **SSL em produção:** `ssl: { rejectUnauthorized: false }` — necessário porque o certificado CA da AWS não está no bundle do Alpine Linux. A criptografia TLS continua ativa.
+- **Migrations:** mesma string de conexão, via `prisma migrate deploy`
 
-**Busca geoespacial** via raw SQL com PostGIS (extensão habilitada no Supabase):
+**Adapter:** `@prisma/adapter-pg` (PrismaPg) — driver nativo para compatibilidade com Cloudflare Workers/Edge (não usado em prod, mas mantido para portabilidade).
+
+**Operações atômicas:** `creditCoins` e `debitCoins` usam `{ increment }` / `{ decrement }` do Prisma para evitar race conditions. Resgates de recompensas são envolvidos em `prisma.$transaction()`.
+
+**Busca geoespacial** via raw SQL com PostGIS:
 
 ```sql
 SELECT id, name, address, latitude, longitude,
@@ -454,10 +477,10 @@ LIMIT 30
 **Migrations:**
 
 ```bash
-# Desenvolvimento
+# Desenvolvimento — cria migration e aplica
 pnpm db:migrate --name descricao
 
-# Produção (CI/VPS)
+# Produção (VPS / CI)
 pnpm prisma migrate deploy
 ```
 
@@ -554,6 +577,48 @@ await sendEmail("partner-approved", email, { partnerName, dashboardUrl });
 
 ---
 
+### QR Code e Check-in Presencial
+
+**`src/lib/qr/token.ts`** — tokens HMAC-SHA256 para check-ins presenciais em pontos de coleta.
+
+**Funcionamento:**
+
+1. Admin/Parceiro gera um QR Code para um ponto específico via `/admin` ou `/parceiro`
+2. Token: `pointId.timestamp.hmac(32 chars)` — assinado com `QR_HMAC_SECRET` (ou `AUTH_SECRET` como fallback)
+3. Cidadão escaneia o QR → `POST /api/checkin { token }` → server valida HMAC + janela de 30 min
+4. Cria registro `Checkin` e credita EcoCoins (+15 com GPS, +10 sem GPS)
+5. Bônus automáticos: `CHECKIN_FIRST_MONTH` (primeiro mês de uso do ponto) e `CHECKIN_NEW_POINT` (primeiro check-in do usuário naquele ponto)
+
+**Segurança do QR:**
+
+- HMAC com 32 caracteres hex (128 bits de entropia) — resistente a força bruta
+- Tokens expiram em 30 minutos
+- `QR_HMAC_SECRET` obrigatório em produção — app lança erro explícito se não configurado
+
+---
+
+### Painel Admin KPIs
+
+**`src/app/admin/kpis/`** — dashboard de métricas em tempo real (revalidação a cada 5 min).
+
+**Arquitetura Server/Client:**
+
+- `page.tsx` — Server Component que chama `getKpiData()` e injeta dados no client
+- `getData.ts` — queries Prisma paralelas (`Promise.all`) sem bloquear renderização
+- `kpis-client.tsx` — Client Component com abas, gráficos Recharts e animações
+
+**Métricas disponíveis:**
+
+| Categoria   | Métricas                                                                          |
+| ----------- | --------------------------------------------------------------------------------- |
+| Usuários    | Total, novos (7d/30d), distribuição por nível, taxa de conversão cidadão→parceiro |
+| Engajamento | DAU/WAU, check-ins totais (7d/30d), pontos novos, média de streak, best streak    |
+| EcoCoins    | Total emitido, total resgatado, average por usuário, saldo em circulação          |
+| Quiz        | Total de tentativas, taxa de acerto (%), média de score                           |
+| Sparkline   | Histórico semanal de EcoCoins (últimas 6 semanas)                                 |
+
+---
+
 ### Gamificação EcoCoins
 
 Sistema de engajamento gamificado implementado em `src/lib/coins/index.ts`.
@@ -570,11 +635,18 @@ await creditCoins(userId, "ARTICLE_READ", articleSlug);
 
 **Regras de negócio:**
 
-- **Teto global:** 120 EcoCoins/dia por usuário (exceto eventos isentos como onboarding e streaks)
-- **Teto por categoria:** ex. CHECKIN = 3/dia, ARTICLE_READ = 5/dia (via `DailyLimitTracker`)
-- **Multiplicadores de nível:** GUARDIAO × 1.2, LENDA_ECO × 1.5
+- **Teto global:** 120 EcoCoins/dia por usuário (exceto eventos isentos: onboarding, admin, redemption, streaks)
+- **Teto por categoria:** ex. `CHECKIN` = 3/dia, `ARTICLE_READ` = 5/dia (via `DailyLimitTracker`)
+- **Operações atômicas:** `{ increment: amount }` / `{ decrement: amount }` — sem race conditions em atualizações concorrentes de saldo
+- **Multiplicadores de nível:** `GUARDIAO` × 1.2, `LENDA_ECO` × 1.5
 - **Streak:** detecta sequência de dias consecutivos — bônus milestone aos 3, 7 e 30 dias
-- **Check-in GPS:** +15 coins (com GPS) vs +10 (sem GPS) + bônus CHECKIN_NEW_POINT e CHECKIN_FIRST_MONTH
+- **Ranking semanal:** ordenado por `weeklyCoins` (reset toda segunda-feira), não por total histórico
+- **Check-in GPS:** +15 coins (com GPS) vs +10 (sem GPS) + bônus `CHECKIN_NEW_POINT` e `CHECKIN_FIRST_MONTH`
+
+**Resgates de recompensas (`/api/rewards/:id/redeem`):**
+
+- Toda operação de resgate é envolvida em `prisma.$transaction()` — verifica saldo, estoque e cooldown atomicamente
+- Status do resgate: enum `RewardStatus` (`PENDING` → `DELIVERED` / `CANCELLED`)
 
 **Componentes UI:**
 
@@ -730,7 +802,7 @@ User ──< DailyLimitTracker    (teto diário por categoria de evento)
 | `Checkin`           | userId, pointId, coinsEarned, hasGps                                        | Registro de descarte via QR Code                |
 | `DailyLimitTracker` | userId, date, category, count, coins `@@unique([userId, date, category])`   | Controle de teto diário por categoria de evento |
 | `RewardCatalog`     | slug, name, tier, cost, minLevel, stock?, cooldownDays, active              | Catálogo de recompensas resgatáveis             |
-| `UserReward`        | userId, rewardId, status (PENDING/DELIVERED/CANCELLED)                      | Histórico de resgates do usuário                |
+| `UserReward`        | userId, rewardId, status (RewardStatus)                                     | Histórico de resgates do usuário                |
 
 ### Níveis (Level)
 
@@ -747,71 +819,109 @@ User ──< DailyLimitTracker    (teto diário por categoria de evento)
 ### Enums
 
 ```sql
-Role:        CITIZEN | PARTNER | ADMIN
-PointStatus: PENDING | APPROVED | REJECTED
-ReportType:  CLOSED | WRONG_ADDRESS | NOT_ACCEPTING | OTHER
-MissionType: DAILY | WEEKLY
-CoinEvent:   SIGNUP | ONBOARDING_PROFILE | ONBOARDING_SCREENS | ONBOARDING_GEO
-             ONBOARDING_PUSH | CHECKIN | CHECKIN_FIRST_MONTH | CHECKIN_NEW_POINT
-             ARTICLE_READ | QUIZ | QUIZ_PERFECT | ECOBOT_QUESTION | ECOBOT_RATING
-             REFERRAL | SHARE_ARTICLE | SHARE_BADGE | STREAK_3_DAYS | STREAK_7_DAYS
-             STREAK_30_DAYS | DAILY_STREAK | MISSION_COMPLETE | MISSION_DAILY_BONUS
-             MISSION_WEEKLY_BONUS | REPORT_SUBMITTED | BADGE_EARNED
-             ADMIN_GRANT | ADJUSTMENT | REDEMPTION
+Role:         CITIZEN | PARTNER | ADMIN
+PointStatus:  PENDING | APPROVED | REJECTED
+ReportType:   CLOSED | WRONG_ADDRESS | NOT_ACCEPTING | OTHER
+MissionType:  DAILY | WEEKLY
+RewardStatus: PENDING | DELIVERED | CANCELLED   -- enum nativo PostgreSQL
+CoinEvent:    SIGNUP | ONBOARDING_PROFILE | ONBOARDING_SCREENS | ONBOARDING_GEO
+              ONBOARDING_PUSH | CHECKIN | CHECKIN_FIRST_MONTH | CHECKIN_NEW_POINT
+              ARTICLE_READ | QUIZ | QUIZ_PERFECT | ECOBOT_QUESTION | ECOBOT_RATING
+              REFERRAL | SHARE_ARTICLE | SHARE_BADGE | STREAK_3_DAYS | STREAK_7_DAYS
+              STREAK_30_DAYS | DAILY_STREAK | MISSION_COMPLETE | MISSION_DAILY_BONUS
+              MISSION_WEEKLY_BONUS | REPORT_SUBMITTED | BADGE_EARNED
+              ADMIN_GRANT | ADJUSTMENT | REDEMPTION
 ```
 
 ---
 
 ## Variáveis de Ambiente
 
-### `app/.env.production` (VPS)
+Copie `app/.env.example` para `app/.env.local` e preencha todos os valores marcados como obrigatórios.
+
+### `app/.env.local` / `app/.env.production`
 
 ```env
-# Banco de dados (AWS Lightsail PostgreSQL)
-DATABASE_URL=postgresql://...@ls-...rds.amazonaws.com:5432/postgres  # pooler/direto
-DIRECT_URL=postgresql://... (mesma string, conexão direta p/ migrations)
+# ── Banco de Dados (AWS Lightsail Managed PostgreSQL) ─────────────────────────
+DATABASE_URL=postgresql://usuario:senha@ls-xxx.rds.amazonaws.com:5432/ecomed
+# DIRECT_URL é alias de DATABASE_URL (não há pooler separado no Lightsail)
 
-# Auth (NextAuth v5 — usar AUTH_* não NEXTAUTH_*)
-AUTH_URL=https://ecomed.eco.br
-AUTH_SECRET=...                    # gerar: openssl rand -base64 32
+# ── Autenticação (NextAuth v5) ─────────────────────────────────────────────────
+# OBRIGATÓRIO: usar prefixo AUTH_* (não NEXTAUTH_*)
+AUTH_URL=https://ecomed.eco.br        # localhost:3000 em dev
+AUTH_SECRET=...                       # openssl rand -base64 32
+AUTH_TRUST_HOST=true                  # obrigatório em produção atrás de proxy
 
-# Google OAuth
-# Redirect URI autorizada no Google Console:
-# https://ecomed.eco.br/api/auth/callback/google
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
+# ── Google OAuth ────────────────────────────────────────────────────────────────
+AUTH_GOOGLE_ID=...
+AUTH_GOOGLE_SECRET=...
+# Redirect URI no Google Console: https://ecomed.eco.br/api/auth/callback/google
 
-# Cloudflare R2
+# ── QR Code / Check-in ─────────────────────────────────────────────────────────
+QR_HMAC_SECRET=...  # OBRIGATÓRIO — app lança erro se não configurado
+                    # gerar: openssl rand -base64 32
+
+# ── Cloudflare R2 (storage de imagens) ─────────────────────────────────────────
 CLOUDFLARE_ACCOUNT_ID=...
 R2_ACCESS_KEY_ID=...
 R2_SECRET_ACCESS_KEY=...
 R2_BUCKET_NAME=ecomed-uploads
 R2_PUBLIC_URL=https://uploads.ecomed.eco.br
 
-# Upstash Redis (rate limiting)
+# ── Upstash Redis (rate limiting) ──────────────────────────────────────────────
 UPSTASH_REDIS_REST_URL=https://...upstash.io
 UPSTASH_REDIS_REST_TOKEN=...
 
-# Resend (emails)
+# ── Resend (emails transacionais) ──────────────────────────────────────────────
 RESEND_API_KEY=re_...
-VAPID_EMAIL=contato@ecomed.eco.br
+EMAIL_FROM=EcoMed <noreply@ecomed.eco.br>
 
-# Web Push (VAPID)
-NEXT_PUBLIC_VAPID_PUBLIC_KEY=...   # público, exposto ao browser
-VAPID_PRIVATE_KEY=...              # privado, só no servidor
+# ── Web Push VAPID ─────────────────────────────────────────────────────────────
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=...      # exposto ao browser (prefixo NEXT_PUBLIC_)
+VAPID_PRIVATE_KEY=...                 # somente servidor
+VAPID_SUBJECT=mailto:noreply@ecomed.eco.br
+
+# ── Microserviço de IA ─────────────────────────────────────────────────────────
+IA_BASE_URL=http://45.151.122.234:8002
+IA_API_KEY=...         # mesmo valor que IA_SERVICE_TOKEN no ia/.env
+
+# ── Sanity CMS (Blog) ──────────────────────────────────────────────────────────
+NEXT_PUBLIC_SANITY_PROJECT_ID=...
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=...
+
+# ── CRON Jobs ──────────────────────────────────────────────────────────────────
+CRON_SECRET=...        # token para autenticar chamadas cron internas
+```
+
+### `ia/.env`
+
+```env
+DATABASE_URL=postgresql://ecomed:senha@ecomed-pgvector:5432/ecomed_vectors
+OLLAMA_BASE_URL=http://ecomed-ollama:11434
+OLLAMA_MODEL=llama3.2:latest
+IA_SERVICE_TOKEN=...              # deve coincidir com IA_API_KEY no app
+PGVECTOR_PASSWORD=...
+```
+
+VAPID_PRIVATE_KEY=... # privado, só no servidor
 
 # Microserviço de IA
+
 IA_SERVICE_URL=http://45.151.122.234:8002
 IA_SERVICE_TOKEN=...
 
 # Sanity CMS
+
 NEXT_PUBLIC_SANITY_PROJECT_ID=...
 NEXT_PUBLIC_SANITY_DATASET=production
 SANITY_API_TOKEN=...
 
 # Sentry
+
 NEXT_PUBLIC_SENTRY_DSN=...
-```
+
+````
 
 ### `ia/.env`
 
@@ -821,7 +931,7 @@ OLLAMA_BASE_URL=http://ecomed-ollama:11434
 OLLAMA_MODEL=llama3.2:latest
 IA_SERVICE_TOKEN=...              # deve coincidir com o app
 PGVECTOR_PASSWORD=...
-```
+````
 
 ---
 
@@ -917,37 +1027,35 @@ python -m app.ingest --reset   # re-indexar documentos
 
 ## Deploy em Produção
 
-### App Next.js — VPS Docker + Nginx
+### App Next.js — VPS Docker
 
-O app roda como container Docker na porta 3010, com Nginx como proxy reverso na 443.
+O app roda como container Docker na porta 3010. O Nginx/Cloudflare faz o proxy reverso.
+
+**Processo de deploy manual:**
 
 ```bash
-# No VPS (45.151.122.234)
-cd /opt/ecomed-app
-git pull origin main
-docker build --no-cache -t ecomed-app:latest .
-docker stop ecomed-app && docker rm ecomed-app
-docker run -d \
-  --name ecomed-app \
-  --restart unless-stopped \
-  -p 3010:3010 \
-  --env-file .env.production \
-  ecomed-app:latest
+# 1. Enviar arquivos modificados para o VPS (via pscp ou git)
+# Método 1 — git archive + pscp (repo privado sem credenciais no VPS):
+git archive --format=tar.gz HEAD -- <arquivos> > /tmp/deploy.tar.gz
+pscp -pw SENHA /tmp/deploy.tar.gz root@45.151.122.234:/tmp/
+ssh root@45.151.122.234 "tar -xzf /tmp/deploy.tar.gz -C /opt/ecomed-app"
+
+# 2. Aplicar migrations (se houver mudanças no schema)
+# Em container temporário com DATABASE_URL do .env
+docker run --rm -e DATABASE_URL="$(grep '^DATABASE_URL=' .env | cut -d= -f2-)" \
+  -v /opt/ecomed-app:/app -w /app -e CI=true \
+  node:20-alpine sh -c "pnpm install --frozen-lockfile --ignore-scripts && pnpm exec prisma migrate deploy"
+
+# 3. Rebuild da imagem
+docker build -t ecomed-app .
+
+# 4. Restart do container
+docker stop ecomed-web && docker rm ecomed-web
+docker run -d --name ecomed-web --restart unless-stopped \
+  -p 3010:3010 --env-file /opt/ecomed-app/.env ecomed-app
 ```
 
-**Variáveis obrigatórias no `.env.production` do VPS:**
-
-```env
-AUTH_URL=https://ecomed.eco.br
-AUTH_SECRET=...
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-DATABASE_URL=...
-DIRECT_URL=...
-```
-
-> **Google OAuth:** no [Google Cloud Console](https://console.cloud.google.com), o redirect URI deve ser:
-> `https://ecomed.eco.br/api/auth/callback/google`
+> **Nota `--webpack`:** o build usa `next build --webpack` (não Turbopack) porque o `@serwist/next` (PWA) depende de internals do webpack e ainda não suporta Turbopack. Remover a flag só será possível após migrar para `@serwist/turbopack`.
 
 ### IA — VPS Docker
 
@@ -968,9 +1076,26 @@ curl -s -o /dev/null -w "HTTP %{http_code}" http://localhost:3010/
 # IA
 curl -s http://localhost:8002/health/
 
-# Todos os containers
-docker ps
+# Containers
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 ```
+
+---
+
+## CI/CD
+
+**GitHub Actions** (`.github/workflows/ci.yml`) — dispara em push/PR para `main`.
+
+**Jobs:**
+
+| Job             | Steps                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `app` (Next.js) | checkout → pnpm setup → Node 22 → install → `db:generate` → lint → typecheck (`tsc --noEmit`) → test → build |
+| `ia` (FastAPI)  | checkout → Python 3.12 → pip install ruff pytest → `ruff check` → `pytest test_guardrails.py`                |
+
+**Secrets necessários no GitHub** (Settings → Secrets):
+
+`DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`, `QR_HMAC_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, `RESEND_API_KEY`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL`, `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_TOKEN`, `IA_BASE_URL`, `IA_API_KEY`
 
 ---
 
@@ -980,13 +1105,18 @@ docker ps
 - **RBAC:** middleware Next.js + helpers `requireAdmin()` / `requirePartner()` em cada Server Component e rota
 - **Rate Limiting:** Upstash sliding window em todas as rotas públicas
 - **Uploads:** validação de MIME type + tamanho (5 MB), conversão forçada para WebP via Sharp
-- **SQL Injection:** todas as queries raw usam `prisma.$queryRaw` com template literals parametrizados
+- **SQL Injection:** queries raw usam `prisma.$queryRaw` com template literals parametrizados
+- **Atomic operations:** `creditCoins`/`debitCoins` usam `{ increment }`/`{ decrement }` Prisma; resgates em `$transaction()`
 - **Passwords:** bcrypt com salt automático (bcryptjs)
+- **Validação de inputs:** Zod em todas as rotas de API (auth, parceiro, rewards, check-in) — `safeParse` com mensagens de erro estruturadas
+- **CNPJ:** validação Módulo 11 (dígitos verificadores) no schema Zod do parceiro — rejeita sequências inválidas e CNPJs fictícios
+- **QR Code:** HMAC-SHA256 com 32 chars hex (128 bits) + expiração em 30 min + secret obrigatório (`QR_HMAC_SECRET`)
 - **CORS:** FastAPI restringe origins a `ecomed.eco.br` e `localhost:3000`
-- **IA Token:** Bearer token estático entre Next.js e FastAPI, nunca exposto ao cliente
+- **IA Token:** Bearer token estático entre Next.js e FastAPI — nunca exposto ao cliente
+- **CSP:** Content Security Policy aplicada pelo middleware — restritiva para todas as rotas, permissiva apenas para `/studio`
 - **robots.txt:** bloqueia `/app/`, `/parceiro/`, `/admin/`, `/api/` do rastreamento
-- **Guardrails:** bloqueio por regex antes do LLM — sem vazamento de dados sensíveis ou uso indevido
-- **Headers:** Cloudflare WAF na frente de toda requisição
+- **Guardrails:** bloqueio por regex antes do LLM — sem vazamento de dados sensíveis, bloqueia prompt injection
+- **Cloudflare WAF:** na frente de toda requisição — DDoS protection, bot management
 
 ---
 
