@@ -13,9 +13,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   // Verificar se o usuário já viu o onboarding (tem CoinTransaction ONBOARDING_SCREENS)
   const headersList = await headers();
   const pathname = headersList.get("x-pathname") ?? "";
-  const isOnboardingPage = pathname === "/app/onboarding";
-
-  if (!isOnboardingPage) {
+  
+  // NUNCA redirecionar se já estiver em páginas do onboarding ou páginas que não precisam
+  const isOnboardingFlow = pathname === "/app/onboarding" || pathname.startsWith("/app/onboarding/");
+  
+  if (!isOnboardingFlow) {
     const visiouOnboarding = await prisma.coinTransaction.findFirst({
       where: { wallet: { userId }, event: "ONBOARDING_SCREENS" },
       select: { id: true },
