@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 export const metadata: Metadata = {
   title: "O que fazemos | EcoMed",
   description:
-    "Entenda como o EcoMed transforma o descarte correto de medicamentos em acao com mapa inteligente, IA educativa e gamificacao.",
+    "Entenda como o EcoMed transforma o descarte correto de medicamentos em ação com mapa inteligente, IA educativa e gamificação.",
   alternates: { canonical: "https://ecomed.eco.br/o-que-fazemos" },
 };
 
@@ -16,34 +16,34 @@ const frentes = [
     icon: MapPin,
     title: "Encontre pontos de coleta",
     description:
-      "Mapa inteligente com mais de 7.500 pontos LogMed para localizar farmacias, UBS e hospitais proximos de voce.",
+      "Mapa inteligente com mais de 7.500 pontos LogMed para localizar farmácias, UBS e hospitais próximos de você.",
   },
   {
     icon: Bot,
-    title: "Responda duvidas com IA",
+    title: "Responda dúvidas com IA",
     description:
-      "EcoBot disponivel 24 horas para orientar sobre descarte, legislacao e impacto ambiental em linguagem simples.",
+      "EcoBot disponível 24 horas para orientar sobre descarte, legislação e impacto ambiental em linguagem simples.",
   },
   {
     icon: Coins,
-    title: "Transforme acao em recompensa",
+    title: "Transforme ação em recompensa",
     description:
-      "Cada descarte correto, quiz e leitura educativa gera EcoMed Coins para estimular habitos sustentaveis.",
+      "Cada descarte correto, quiz e leitura educativa gera EcoMed Coins para estimular hábitos sustentáveis.",
   },
 ];
 
 const desafios = [
   "91% dos brasileiros descartam medicamentos de forma incorreta.",
-  "Cerca de 30 mil toneladas sao descartadas incorretamente por ano no Brasil.",
-  "Um comprimido pode contaminar ate 450.000 litros de agua.",
-  "Antibioticos descartados incorretamente contribuem para superbacterias.",
+  "Cerca de 30 mil toneladas são descartadas incorretamente por ano no Brasil.",
+  "Um comprimido pode contaminar até 450.000 litros de água.",
+  "Antibióticos descartados incorretamente contribuem para superbactérias.",
 ];
 
 const basePublica = [
-  "Lei 12.305/2010 (PNRS): responsabilidade compartilhada no ciclo de residuos.",
-  "Decreto 10.388/2020: logistica reversa de medicamentos domiciliares (LogMed).",
-  "RDC 222/2018 (ANVISA): boas praticas de gerenciamento de residuos de saude.",
-  "ODS 3, ODS 6 e ODS 12 (ONU): saude, agua potavel e consumo responsavel.",
+  "Lei 12.305/2010 (PNRS): responsabilidade compartilhada no ciclo de resíduos.",
+  "Decreto 10.388/2020: logística reversa de medicamentos domiciliares (LogMed).",
+  "RDC 222/2018 (ANVISA): boas práticas de gerenciamento de resíduos de saúde.",
+  "ODS 3, ODS 6 e ODS 12 (ONU): saúde, água potável e consumo responsável.",
 ];
 
 const metodo = [
@@ -51,19 +51,19 @@ const metodo = [
     icon: MapPin,
     title: "Mapeamos o caminho",
     description:
-      "Concentramos em um unico lugar dados de pontos de coleta para reduzir a distancia entre intencao e descarte correto.",
+      "Concentramos em um único lugar dados de pontos de coleta para reduzir a distância entre intenção e descarte correto.",
   },
   {
     icon: BookOpen,
     title: "Educamos com clareza",
     description:
-      "Traduzimos normas tecnicas e temas de saude ambiental para linguagem acessivel, sem jargao e com foco pratico.",
+      "Traduzimos normas técnicas e temas de saúde ambiental para linguagem acessível, sem jargão e com foco prático.",
   },
   {
     icon: ShieldCheck,
-    title: "Aplicamos IA responsavel",
+    title: "Aplicamos IA responsável",
     description:
-      "Nossa IA e educativa, com guardrails, sem prescricao medica e com redirecionamento para profissionais quando necessario.",
+      "Nossa IA é educativa, com guardrails, sem prescrição médica e com redirecionamento para profissionais quando necessário.",
   },
 ];
 
@@ -79,11 +79,11 @@ export default function OQueFazemosPage() {
             </span>
             <h1 className="mb-6 font-sans text-4xl font-extrabold leading-tight text-white sm:text-5xl">
               Transformamos descarte correto em
-              <span className="text-eco-lime"> acao simples no dia a dia</span>
+              <span className="text-eco-lime"> ação simples no dia a dia</span>
             </h1>
             <p className="text-lg leading-relaxed text-white/80">
-              O EcoMed conecta educacao ambiental, tecnologia e politicas publicas para ajudar
-              pessoas a descartarem medicamentos com seguranca, praticidade e impacto positivo.
+              O EcoMed conecta educação ambiental, tecnologia e políticas públicas para ajudar
+              pessoas a descartarem medicamentos com segurança, praticidade e impacto positivo.
             </p>
           </div>
         </section>
@@ -91,10 +91,10 @@ export default function OQueFazemosPage() {
         <section className="bg-white py-20">
           <div className="container mx-auto max-w-5xl px-4">
             <div className="mb-10 text-center">
-              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Nossas frentes de atuacao</h2>
+              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Nossas frentes de atuação</h2>
               <p className="mx-auto max-w-2xl text-gray-500">
                 Com base no modelo Encontre, Pergunte e Ganhe, tornamos o descarte correto mais
-                acessivel, educativo e recompensador.
+                acessível, educativo e recompensador.
               </p>
             </div>
 
@@ -123,8 +123,8 @@ export default function OQueFazemosPage() {
             <div>
               <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Como fazemos acontecer</h2>
               <p className="mb-6 text-gray-600">
-                Nossa atuacao une produto digital, conteudo educativo e direcionamento tecnico para
-                que a populacao tenha autonomia no descarte correto.
+                Nossa atuação une produto digital, conteúdo educativo e direcionamento técnico para
+                que a população tenha autonomia no descarte correto.
               </p>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 {metodo.map((item) => {
@@ -160,10 +160,10 @@ export default function OQueFazemosPage() {
         <section className="bg-white py-20">
           <div className="container mx-auto max-w-5xl px-4">
             <div className="mb-10 text-center">
-              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Alinhamento com politicas publicas</h2>
+              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Alinhamento com políticas públicas</h2>
               <p className="mx-auto max-w-2xl text-gray-500">
-                O EcoMed foi desenhado para apoiar metas nacionais e internacionais de saude
-                ambiental, logistica reversa e consumo responsavel.
+                O EcoMed foi desenhado para apoiar metas nacionais e internacionais de saúde
+                ambiental, logística reversa e consumo responsável.
               </p>
             </div>
 
@@ -179,10 +179,10 @@ export default function OQueFazemosPage() {
 
         <section className="bg-gray-50 py-20">
           <div className="container mx-auto max-w-4xl px-4 text-center">
-            <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Coloque isso em pratica hoje</h2>
+            <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Coloque isso em prática hoje</h2>
             <p className="mx-auto mb-8 max-w-2xl text-gray-600">
-              Se voce tem medicamentos vencidos ou em desuso, o primeiro passo pode ser dado agora:
-              encontrar um ponto de coleta proximo e descartar com seguranca.
+              Se você tem medicamentos vencidos ou em desuso, o primeiro passo pode ser dado agora:
+              encontrar um ponto de coleta próximo e descartar com segurança.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
@@ -196,7 +196,7 @@ export default function OQueFazemosPage() {
                 href="/sobre"
                 className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition-colors hover:border-eco-lime hover:text-gray-900"
               >
-                Conhecer a historia do EcoMed
+                Conhecer a história do EcoMed
               </Link>
             </div>
           </div>
