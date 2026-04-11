@@ -293,16 +293,19 @@ ecomed/
 
 #### Área do Cidadão (`/app/*` — role: CITIZEN+)
 
-| Rota                 | Descrição                               |
-| -------------------- | --------------------------------------- |
-| `/app`               | Dashboard do cidadão                    |
-| `/app/perfil`        | Perfil, EcoCoins e histórico de coins   |
-| `/app/favoritos`     | Pontos salvos como favoritos            |
-| `/app/notificacoes`  | Notificações do sistema                 |
-| `/app/chat`          | Chat com assistente de IA               |
-| `/app/missoes`       | Missões diárias e semanais (EcoCoins)   |
-| `/app/recompensas`   | Catálogo de recompensas + resgate       |
-| `/app/seja-parceiro` | Formulário de candidatura como parceiro |
+| Rota                 | Descrição                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| `/app`               | Dashboard do cidadão                                                                       |
+| `/app/perfil`        | Perfil, EcoCoins e histórico de coins                                                      |
+| `/app/favoritos`     | Pontos salvos como favoritos                                                               |
+| `/app/notificacoes`  | Notificações do sistema                                                                    |
+| `/app/chat`          | Chat com assistente de IA                                                                  |
+| `/app/missoes`       | Missões diárias e semanais (EcoCoins)                                                      |
+| `/app/recompensas`   | Catálogo de recompensas + resgate                                                          |
+| `/app/conquistas`    | Conquistas estilo Apple Fitness — metas acumuladas de descarte, quizzes e pontos distintos |
+| `/app/ranking`       | Ranking semanal de EcoCoins (Top 10 + posição do usuário)                                  |
+| `/app/quiz/[id]`     | Quiz educativo — alternativas embaralhadas por sessão (Fisher-Yates + HMAC-SHA256)         |
+| `/app/seja-parceiro` | Formulário de candidatura como parceiro                                                    |
 
 #### Painel do Parceiro (`/parceiro/*` — role: PARTNER+)
 
@@ -380,19 +383,20 @@ Todas as rotas de API ficam em `src/app/api/[[...route]]/route.ts`, roteadas via
 
 #### Gamificação — EcoCoins
 
-| Método | Endpoint                     | Auth    | Descrição                                                     |
-| ------ | ---------------------------- | ------- | ------------------------------------------------------------- |
-| `GET`  | `/api/coins`                 | CITIZEN | Saldo, nível, streak e histórico de transações                |
-| `POST` | `/api/coins/article-read`    | CITIZEN | Credita ARTICLE_READ (≥120s lido + ≥90% scroll)               |
-| `POST` | `/api/coins/ecobot-question` | CITIZEN | Credita ECOBOT_QUESTION (pergunta ≥10 chars)                  |
-| `POST` | `/api/coins/ecobot-rating`   | CITIZEN | Credita ECOBOT_RATING após avaliação da resposta              |
-| `POST` | `/api/coins/share`           | CITIZEN | Credita SHARE_ARTICLE ou SHARE_BADGE                          |
-| `GET`  | `/api/missions`              | CITIZEN | Lista missões do dia e da semana (auto-gera se não existirem) |
-| `POST` | `/api/missions/:id/progress` | CITIZEN | Avança progresso; credita bônus ao completar todas as missões |
-| `GET`  | `/api/rewards`               | CITIZEN | Catálogo com flags `podeResgatar` e `emCooldown`              |
-| `GET`  | `/api/rewards/my`            | CITIZEN | Histórico de resgates do usuário                              |
-| `POST` | `/api/rewards/:id/redeem`    | CITIZEN | Resgata recompensa (valida nível, saldo, estoque e cooldown)  |
-| `POST` | `/api/checkin`               | PARTNER | Registra check-in via QR (+15 GPS / +10 sem GPS)              |
+| Método | Endpoint                     | Auth    | Descrição                                                                                                                      |
+| ------ | ---------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `GET`  | `/api/coins`                 | CITIZEN | Saldo, nível, streak e histórico de transações                                                                                 |
+| `POST` | `/api/coins/article-read`    | CITIZEN | Credita ARTICLE_READ (≥120s lido + ≥90% scroll)                                                                                |
+| `POST` | `/api/coins/ecobot-question` | CITIZEN | Credita ECOBOT_QUESTION (pergunta ≥10 chars)                                                                                   |
+| `POST` | `/api/coins/ecobot-rating`   | CITIZEN | Credita ECOBOT_RATING após avaliação da resposta                                                                               |
+| `POST` | `/api/coins/share`           | CITIZEN | Credita SHARE_ARTICLE ou SHARE_BADGE                                                                                           |
+| `GET`  | `/api/missions`              | CITIZEN | Lista missões do dia e da semana (auto-gera se não existirem)                                                                  |
+| `POST` | `/api/missions/:id/progress` | CITIZEN | Avança progresso; credita bônus ao completar todas as missões                                                                  |
+| `GET`  | `/api/rewards`               | CITIZEN | Catálogo com flags `podeResgatar` e `emCooldown`                                                                               |
+| `GET`  | `/api/rewards/my`            | CITIZEN | Histórico de resgates do usuário                                                                                               |
+| `POST` | `/api/rewards/:id/redeem`    | CITIZEN | Resgata recompensa (valida nível, saldo, estoque e cooldown)                                                                   |
+| `POST` | `/api/checkin`               | PARTNER | Registra check-in via QR (+15 GPS / +10 sem GPS) — verifica milestones de descarte                                             |
+| `POST` | `/api/quiz/:id/submit`       | CITIZEN | Submete respostas do quiz — limite hard 3/dia (HTTP 429), apenas score perfeito gera QUIZ_PERFECT; verifica milestones de quiz |
 
 #### Admin
 
@@ -507,6 +511,9 @@ pnpm prisma migrate deploy
 - `navigationPreload: false` — evita `no-response` em redes instáveis
 - `Cache-Control: no-store` no header do `sw.js` — garante que CDN nunca cacheia o SW
 - Analytics externas (`cloudflareinsights.com`, GA4 via `/fslp/`) → `NetworkOnly` com `handlerDidError` silencioso (retorna 204)
+- Rotas protegidas `/app/*` → `NetworkOnly` no SW — evita interceptação de redirects de auth (opaqueredirect)
+
+**`x-pathname` no middleware:** `middleware.ts` usa `NextResponse.next({ request: { headers } })` para encaminhar o pathname como request header — necessário para Server Components lerem `headers().get('x-pathname')` e detectarem rotas especiais (ex: `/app/onboarding`).
 
 **Web App Manifest** (`/manifest.webmanifest`):
 
@@ -637,6 +644,9 @@ await creditCoins(userId, "ARTICLE_READ", articleSlug);
 
 - **Teto global:** 120 EcoCoins/dia por usuário (exceto eventos isentos: onboarding, admin, redemption, streaks)
 - **Teto por categoria:** ex. `CHECKIN` = 3/dia, `ARTICLE_READ` = 5/dia (via `DailyLimitTracker`)
+- **Quiz:** limite hard de 3 tentativas/dia por quiz (HTTP 429); apenas score perfeito (100%) gera evento `QUIZ_PERFECT`; badge de nível concedido ao completar todos os quizzes do nível
+- **Embaralhamento de quiz (`src/lib/quiz/shuffle.ts`):** Fisher-Yates gera nova ordem a cada carregamento; token HMAC-SHA256 assinado com `AUTH_SECRET` mapeia índices embaralhados → originais no server (stateless, resistente a adulteração)
+- **Milestones de metas (`src/lib/goals/milestones.ts`):** verifica automaticamente após check-in e submit de quiz — concede badges acumulativos para marcos de descarte [1, 5, 10, 25, 50, 100, 365, 500, 1000], pontos distintos [5, 10, 25], quizzes feitos [10, 25, 50] e quizzes perfeitos [10, 25]
 - **Operações atômicas:** `{ increment: amount }` / `{ decrement: amount }` — sem race conditions em atualizações concorrentes de saldo
 - **Multiplicadores de nível:** `GUARDIAO` × 1.2, `LENDA_ECO` × 1.5
 - **Streak:** detecta sequência de dias consecutivos — bônus milestone aos 3, 7 e 30 dias
