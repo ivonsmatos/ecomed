@@ -559,7 +559,78 @@ export default async function HomePage() {
         )}
 
         {/* ════════════════════════════════════════════════
-            9. FAQ — bg:about-bg.jpg
+            9. COMPROMISSO — teaser institucional
+        ════════════════════════════════════════════════ */}
+        <section className="py-28 bg-[#0d3b1a] relative overflow-hidden">
+          <Image
+            src="/echofy/about-shape.png"
+            alt=""
+            width={90}
+            height={90}
+            draggable={false}
+            className="absolute top-10 left-10 animate-echofy-dance hidden xl:block"
+          />
+          <Image
+            src="/echofy/about-shape-1.png"
+            alt=""
+            width={80}
+            height={80}
+            draggable={false}
+            className="absolute bottom-10 right-10 animate-echofy-zoom hidden xl:block"
+          />
+
+          <div className="echofy-container relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <h5 className="font-sans font-medium text-eco-lime flex items-center gap-2 justify-center text-sm uppercase tracking-wider">
+                <Image src="/echofy/sub-title-shape.png" alt="" width={20} height={20} draggable={false} />
+                Compromisso EcoMed
+              </h5>
+              <h2 className="font-sans font-bold text-[30px] sm:text-[44px] text-white mt-4 leading-tight">
+                Tecnologia com propósito para
+                <span className="text-eco-lime"> descarte correto</span>
+              </h2>
+              <p className="font-sans text-white/80 text-base sm:text-lg mt-5 max-w-3xl mx-auto leading-relaxed">
+                Conheça os compromissos institucionais que orientam nossas decisões de produto,
+                conteúdo e impacto: sustentabilidade, educação acessível, transparência e inovação
+                responsável com IA.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-9">
+                {[
+                  "Sustentabilidade em primeiro lugar",
+                  "Educação acessível para todos",
+                  "Impacto mensurável e transparente",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-xl border border-white/20 bg-white/10 px-4 py-3 font-sans text-sm text-white"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-9 flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/compromisso"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-eco-green px-7 py-3 font-sans font-semibold text-white transition-colors hover:bg-eco-green/90"
+                >
+                  Ver página de compromisso
+                  <ArrowRight className="size-4" />
+                </Link>
+                <Link
+                  href="/mapa"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 px-7 py-3 font-sans font-semibold text-white transition-colors hover:bg-white/10"
+                >
+                  Encontrar ponto de coleta
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════════
+          10. FAQ — bg:about-bg.jpg
         ════════════════════════════════════════════════ */}
         <section id="faq" className="py-[100px] bg-[url('/echofy/about-bg.jpg')] bg-cover bg-center bg-no-repeat">
           <div className="echofy-container max-w-3xl">
