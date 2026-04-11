@@ -10,17 +10,29 @@ onboarding.post("/concluir", async (c) => {
   const session = await auth()
   if (!session?.user?.id) return c.json({ error: "Não autenticado." }, 401)
 
-  // Verificar se já recebeu o bônus de cadastro
-  const wallet = await prisma.wallet.findUnique({ where: { userId: session.user.id } })
+  const userId = session.user.id
 
-  const jaRecebeu = wallet
+  // Creditar SIGNUP se ainda não recebeu
+  const wallet = await prisma.wallet.findUnique({ where: { userId } })
+  const jaRecebeuSignup = wallet
     ? await prisma.coinTransaction.findFirst({
         where: { walletId: wallet.id, event: "SIGNUP" },
       })
     : null
 
-  if (!jaRecebeu) {
-    await creditCoins(session.user.id, "SIGNUP")
+  if (!jaRecebeuSignup) {
+    await creditCoins(userId, "SIGNUP")
+  }
+
+  // Creditar ONBOARDING_SCREENS se ainda não recebeu (marca que o onboarding foi concluído)
+  const jaRecebeuOnboarding = wallet
+    ? await prisma.coinTransaction.findFirst({
+        where: { walletId: wallet.id, event: "ONBOARDING_SCREENS" },
+      })
+    : null
+
+  if (!jaRecebeuOnboarding) {
+    await creditCoins(userId, "ONBOARDING_SCREENS")
   }
 
   return c.json({ ok: true })

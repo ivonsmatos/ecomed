@@ -51,6 +51,7 @@ export default auth((req: NextAuthRequest) => {
 
   function withCsp(res: NextResponse): NextResponse {
     res.headers.set("Content-Security-Policy", cspValue);
+    res.headers.set("x-pathname", pathname);
     return res;
   }
 

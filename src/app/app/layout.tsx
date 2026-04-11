@@ -1,10 +1,30 @@
 import { requireSession } from "@/lib/auth/session";
+import { prisma } from "@/lib/db/prisma";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { SideNav } from "@/components/layout/SideNav";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  await requireSession();
+  const session = await requireSession();
+  const userId = session.user!.id!;
+
+  // Verificar se o usuário já viu o onboarding (tem CoinTransaction ONBOARDING_SCREENS)
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "";
+  const isOnboardingPage = pathname === "/app/onboarding";
+
+  if (!isOnboardingPage) {
+    const visiouOnboarding = await prisma.coinTransaction.findFirst({
+      where: { wallet: { userId }, event: "ONBOARDING_SCREENS" },
+      select: { id: true },
+    });
+
+    if (!visiouOnboarding) {
+      redirect("/app/onboarding");
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
