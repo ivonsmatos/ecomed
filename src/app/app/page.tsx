@@ -140,7 +140,7 @@ export default async function AppPage() {
           <ChevronRight className="size-3.5" />Ver meu perfil completo
         </Link>
         <Link href="/ranking" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "gap-2 text-muted-foreground")}>
-          <Trophy className="size-3.5" />Ranking semanal
+          <Trophy className="size-3.5" />Ranking geral
         </Link>
       </div>
 

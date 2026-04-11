@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Ranking EcoMed" };
 
 const rankingOrder = [
-  { weeklyCoins: "desc" as const },
   { balance: "desc" as const },
   { totalEarned: "desc" as const },
+  { weeklyCoins: "desc" as const },
   { updatedAt: "asc" as const },
 ];
 
@@ -18,6 +18,9 @@ export default async function RankingPage() {
 
   const top = await prisma.wallet.findMany({
     take: 10,
+    where: {
+      balance: { gt: 0 },
+    },
     orderBy: rankingOrder,
     include: {
       user: { select: { id: true, name: true, image: true } },
@@ -26,7 +29,7 @@ export default async function RankingPage() {
 
   let myRankCard: {
     position: number;
-    weeklyCoins: number;
+    balance: number;
     level: string;
     name: string;
   } | null = null;
@@ -39,21 +42,24 @@ export default async function RankingPage() {
 
     const alreadyInTop = top.some((wallet) => wallet.user.id === session.user?.id);
 
-    if (me && !alreadyInTop && me.weeklyCoins > 0) {
+    if (me && !alreadyInTop && me.balance > 0) {
       const ahead = await prisma.wallet.count({
         where: {
           OR: [
-            { weeklyCoins: { gt: me.weeklyCoins } },
-            { weeklyCoins: me.weeklyCoins, balance: { gt: me.balance } },
+            { balance: { gt: me.balance } },
             {
-              weeklyCoins: me.weeklyCoins,
               balance: me.balance,
               totalEarned: { gt: me.totalEarned },
             },
             {
-              weeklyCoins: me.weeklyCoins,
               balance: me.balance,
               totalEarned: me.totalEarned,
+              weeklyCoins: { gt: me.weeklyCoins },
+            },
+            {
+              balance: me.balance,
+              totalEarned: me.totalEarned,
+              weeklyCoins: me.weeklyCoins,
               updatedAt: { lt: me.updatedAt },
             },
           ],
@@ -62,7 +68,7 @@ export default async function RankingPage() {
 
       myRankCard = {
         position: ahead + 1,
-        weeklyCoins: me.weeklyCoins,
+        balance: me.balance,
         level: me.level,
         name: me.user.name ?? "Você",
       };
@@ -73,9 +79,9 @@ export default async function RankingPage() {
     <>
       <Header />
       <main className="container mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-2xl font-semibold mb-2 text-center">Ranking semanal</h1>
+        <h1 className="text-2xl font-semibold mb-2 text-center">Ranking geral</h1>
         <p className="text-sm text-muted-foreground text-center mb-8">
-          Classificação por EcoCoins ganhos na semana
+          Classificação por saldo total de EcoCoins
         </p>
 
         <div className="space-y-3">
@@ -106,9 +112,9 @@ export default async function RankingPage() {
               </div>
               <div className="text-right">
                 <p className="font-medium text-sm text-amber-600">
-                  {wallet.weeklyCoins.toLocaleString("pt-BR")}
+                  {wallet.balance.toLocaleString("pt-BR")}
                 </p>
-                <p className="text-xs text-muted-foreground">EcoCoins (semana)</p>
+                <p className="text-xs text-muted-foreground">EcoCoins (total)</p>
               </div>
             </div>
           ))}
@@ -118,7 +124,7 @@ export default async function RankingPage() {
           <div className="mt-6 rounded-xl border border-eco-teal/30 bg-eco-teal/10 p-4">
             <p className="text-sm font-semibold text-eco-teal-dark mb-1">Sua posição no ranking</p>
             <p className="text-sm text-foreground">
-              {myRankCard.position}º lugar - {myRankCard.name} - {myRankCard.weeklyCoins.toLocaleString("pt-BR")} EcoCoins na semana
+              {myRankCard.position}º lugar - {myRankCard.name} - {myRankCard.balance.toLocaleString("pt-BR")} EcoCoins no total
             </p>
           </div>
         )}
