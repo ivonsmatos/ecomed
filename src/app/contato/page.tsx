@@ -1,13 +1,13 @@
 ﻿import type { Metadata } from "next";
 import Link from "next/link";
-import { Mail, Phone, ExternalLink, Building2, Shield, Leaf, Globe } from "lucide-react";
+import { Mail, Phone, ExternalLink, Building2, Shield, Leaf, Globe, MessageCircle } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Contato | EcoMed",
   description:
-    "Entre em contato com o EcoMed e confira os órgãos responsáveis pelo descarte correto de medicamentos no Brasil: ANVISA, MMA, ABRADILAN e mais.",
+    "Entre em contato com o EcoMed e confira os órgãos públicos responsáveis pelo descarte correto de medicamentos no Brasil: ANVISA, Ministério e Secretarias de Saúde, MMA e mais.",
   alternates: { canonical: "https://ecomed.eco.br/contato" },
 };
 
@@ -21,6 +21,31 @@ const orgaos = [
     telefone: "0800 642 9782",
     icon: Shield,
     tag: "Regulação federal",
+  },
+  {
+    nome: "Ministério da Saúde",
+    descricao:
+      "Formula políticas públicas nacionais de saúde e orienta campanhas de educação sanitária, incluindo descarte correto e uso racional de medicamentos.",
+    href: "https://www.gov.br/saude/pt-br",
+    telefone: "136",
+    icon: Globe,
+    tag: "Saúde pública federal",
+  },
+  {
+    nome: "Secretaria de Estado da Saúde de São Paulo",
+    descricao:
+      "Coordena políticas estaduais de saúde, vigilância e ações de apoio à rede pública para prevenção de riscos sanitários e ambientais.",
+    href: "https://www.saude.sp.gov.br",
+    icon: Building2,
+    tag: "Gestão estadual",
+  },
+  {
+    nome: "Secretaria Municipal da Saúde de São Paulo",
+    descricao:
+      "Responsável pela rede municipal de saúde e ações locais de orientação à população sobre descarte e prevenção de riscos à saúde.",
+    href: "https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/",
+    icon: Building2,
+    tag: "Gestão municipal",
   },
   {
     nome: "Ministério do Meio Ambiente (MMA)",
@@ -86,7 +111,46 @@ const linksUteis = [
     label: "Disque Saúde — Ministério da Saúde (136)",
     href: "https://www.gov.br/saude/pt-br/acesso-a-informacao/disque-saude",
   },
+  {
+    label: "Secretaria de Estado da Saúde de São Paulo",
+    href: "https://www.saude.sp.gov.br",
+  },
+  {
+    label: "Secretaria Municipal da Saúde de São Paulo",
+    href: "https://www.prefeitura.sp.gov.br/cidade/secretarias/saude/",
+  },
 ];
+
+const contatosInstitucionais = [
+  {
+    label: "Contato geral",
+    value: "contato@ecomed.eco.br",
+    href: "mailto:contato@ecomed.eco.br",
+    description: "Dúvidas gerais, imprensa e assuntos institucionais.",
+    icon: Mail,
+  },
+  {
+    label: "Parcerias",
+    value: "parceiro@ecomed.eco.br",
+    href: "mailto:parceiro@ecomed.eco.br",
+    description: "Farmácias, instituições, empresas e órgãos públicos.",
+    icon: Building2,
+  },
+  {
+    label: "Suporte",
+    value: "suporte@ecomed.eco.br",
+    href: "mailto:suporte@ecomed.eco.br",
+    description: "Problemas técnicos na plataforma e acesso de conta.",
+    icon: Mail,
+  },
+  {
+    label: "WhatsApp",
+    value: "(11) 94190-6079",
+    href: "https://wa.me/5511941906079?text=Olá%2C%20quero%20falar%20com%20o%20EcoMed.",
+    description: "Atendimento direto para orientações e contato rápido.",
+    icon: MessageCircle,
+  },
+] as const;
 
 export default function ContatoPage() {
   return (
@@ -125,44 +189,52 @@ export default function ContatoPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-              {/* E-mail */}
-              <a
-                href="mailto:contato@ecomed.eco.br"
-                className="flex items-start gap-4 rounded-2xl border border-gray-200 p-6
-                           hover:border-eco-lime hover:shadow-md transition-all group"
-              >
-                <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center
-                                rounded-xl bg-eco-teal/10 text-eco-lime group-hover:bg-eco-teal group-hover:text-white transition-colors">
-                  <Mail className="size-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">E-mail</p>
-                  <p className="font-semibold text-gray-900">contato@ecomed.eco.br</p>
-                  <p className="text-sm text-gray-500 mt-0.5">Dúvidas, parcerias e imprensa</p>
-                </div>
-              </a>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+              {contatosInstitucionais.map((contato) => {
+                const Icon = contato.icon;
 
-              {/* Suporte */}
+                return (
+                  <a
+                    key={contato.href}
+                    href={contato.href}
+                    target={contato.href.startsWith("http") ? "_blank" : undefined}
+                    rel={contato.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="flex items-start gap-4 rounded-2xl border border-gray-200 p-6 hover:border-eco-lime hover:shadow-md transition-all group bg-white"
+                  >
+                    <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center rounded-xl bg-eco-teal/10 text-eco-lime group-hover:bg-eco-teal group-hover:text-white transition-colors">
+                      <Icon className="size-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">{contato.label}</p>
+                      <p className="font-semibold text-gray-900 break-all">{contato.value}</p>
+                      <p className="text-sm text-gray-500 mt-0.5">{contato.description}</p>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
-                href="mailto:suporte@ecomed.eco.br"
-                className="flex items-start gap-4 rounded-2xl border border-gray-200 p-6
-                           hover:border-eco-lime hover:shadow-md transition-all group"
+                href="tel:+5511941906079"
+                className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-gray-700 hover:border-eco-lime hover:text-gray-900 transition-colors"
               >
-                <div className="mt-0.5 flex size-11 shrink-0 items-center justify-center
-                                rounded-xl bg-eco-teal/10 text-eco-lime group-hover:bg-eco-teal group-hover:text-white transition-colors">
-                  <Mail className="size-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Suporte</p>
-                  <p className="font-semibold text-gray-900">suporte@ecomed.eco.br</p>
-                  <p className="text-sm text-gray-500 mt-0.5">Problemas técnicos na plataforma</p>
-                </div>
+                <Phone className="size-4 text-eco-lime" />
+                Ligar para (11) 94190-6079
+              </a>
+              <a
+                href="https://wa.me/5511941906079?text=Olá%2C%20quero%20falar%20com%20o%20EcoMed."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-eco-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-eco-green/90 transition-colors"
+              >
+                <MessageCircle className="size-4" />
+                Falar no WhatsApp
               </a>
             </div>
 
             <p className="text-center text-sm text-gray-400 mt-8">
-              Respondemos em até 2 dias úteis. Para assuntos urgentes de saúde, contate{" "}
+              Respondemos em até 2 dias úteis. Para urgências de saúde, contate{" "}
               <a href="tel:136" className="text-eco-lime font-medium hover:underline">
                 Disque Saúde (136)
               </a>
@@ -179,7 +251,7 @@ export default function ContatoPage() {
                 Regulação e fiscalização
               </span>
               <h2 className="font-sans text-3xl font-bold text-gray-900 mb-3">
-                Órgãos Responsáveis
+                Órgãos Responsáveis e Canais Públicos
               </h2>
               <p className="text-gray-500 max-w-2xl mx-auto">
                 O descarte correto de medicamentos é regulado por lei federal e

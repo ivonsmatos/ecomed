@@ -50,7 +50,7 @@ export async function Header() {
             Blog
           </Link>
           <Link
-            href="/#contato"
+            href="/contato"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Contato
