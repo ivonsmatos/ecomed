@@ -179,6 +179,7 @@ export function Footer() {
             <ul>
               {[
                 { label: "Sobre o projeto", href: "/sobre" },
+                { label: "Nosso compromisso", href: "/compromisso" },
                 { label: "Política de Privacidade", href: "/privacidade" },
                 { label: "Termos de Uso", href: "/termos" },
                 { label: "Aviso Médico", href: "/aviso-medico" },

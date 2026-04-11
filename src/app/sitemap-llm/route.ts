@@ -44,6 +44,14 @@ export async function GET() {
       description: "Artigos sobre legislação, descarte correto e impacto ambiental de medicamentos.",
     },
     {
+      url: `${base}/compromisso`,
+      lastmod: now,
+      changefreq: "monthly",
+      priority: "0.6",
+      title: "Compromisso EcoMed — Sustentabilidade, educação e impacto",
+      description: "Conheça os compromissos institucionais do EcoMed com descarte correto, IA responsável e políticas públicas.",
+    },
+    {
       url: `${base}/ranking`,
       lastmod: now,
       changefreq: "daily",

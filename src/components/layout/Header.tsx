@@ -38,6 +38,12 @@ export async function Header() {
             Quem somos
           </Link>
           <Link
+            href="/compromisso"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Compromisso
+          </Link>
+          <Link
             href="/blog"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
