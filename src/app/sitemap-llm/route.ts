@@ -44,6 +44,14 @@ export async function GET() {
       description: "Artigos sobre legislação, descarte correto e impacto ambiental de medicamentos.",
     },
     {
+      url: `${base}/o-que-fazemos`,
+      lastmod: now,
+      changefreq: "monthly",
+      priority: "0.7",
+      title: "O que fazemos no EcoMed",
+      description: "Entenda como o EcoMed atua com mapa inteligente, IA educativa e gamificação para o descarte correto de medicamentos.",
+    },
+    {
       url: `${base}/compromisso`,
       lastmod: now,
       changefreq: "monthly",

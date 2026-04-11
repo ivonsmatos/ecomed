@@ -26,7 +26,7 @@ export async function Header() {
 
         <nav className="hidden items-center gap-6 text-sm md:flex">
           <Link
-            href="/#como-funciona"
+            href="/o-que-fazemos"
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             O que fazemos
