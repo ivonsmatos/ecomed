@@ -25,14 +25,15 @@ const rankingOrderWeekly = [
 
 type RankingMode = "geral" | "semanal";
 
-function parseMode(mode?: string): RankingMode {
-  return mode === "semanal" ? "semanal" : "geral";
+function parseMode(mode?: string | string[]): RankingMode {
+  const value = Array.isArray(mode) ? mode[0] : mode;
+  return value === "semanal" ? "semanal" : "geral";
 }
 
 export default async function RankingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ mode?: string }>;
+  searchParams: Promise<{ mode?: string | string[] }>;
 }) {
   const session = await auth();
   const { mode: rawMode } = await searchParams;
