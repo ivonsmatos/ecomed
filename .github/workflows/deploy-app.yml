@@ -2,7 +2,7 @@ name: Deploy App — VPS
 
 on:
   push:
-    branches: [master]
+    branches: [main, master]
     paths:
       - "app/**"
       - "!app/**/*.md"
