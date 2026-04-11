@@ -1,8 +1,9 @@
 import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
 
+// Lazy init: Redis só é instanciado na 1ª chamada (não no import/build time)
 let _redis: Redis | null = null
-function getRedis() {
+function getRedis(): Redis {
   if (!_redis) {
     _redis = new Redis({
       url: process.env.UPSTASH_REDIS_REST_URL!,
@@ -12,19 +13,28 @@ function getRedis() {
   return _redis
 }
 
-function makeRatelimit(limiter: Ratelimit["limiter"], prefix: string) {
-  return new Ratelimit({ get redis() { return getRedis() }, limiter, prefix })
-}
+// Cada ratelimit é criado lazy também
+let _ratelimits: {
+  auth: Ratelimit
+  chat: Ratelimit
+  map: Ratelimit
+} | null = null
 
-export const ratelimits = {
-  auth: makeRatelimit(Ratelimit.slidingWindow(10, "1 m"),  "ecomed:auth"),
-  chat: makeRatelimit(Ratelimit.slidingWindow(20, "1 m"),  "ecomed:chat"),
-  map:  makeRatelimit(Ratelimit.slidingWindow(100, "1 m"), "ecomed:map"),
+function getRatelimits() {
+  if (!_ratelimits) {
+    const redis = getRedis()
+    _ratelimits = {
+      auth: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "1 m"),  prefix: "ecomed:auth" }),
+      chat: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "1 m"),  prefix: "ecomed:chat" }),
+      map:  new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(100, "1 m"), prefix: "ecomed:map" }),
+    }
+  }
+  return _ratelimits
 }
 
 export async function checkRateLimit(
-  limiter: keyof typeof ratelimits,
+  limiter: "auth" | "chat" | "map",
   identifier: string
 ) {
-  return ratelimits[limiter].limit(identifier)
+  return getRatelimits()[limiter].limit(identifier)
 }

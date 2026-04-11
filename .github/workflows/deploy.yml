@@ -46,8 +46,8 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
-            AUTH_SECRET=${{ secrets.AUTH_SECRET }}
-            AUTH_URL=${{ secrets.AUTH_URL }}
+            AUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            AUTH_URL=${{ secrets.NEXTAUTH_URL }}
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
             NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
@@ -64,8 +64,8 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: root
-          password: ${{ secrets.VPS_PASSWORD }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
           command_timeout: 4m
           envs: GHCR_TOKEN,GH_OWNER
           script: |
@@ -92,5 +92,5 @@ jobs:
             echo "✅ Deploy concluído!"
             docker ps --filter name=ecomed-web --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
         env:
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_OWNER: ${{ github.repository_owner }}
