@@ -1,10 +1,12 @@
 import { auth } from "@/../auth";
-import { buttonVariants } from "@/components/ui/button-variants";
+import {
+  RankingModeSwitcher,
+  type RankingCard,
+  type RankingEntry,
+} from "@/components/ranking/RankingModeSwitcher";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { prisma } from "@/lib/db/prisma";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ranking EcoMed" };
@@ -23,45 +25,46 @@ const rankingOrderWeekly = [
   { updatedAt: "asc" as const },
 ];
 
-type RankingMode = "geral" | "semanal";
-
-function parseMode(mode?: string | string[]): RankingMode {
-  const value = Array.isArray(mode) ? mode[0] : mode;
-  return value === "semanal" ? "semanal" : "geral";
+function toRankingEntry(wallet: {
+  id: string;
+  level: string;
+  balance: number;
+  weeklyCoins: number;
+  user: { name: string | null };
+}): RankingEntry {
+  return {
+    id: wallet.id,
+    name: wallet.user.name ?? "Usuário",
+    level: wallet.level,
+    balance: wallet.balance,
+    weeklyCoins: wallet.weeklyCoins,
+  };
 }
 
-export default async function RankingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ mode?: string | string[] }>;
-}) {
+export default async function RankingPage() {
   const session = await auth();
-  const { mode: rawMode } = await searchParams;
-  const mode = parseMode(rawMode);
-  const isWeekly = mode === "semanal";
 
-  const title = isWeekly ? "Ranking semanal" : "Ranking geral";
-  const subtitle = isWeekly
-    ? "Classificação por EcoCoins ganhos na semana"
-    : "Classificação por saldo total de EcoCoins";
-  const metricLabel = isWeekly ? "EcoCoins (semana)" : "EcoCoins (total)";
-  const myRankSuffix = isWeekly ? "EcoCoins na semana" : "EcoCoins no total";
+  const [topGeneralWallets, topWeeklyWallets] = await Promise.all([
+    prisma.wallet.findMany({
+      take: 10,
+      where: { balance: { gt: 0 } },
+      orderBy: rankingOrderGeneral,
+      include: {
+        user: { select: { id: true, name: true } },
+      },
+    }),
+    prisma.wallet.findMany({
+      take: 10,
+      where: { weeklyCoins: { gt: 0 } },
+      orderBy: rankingOrderWeekly,
+      include: {
+        user: { select: { id: true, name: true } },
+      },
+    }),
+  ]);
 
-  const top = await prisma.wallet.findMany({
-    take: 10,
-    where: isWeekly ? { weeklyCoins: { gt: 0 } } : { balance: { gt: 0 } },
-    orderBy: isWeekly ? rankingOrderWeekly : rankingOrderGeneral,
-    include: {
-      user: { select: { id: true, name: true, image: true } },
-    },
-  });
-
-  let myRankCard: {
-    position: number;
-    score: number;
-    level: string;
-    name: string;
-  } | null = null;
+  let myGeneral: RankingCard | null = null;
+  let myWeekly: RankingCard | null = null;
 
   if (session?.user?.id) {
     const me = await prisma.wallet.findUnique({
@@ -69,56 +72,76 @@ export default async function RankingPage({
       include: { user: { select: { name: true } } },
     });
 
-    const alreadyInTop = top.some((wallet) => wallet.user.id === session.user?.id);
+    if (me) {
+      const alreadyInTopGeneral = topGeneralWallets.some(
+        (wallet) => wallet.user.id === session.user?.id,
+      );
 
-    const hasScore = me ? (isWeekly ? me.weeklyCoins > 0 : me.balance > 0) : false;
+      if (!alreadyInTopGeneral && me.balance > 0) {
+        const aheadGeneral = await prisma.wallet.count({
+          where: {
+            OR: [
+              { balance: { gt: me.balance } },
+              {
+                balance: me.balance,
+                totalEarned: { gt: me.totalEarned },
+              },
+              {
+                balance: me.balance,
+                totalEarned: me.totalEarned,
+                weeklyCoins: { gt: me.weeklyCoins },
+              },
+              {
+                balance: me.balance,
+                totalEarned: me.totalEarned,
+                weeklyCoins: me.weeklyCoins,
+                updatedAt: { lt: me.updatedAt },
+              },
+            ],
+          },
+        });
 
-    if (me && !alreadyInTop && hasScore) {
-      const ahead = await prisma.wallet.count({
-        where: {
-          OR: isWeekly
-            ? [
-                { weeklyCoins: { gt: me.weeklyCoins } },
-                { weeklyCoins: me.weeklyCoins, balance: { gt: me.balance } },
-                {
-                  weeklyCoins: me.weeklyCoins,
-                  balance: me.balance,
-                  totalEarned: { gt: me.totalEarned },
-                },
-                {
-                  weeklyCoins: me.weeklyCoins,
-                  balance: me.balance,
-                  totalEarned: me.totalEarned,
-                  updatedAt: { lt: me.updatedAt },
-                },
-              ]
-            : [
-                { balance: { gt: me.balance } },
-                {
-                  balance: me.balance,
-                  totalEarned: { gt: me.totalEarned },
-                },
-                {
-                  balance: me.balance,
-                  totalEarned: me.totalEarned,
-                  weeklyCoins: { gt: me.weeklyCoins },
-                },
-                {
-                  balance: me.balance,
-                  totalEarned: me.totalEarned,
-                  weeklyCoins: me.weeklyCoins,
-                  updatedAt: { lt: me.updatedAt },
-                },
-              ],
-        },
-      });
+        myGeneral = {
+          position: aheadGeneral + 1,
+          score: me.balance,
+          name: me.user.name ?? "Você",
+        };
+      }
 
-      myRankCard = {
-        position: ahead + 1,
-        score: isWeekly ? me.weeklyCoins : me.balance,
-        level: me.level,
-        name: me.user.name ?? "Você",
-      };
+      const alreadyInTopWeekly = topWeeklyWallets.some(
+        (wallet) => wallet.user.id === session.user?.id,
+      );
+
+      if (!alreadyInTopWeekly && me.weeklyCoins > 0) {
+        const aheadWeekly = await prisma.wallet.count({
+          where: {
+            OR: [
+              { weeklyCoins: { gt: me.weeklyCoins } },
+              {
+                weeklyCoins: me.weeklyCoins,
+                balance: { gt: me.balance },
+              },
+              {
+                weeklyCoins: me.weeklyCoins,
+                balance: me.balance,
+                totalEarned: { gt: me.totalEarned },
+              },
+              {
+                weeklyCoins: me.weeklyCoins,
+                balance: me.balance,
+                totalEarned: me.totalEarned,
+                updatedAt: { lt: me.updatedAt },
+              },
+            ],
+          },
+        });
+
+        myWeekly = {
+          position: aheadWeekly + 1,
+          score: me.weeklyCoins,
+          name: me.user.name ?? "Você",
+        };
+      }
     }
   }
 
@@ -126,76 +149,12 @@ export default async function RankingPage({
     <>
       <Header />
       <main className="container mx-auto max-w-2xl px-4 py-10">
-        <div className="mb-6 flex justify-center gap-2">
-          <Link
-            href="/ranking?mode=geral"
-            className={cn(buttonVariants({ variant: !isWeekly ? "default" : "outline", size: "sm" }))}
-          >
-            Geral
-          </Link>
-          <Link
-            href="/ranking?mode=semanal"
-            className={cn(buttonVariants({ variant: isWeekly ? "default" : "outline", size: "sm" }))}
-          >
-            Semanal
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-semibold mb-2 text-center">{title}</h1>
-        <p className="text-sm text-muted-foreground text-center mb-8">
-          {subtitle}
-        </p>
-
-        <div className="space-y-3">
-          {top.map((wallet, i) => (
-            <div
-              key={wallet.id}
-              className="flex items-center gap-4 p-3 bg-card border border-border rounded-xl"
-            >
-              <span
-                className={`text-lg font-bold w-8 text-center ${
-                  i === 0
-                    ? "text-amber-500"
-                    : i === 1
-                      ? "text-gray-400"
-                      : i === 2
-                        ? "text-amber-700"
-                        : "text-muted-foreground"
-                }`}
-              >
-                {i + 1}
-              </span>
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-medium">
-                {wallet.user.name?.[0] ?? "?"}
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm">{wallet.user.name ?? "Usuário"}</p>
-                <p className="text-xs text-muted-foreground">{wallet.level}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-medium text-sm text-amber-600">
-                  {(isWeekly ? wallet.weeklyCoins : wallet.balance).toLocaleString("pt-BR")}
-                </p>
-                <p className="text-xs text-muted-foreground">{metricLabel}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {myRankCard && (
-          <div className="mt-6 rounded-xl border border-eco-teal/30 bg-eco-teal/10 p-4">
-            <p className="text-sm font-semibold text-eco-teal-dark mb-1">Sua posição no ranking</p>
-            <p className="text-sm text-foreground">
-              {myRankCard.position}º lugar - {myRankCard.name} - {myRankCard.score.toLocaleString("pt-BR")} {myRankSuffix}
-            </p>
-          </div>
-        )}
-
-        {top.length === 0 && (
-          <p className="text-center text-muted-foreground text-sm mt-8">
-            Seja o primeiro a aparecer no ranking.
-          </p>
-        )}
+        <RankingModeSwitcher
+          topGeneral={topGeneralWallets.map(toRankingEntry)}
+          topWeekly={topWeeklyWallets.map(toRankingEntry)}
+          myGeneral={myGeneral}
+          myWeekly={myWeekly}
+        />
       </main>
       <Footer />
     </>
