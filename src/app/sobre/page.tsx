@@ -257,70 +257,84 @@ export default function SobrePage() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
 
-              {/* ODS 3 — Vida Saudável */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#4C9F38" }}>
-                <span className="text-white font-black text-2xl leading-none">3</span>
-                <span className="text-white text-[10px] font-bold uppercase leading-tight mt-0.5 mb-2">VIDA<br/>SAUDÁVEL</span>
-                <svg viewBox="0 0 80 80" className="w-full max-w-[56px] mx-auto mt-auto" fill="white" aria-hidden="true">
-                  <path d="M40 68 C22 52 8 42 8 27 C8 17 16 10 26 10 C32 10 37 13 40 18 C43 13 48 10 54 10 C64 10 72 17 72 27 C72 42 58 52 40 68Z"/>
-                  <polyline points="14,32 22,24 30,44 37,31 43,39 52,18 60,32 68,32" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* ODS 03 — Vida Saudável */}
+              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#009D5B" }}>
+                <span className="text-white font-black text-3xl leading-none tracking-tighter">03</span>
+                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">VIDA<br/>SAUDÁVEL</span>
+                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2 tracking-tighter" aria-hidden="true">
+                  <path d="M 50,55 C 25,40 25,20 35,12 C 45,6 50,15 50,20 C 50,15 55,6 65,12 C 75,20 75,40 50,55 Z" fill="white" />
+                  <polyline points="5,75 25,75 35,60 45,85 55,65 65,75 75,60 95,75 100,75" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
 
-              {/* ODS 4 — Educação de Qualidade */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#C5192D" }}>
-                <span className="text-white font-black text-2xl leading-none">4</span>
-                <span className="text-white text-[10px] font-bold uppercase leading-tight mt-0.5 mb-2">EDUCAÇÃO<br/>DE QUALIDADE</span>
-                <svg viewBox="0 0 80 80" className="w-full max-w-[56px] mx-auto mt-auto" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M40 12 L72 28 L40 44 L8 28 Z" fill="white" stroke="none"/>
-                  <path d="M20 36 L20 56 C20 56 30 64 40 64 C50 64 60 56 60 56 L60 36" fill="none" stroke="white"/>
-                  <line x1="72" y1="28" x2="72" y2="50"/>
+              {/* ODS 04 — Educação de Qualidade */}
+              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#E5243B" }}>
+                <span className="text-white font-black text-3xl leading-none tracking-tighter">04</span>
+                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">EDUCAÇÃO<br/>DE QUALIDADE</span>
+                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
+                  <polygon points="50,25 85,35 50,45 15,35" fill="white" />
+                  <polygon points="28,47 50,54 72,47 72,75 28,75" fill="white" />
+                  <line x1="75" y1="36" x2="75" y2="68" stroke="white" strokeWidth="3" strokeLinecap="round" />
                 </svg>
               </div>
 
-              {/* ODS 6 — Água e Saneamento */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#26BDE2" }}>
-                <span className="text-white font-black text-2xl leading-none">6</span>
-                <span className="text-white text-[10px] font-bold uppercase leading-tight mt-0.5 mb-2">ÁGUA E<br/>SANEAMENTO</span>
-                <svg viewBox="0 0 80 80" className="w-full max-w-[56px] mx-auto mt-auto" fill="white" aria-hidden="true">
-                  <path d="M40 10 C40 10 16 38 16 52 C16 65 27 72 40 72 C53 72 64 65 64 52 C64 38 40 10 40 10Z"/>
-                  <path d="M30 58 C30 58 24 54 24 48" fill="none" stroke="#26BDE2" strokeWidth="4" strokeLinecap="round"/>
+              {/* ODS 06 — Água e Saneamento */}
+              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#00ADD8" }}>
+                <span className="text-white font-black text-3xl leading-none tracking-tighter">06</span>
+                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">ÁGUA E<br/>SANEAMENTO</span>
+                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
+                  <mask id="cutout-6">
+                    <rect width="100" height="100" fill="white" />
+                    <path d="M 15 45 Q 35 30 50 45 T 85 45 L 85 55 Q 65 40 50 55 T 15 55 Z" fill="black" />
+                    <path d="M 50 63 C 65 80 60 92 50 90 C 40 92 35 80 50 63 Z" fill="black" />
+                  </mask>
+                  <polygon points="25,25 75,25 65,90 35,90" fill="white" mask="url(#cutout-6)" />
                 </svg>
               </div>
 
-              {/* ODS 9 — Inovação e Infraestruturas */}
+              {/* ODS 09 — Inovação e Infraestruturas */}
               <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#FD6925" }}>
-                <span className="text-white font-black text-2xl leading-none">9</span>
-                <span className="text-white text-[10px] font-bold uppercase leading-tight mt-0.5 mb-2">INOVAÇÃO E<br/>INFRAESTRUTURA</span>
-                <svg viewBox="0 0 80 80" className="w-full max-w-[56px] mx-auto mt-auto" fill="white" aria-hidden="true">
-                  <rect x="10" y="40" width="18" height="32" rx="2"/>
-                  <rect x="31" y="26" width="18" height="46" rx="2"/>
-                  <rect x="52" y="14" width="18" height="58" rx="2"/>
-                  <path d="M8 38 L38 18 L54 26 L73 12" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="73" cy="12" r="4"/>
+                <span className="text-white font-black text-3xl leading-none tracking-tighter">09</span>
+                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">INOVAÇÃO E<br/>INFRAESTRUTURA</span>
+                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
+                  <g fill="none" stroke="white" strokeWidth="2" strokeLinejoin="round" transform="translate(0, 5) scale(1.1)">
+                    <polygon points="45,15 60,23 45,31 30,23" fill="white" />
+                    <polygon points="30,23 45,31 45,47 30,39" />
+                    <polygon points="45,31 60,23 60,39 45,47" />
+                    <polygon points="30,39 45,47 30,55 15,47" />
+                    <polygon points="15,47 30,55 30,71 15,63" fill="white" />
+                    <polygon points="30,55 45,47 45,63 30,71" />
+                    <polygon points="60,39 75,47 60,55 45,47" />
+                    <polygon points="45,47 60,55 60,71 45,63" />
+                    <polygon points="60,55 75,47 75,63 60,71" fill="white" />
+                  </g>
                 </svg>
               </div>
 
               {/* ODS 12 — Produção e Consumo Sustentáveis */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#BF8B2E" }}>
-                <span className="text-white font-black text-2xl leading-none">12</span>
-                <span className="text-white text-[10px] font-bold uppercase leading-tight mt-0.5 mb-2">PRODUÇÃO E<br/>CONSUMO</span>
-                <svg viewBox="0 0 80 80" className="w-full max-w-[56px] mx-auto mt-auto" fill="none" stroke="white" strokeWidth="5" strokeLinecap="round" aria-hidden="true">
-                  <path d="M15 40 C15 28 24 20 34 20 C44 20 50 28 50 36 C50 44 44 50 34 50 C24 50 30 58 40 60 C50 62 65 52 65 40 C65 28 56 20 46 20"/>
+              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#D79C3B" }}>
+                <span className="text-white font-black text-3xl leading-none tracking-tighter">12</span>
+                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">PRODUÇÃO E<br/>CONSUMO</span>
+                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
+                  <g transform="translate(5, 10) scale(1.15)">
+                    <path d="M 53 45 C 45 45 45 65 30 65 C 15 65 15 45 30 45 C 45 45 45 65 60 65 C 75 65 75 45 65 45" fill="none" stroke="white" strokeWidth="6" strokeLinecap="round" />
+                    <polygon points="56,38 45,45 56,52" fill="white"/>
+                  </g>
                 </svg>
               </div>
 
               {/* ODS 17 — Parcerias para o Desenvolvimento */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#19486A" }}>
-                <span className="text-white font-black text-2xl leading-none">17</span>
-                <span className="text-white text-[10px] font-bold uppercase leading-tight mt-0.5 mb-2">PARCERIAS<br/>GLOBAIS</span>
-                <svg viewBox="0 0 80 80" className="w-full max-w-[56px] mx-auto mt-auto" fill="none" stroke="white" strokeWidth="4" aria-hidden="true">
-                  <circle cx="40" cy="16" r="10" fill="white"/>
-                  <circle cx="16" cy="58" r="10" fill="white"/>
-                  <circle cx="64" cy="58" r="10" fill="white"/>
-                  <line x1="33" y1="23" x2="22" y2="48"/>
-                  <line x1="47" y1="23" x2="58" y2="48"/>
-                  <line x1="26" y1="58" x2="54" y2="58"/>
+              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#3B5E7E" }}>
+                <span className="text-white font-black text-3xl leading-none tracking-tighter">17</span>
+                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">PARCERIAS<br/>GLOBAIS</span>
+                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
+                  <g fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" transform="translate(0, -2) scale(1.05)">
+                    <circle cx="50" cy="38.5" r="14" />
+                    <circle cx="60.9" cy="46.5" r="14" />
+                    <circle cx="56.8" cy="59.3" r="14" />
+                    <circle cx="43.2" cy="59.3" r="14" />
+                    <circle cx="39.1" cy="46.5" r="14" />
+                  </g>
                 </svg>
               </div>
 
