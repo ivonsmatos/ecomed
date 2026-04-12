@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -256,88 +257,24 @@ export default function SobrePage() {
               Alinhado com os ODS da ONU
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-
-              {/* ODS 03 — Vida Saudável */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#009D5B" }}>
-                <span className="text-white font-black text-3xl leading-none tracking-tighter">03</span>
-                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">VIDA<br/>SAUDÁVEL</span>
-                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2 tracking-tighter" aria-hidden="true">
-                  <path d="M 50,55 C 25,40 25,20 35,12 C 45,6 50,15 50,20 C 50,15 55,6 65,12 C 75,20 75,40 50,55 Z" fill="white" />
-                  <polyline points="5,75 25,75 35,60 45,85 55,65 65,75 75,60 95,75 100,75" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-
-              {/* ODS 04 — Educação de Qualidade */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#E5243B" }}>
-                <span className="text-white font-black text-3xl leading-none tracking-tighter">04</span>
-                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">EDUCAÇÃO<br/>DE QUALIDADE</span>
-                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
-                  <polygon points="50,25 85,35 50,45 15,35" fill="white" />
-                  <polygon points="28,47 50,54 72,47 72,75 28,75" fill="white" />
-                  <line x1="75" y1="36" x2="75" y2="68" stroke="white" strokeWidth="3" strokeLinecap="round" />
-                </svg>
-              </div>
-
-              {/* ODS 06 — Água e Saneamento */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#00ADD8" }}>
-                <span className="text-white font-black text-3xl leading-none tracking-tighter">06</span>
-                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">ÁGUA E<br/>SANEAMENTO</span>
-                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
-                  <mask id="cutout-6">
-                    <rect width="100" height="100" fill="white" />
-                    <path d="M 15 45 Q 35 30 50 45 T 85 45 L 85 55 Q 65 40 50 55 T 15 55 Z" fill="black" />
-                    <path d="M 50 63 C 65 80 60 92 50 90 C 40 92 35 80 50 63 Z" fill="black" />
-                  </mask>
-                  <polygon points="25,25 75,25 65,90 35,90" fill="white" mask="url(#cutout-6)" />
-                </svg>
-              </div>
-
-              {/* ODS 09 — Inovação e Infraestruturas */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#FD6925" }}>
-                <span className="text-white font-black text-3xl leading-none tracking-tighter">09</span>
-                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">INOVAÇÃO E<br/>INFRAESTRUTURA</span>
-                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
-                  <g fill="none" stroke="white" strokeWidth="2" strokeLinejoin="round" transform="translate(0, 5) scale(1.1)">
-                    <polygon points="45,15 60,23 45,31 30,23" fill="white" />
-                    <polygon points="30,23 45,31 45,47 30,39" />
-                    <polygon points="45,31 60,23 60,39 45,47" />
-                    <polygon points="30,39 45,47 30,55 15,47" />
-                    <polygon points="15,47 30,55 30,71 15,63" fill="white" />
-                    <polygon points="30,55 45,47 45,63 30,71" />
-                    <polygon points="60,39 75,47 60,55 45,47" />
-                    <polygon points="45,47 60,55 60,71 45,63" />
-                    <polygon points="60,55 75,47 75,63 60,71" fill="white" />
-                  </g>
-                </svg>
-              </div>
-
-              {/* ODS 12 — Produção e Consumo Sustentáveis */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#D79C3B" }}>
-                <span className="text-white font-black text-3xl leading-none tracking-tighter">12</span>
-                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">PRODUÇÃO E<br/>CONSUMO</span>
-                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
-                  <g transform="translate(5, 10) scale(1.15)">
-                    <path d="M 53 45 C 45 45 45 65 30 65 C 15 65 15 45 30 45 C 45 45 45 65 60 65 C 75 65 75 45 65 45" fill="none" stroke="white" strokeWidth="6" strokeLinecap="round" />
-                    <polygon points="56,38 45,45 56,52" fill="white"/>
-                  </g>
-                </svg>
-              </div>
-
-              {/* ODS 17 — Parcerias para o Desenvolvimento */}
-              <div className="rounded-xl p-3 flex flex-col items-start" style={{ background: "#3B5E7E" }}>
-                <span className="text-white font-black text-3xl leading-none tracking-tighter">17</span>
-                <span className="text-white text-[11px] font-bold uppercase leading-tight mt-1 mb-2">PARCERIAS<br/>GLOBAIS</span>
-                <svg viewBox="0 0 100 100" className="w-full max-w-[64px] mx-auto mt-auto mb-2" aria-hidden="true">
-                  <g fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" transform="translate(0, -2) scale(1.05)">
-                    <circle cx="50" cy="38.5" r="14" />
-                    <circle cx="60.9" cy="46.5" r="14" />
-                    <circle cx="56.8" cy="59.3" r="14" />
-                    <circle cx="43.2" cy="59.3" r="14" />
-                    <circle cx="39.1" cy="46.5" r="14" />
-                  </g>
-                </svg>
-              </div>
-
+              {[
+                { file: "3-VIDA-SAUDAVEL.png", alt: "ODS 3 — Vida Saudável" },
+                { file: "4-EDUCACAO-DE-QUALIDADE.png", alt: "ODS 4 — Educação de Qualidade" },
+                { file: "6-AGUA-E-SANEAMENTO.png", alt: "ODS 6 — Água e Saneamento" },
+                { file: "9 INOVACAO-E-INFRAESTRUTURA.png", alt: "ODS 9 — Inovação e Infraestrutura" },
+                { file: "12-PRODUCAO-E-CONSUMO.png", alt: "ODS 12 — Produção e Consumo Sustentáveis" },
+                { file: "17-PARCERIAS-GLOBAIS.png", alt: "ODS 17 — Parcerias Globais" },
+              ].map((ods, i) => (
+                <div key={i} className="relative w-full aspect-square rounded-xl overflow-hidden shadow-sm hover:scale-105 transition-transform duration-300">
+                  <Image 
+                    src={`/ods/${ods.file}`}
+                    alt={ods.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 16vw"
+                  />
+                </div>
+              ))}
             </div>
             <p className="text-xs text-gray-400 mt-4">
               Objetivos de Desenvolvimento Sustentável da ONU aos quais o EcoMed contribui diretamente.
