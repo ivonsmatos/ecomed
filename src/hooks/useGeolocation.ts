@@ -21,8 +21,11 @@ export function useGeolocation(): UseGeolocationReturn {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setLoading(false);
-      return;
+      const timeoutId = window.setTimeout(() => {
+        setLoading(false);
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
 
     const watcher = navigator.geolocation.watchPosition(

@@ -7,6 +7,7 @@ import { creditCoins, concederBadge } from "@/lib/coins"
 import { checkRateLimit } from "@/lib/ratelimit"
 import { verifyShuffleMaps } from "@/lib/quiz/shuffle"
 import { verificarMilestonesQuiz } from "@/lib/goals/milestones"
+import { aplicarProgressoMissoes } from "@/lib/coins/missions"
 
 const QUIZ_DIARIO_MAXIMO = 3
 
@@ -162,6 +163,7 @@ quiz.post(
     }
 
     const perfect = score === total
+    const quizAprovado = total > 0 && score / total >= 0.7
 
     // ── Creditar EcoCoins APENAS se resposta perfeita (100%) ─────────────────
     // Respostas erradas (mesmo parcialmente corretas) não geram coins.
@@ -175,6 +177,10 @@ quiz.post(
     await prisma.quizAttempt.create({
       data: { userId, quizId: id, score, total, perfect, coinsEarned },
     })
+
+    if (quizAprovado) {
+      await aplicarProgressoMissoes(userId, "QUIZ").catch(() => null)
+    }
 
     // ── Badge de nível: conceder ao completar TODOS os quizzes do nível com 100% ──
     let levelBadgeEarned = false

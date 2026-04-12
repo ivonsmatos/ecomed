@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/../auth";
-import { creditCoins } from "@/lib/coins";
+import { concluirOnboardingComBoasVindas } from "@/lib/coins/onboarding";
 
 /**
  * POST /api/onboarding/concluir
@@ -8,7 +8,7 @@ import { creditCoins } from "@/lib/coins";
  * Marca o onboarding como concluído pelo usuário e credita EcoCoins de bônus.
  * Esta rota é chamada quando o usuário termina o fluxo de onboarding.
  */
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const session = await auth();
     
@@ -20,14 +20,13 @@ export async function POST(req: NextRequest) {
     }
 
     const userId = session.user.id;
-
-    // Creditar EcoCoins pela conclusão do onboarding
-    // A função creditCoins já cria a transaction com event: "ONBOARDING_SCREENS"
-    await creditCoins(userId, "ONBOARDING_SCREENS");
+    const result = await concluirOnboardingComBoasVindas(userId);
 
     return NextResponse.json({ 
-      success: true, 
-      message: "Onboarding concluído com sucesso!" 
+      success: result.ok,
+      creditedSignup: result.creditedSignup,
+      creditedOnboarding: result.creditedOnboarding,
+      message: "Onboarding concluído com sucesso!"
     });
     
   } catch (error) {

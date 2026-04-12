@@ -438,24 +438,21 @@ const spec = {
         },
       },
     },
-    "/missions/progress": {
+    "/missions/{id}/progress": {
       post: {
         tags: ["missions"],
         summary: "Registrar progresso em uma missão",
         operationId: "postMissionsProgress",
         security: [{ sessionCookie: [] }],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                required: ["event"],
-                properties: { event: { type: "string", description: "Evento de progresso (ex: ARTICLE_READ, CHECKIN, QUIZ)" } },
-              },
-            },
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "string", format: "cuid" },
+            description: "ID da missão do usuário",
           },
-        },
+        ],
         responses: {
           200: { description: "Progresso atualizado, coins creditados se missão completada" },
           401: { description: "Não autenticado" },

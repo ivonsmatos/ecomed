@@ -50,7 +50,14 @@ export function MapContainer({ initialPoints = [] }: MapContainerProps) {
   );
 
   useEffect(() => {
-    if (coords) fetchNearby(coords.latitude, coords.longitude);
+    if (!coords) return;
+
+    // Defer one tick to avoid synchronous state updates in effect body.
+    const timeoutId = window.setTimeout(() => {
+      void fetchNearby(coords.latitude, coords.longitude);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [coords, fetchNearby]);
 
   function handlePinClick(point: MapPoint) {

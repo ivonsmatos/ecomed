@@ -7,12 +7,17 @@ import { validarTokenQR } from "@/lib/qr/token"
 import { creditCoins } from "@/lib/coins"
 import { checkRateLimit } from "@/lib/ratelimit"
 import { verificarMilestonesDescarte } from "@/lib/goals/milestones"
+import { aplicarProgressoMissoes } from "@/lib/coins/missions"
 
 const checkin = new Hono()
 
 const checkinSchema = z.object({
   token: z.string().min(10),
-  pointId: z.string().cuid(),
+  pointId: z.union([
+    z.string().cuid(),
+    z.string().regex(/^point-seed-[a-zA-Z0-9_-]+$/),
+    z.string().regex(/^seed-[a-zA-Z0-9_-]+$/),
+  ]),
   hasGps: z.boolean().optional().default(false),
 })
 
@@ -101,6 +106,8 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
     prisma.checkin.create({ data: { userId, pointId, coinsEarned: coinsBase, hasGps } }),
     creditCoins(userId, "CHECKIN", pointId, coinsBase),
   ])
+
+  await aplicarProgressoMissoes(userId, "CHECKIN").catch(() => null)
 
   // 8. Bônus por novo ponto
   if (!primeiraVisita) {

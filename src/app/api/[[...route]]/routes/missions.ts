@@ -4,6 +4,7 @@ import { z } from "zod"
 import { auth } from "@/../auth"
 import { prisma } from "@/lib/db/prisma"
 import { creditCoins } from "@/lib/coins"
+import { ensureMissionsAtivas } from "@/lib/coins/missions"
 
 const missions = new Hono()
 
@@ -126,6 +127,8 @@ missions.get("/", async (c) => {
   const session = await auth()
   if (!session?.user?.id) return c.json({ error: "Não autenticado." }, 401)
   const userId = session.user.id
+
+  await ensureMissionsAtivas(userId).catch(() => null)
 
   const hoje = diaAtualUTC0()
   const amanha = proximoDia()

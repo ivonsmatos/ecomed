@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CheckCircle2, Clock, Trophy, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CoinDisclaimer } from "@/components/coins/CoinDisclaimer";
+import { ensureMissionsAtivas } from "@/lib/coins/missions";
 
 export const metadata = { title: "Missões | EcoMed" };
 
@@ -22,6 +23,8 @@ function inicioSemanaUTC0(): Date {
 export default async function MissoesPage() {
   const session = await requireSession();
   const userId = session.user!.id!;
+
+  await ensureMissionsAtivas(userId).catch(() => null);
 
   const hoje = diaUTC0();
   const amanha = new Date(hoje);
@@ -179,12 +182,11 @@ export default async function MissoesPage() {
                   </div>
                   {!m.completed && (
                     <div className="space-y-1">
-                      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                        <div
-                      className="h-full bg-purple-500 rounded-full transition-all"
-                      style={{ width: `${pct}%` }}
-                    />
-                      </div>
+                      <progress
+                        value={pct}
+                        max={100}
+                        className="h-1.5 w-full overflow-hidden rounded-full bg-muted [&::-moz-progress-bar]:bg-purple-500 [&::-webkit-progress-bar]:bg-muted [&::-webkit-progress-value]:bg-purple-500"
+                      />
                       <p className="text-xs text-muted-foreground text-right">
                         {m.progress} / {m.mission.targetCount}
                       </p>

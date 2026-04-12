@@ -3,6 +3,7 @@ import { auth } from "@/../auth"
 import { prisma } from "@/lib/db/prisma"
 import { creditCoins } from "@/lib/coins"
 import { checkRateLimit } from "@/lib/ratelimit"
+import { aplicarProgressoMissoes } from "@/lib/coins/missions"
 
 const coins = new Hono()
 
@@ -78,6 +79,8 @@ coins.post("/article-read", async (c) => {
     return c.json({ ok: false, reason: "limite_diario", newBalance: result.newBalance })
   }
 
+  await aplicarProgressoMissoes(userId, "ARTICLE_READ").catch(() => null)
+
   return c.json({
     ok: true,
     coinsEarned: 2,
@@ -99,6 +102,9 @@ coins.post("/ecobot-question", async (c) => {
   }
 
   const result = await creditCoins(userId, "ECOBOT_QUESTION")
+  if (result.ok) {
+    await aplicarProgressoMissoes(userId, "ECOBOT_QUESTION").catch(() => null)
+  }
   return c.json({ ok: result.ok, newBalance: result.newBalance })
 })
 
@@ -109,6 +115,9 @@ coins.post("/ecobot-rating", async (c) => {
   const userId = session.user.id
 
   const result = await creditCoins(userId, "ECOBOT_RATING")
+  if (result.ok) {
+    await aplicarProgressoMissoes(userId, "ECOBOT_RATING").catch(() => null)
+  }
   return c.json({ ok: result.ok, newBalance: result.newBalance })
 })
 
@@ -122,6 +131,9 @@ coins.post("/share", async (c) => {
   const event = body.type === "badge" ? "SHARE_BADGE" : "SHARE_ARTICLE"
 
   const result = await creditCoins(userId, event)
+  if (result.ok) {
+    await aplicarProgressoMissoes(userId, event).catch(() => null)
+  }
   return c.json({ ok: result.ok, newBalance: result.newBalance })
 })
 

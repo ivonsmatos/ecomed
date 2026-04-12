@@ -5,6 +5,7 @@ import { auth } from "@/../auth";
 import { checkRateLimit } from "@/lib/ratelimit";
 import { prisma } from "@/lib/db/prisma";
 import { creditCoins } from "@/lib/coins";
+import { aplicarProgressoMissoes } from "@/lib/coins/missions";
 
 const app = new Hono();
 
@@ -51,7 +52,16 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
     }
 
     const data: { resposta: string } = await res.json();
+    const session = await auth();
     const messageId = crypto.randomUUID();
+
+    if (session?.user?.id && pergunta.trim().length >= 10) {
+      const coinResult = await creditCoins(session.user.id, "ECOBOT_QUESTION", messageId);
+      if (coinResult.ok) {
+        await aplicarProgressoMissoes(session.user.id, "ECOBOT_QUESTION").catch(() => null);
+      }
+    }
+
     return c.json({ resposta: data.resposta, messageId });
   } catch (err) {
     const isTimeout =
@@ -94,7 +104,10 @@ app.post("/feedback", zValidator("json", feedbackSchema), async (c) => {
   let coinsEarned = 0;
   if (session?.user?.id) {
     const result = await creditCoins(session.user.id, "ECOBOT_RATING", messageId);
-    if (result.ok) coinsEarned = 1;
+    if (result.ok) {
+      await aplicarProgressoMissoes(session.user.id, "ECOBOT_RATING").catch(() => null);
+      coinsEarned = 1;
+    }
   }
 
   return c.json({ ok: true, coinsEarned });
