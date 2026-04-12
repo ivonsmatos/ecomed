@@ -1,104 +1,103 @@
-name: Deploy App — VPS
+name: Deploy App - VPS
 
 on:
   push:
-    branches: [main, master]
+    branches: [master]
     paths:
       - "app/**"
-      - "!app/**/*.md"
       - ".github/workflows/deploy-app.yml"
+  workflow_dispatch:
 
 jobs:
-  build-push:
-    name: Build → GHCR
+  deploy:
+    name: Build e Deploy no VPS
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     permissions:
       contents: read
-      packages: write
-
-    outputs:
-      image: ${{ steps.meta.outputs.tags }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login no GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Metadata da imagem
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository_owner }}/ecomed-app
-          tags: |
-            type=raw,value=latest
-            type=sha,prefix=sha-
-
-      - name: Build e push para GHCR
-        uses: docker/build-push-action@v6
-        with:
-          context: ./app
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          # Cache entre runs — reduz build de ~4min para ~1min
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            AUTH_SECRET=${{ secrets.AUTH_SECRET }}
-            AUTH_URL=${{ secrets.AUTH_URL }}
-            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            NEXT_PUBLIC_VAPID_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
-
-  deploy:
-    name: Deploy → VPS
-    runs-on: ubuntu-latest
-    needs: build-push
-    timeout-minutes: 10
 
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.0
-        env:
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_ACTOR: ${{ github.repository_owner }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: root
           password: ${{ secrets.VPS_PASSWORD }}
-          command_timeout: 8m
-          envs: GHCR_TOKEN,GH_ACTOR
+          command_timeout: 22m
           script: |
-            set -e
+            set -euo pipefail
 
-            IMAGE="ghcr.io/${GH_ACTOR}/ecomed-app:latest"
+            APP_DIR="/opt/ecomed/app"
+            CANARY_PORT="3011"
+            PROD_PORT="3010"
+            CANARY_NAME="ecomed-web-canary"
 
-            echo "🔐 Autenticando no GHCR..."
-            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GH_ACTOR" --password-stdin
+            cd "$APP_DIR"
 
-            echo "📦 Baixando nova imagem: $IMAGE"
-            docker pull "$IMAGE"
+            echo "Atualizando código"
+            git fetch origin master
+            git checkout master
+            git reset --hard origin/master
+            echo "HEAD: $(git rev-parse --short HEAD)"
 
-            echo "🔄 Substituindo container..."
-            docker stop ecomed-web 2>/dev/null || true
-            docker rm   ecomed-web 2>/dev/null || true
+            echo "Carregando variáveis do servidor"
+            source /opt/ecomed/.env
 
+            echo "Build da imagem"
+            docker build \
+              --build-arg "DATABASE_URL=${DATABASE_URL}" \
+              --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
+              --build-arg "AUTH_URL=${AUTH_URL}" \
+              --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
+              --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
+              --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
+              --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
+              --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
+              -t ecomed-app:latest .
+
+            echo "Subindo canário"
+            docker rm -f "$CANARY_NAME" 2>/dev/null || true
+            docker run -d \
+              --name "$CANARY_NAME" \
+              --restart unless-stopped \
+              -p ${CANARY_PORT}:3010 \
+              --env-file /opt/ecomed/.env \
+              ecomed-app:latest
+
+            echo "Health-check canário"
+            ok=0
+            for i in $(seq 1 30); do
+              if curl -fsS "http://127.0.0.1:${CANARY_PORT}/api/health" | grep -q '"status":"ok"'; then
+                ok=1
+                break
+              fi
+              sleep 2
+            done
+
+            if [ "$ok" -ne 1 ]; then
+              echo "Canário não ficou saudável"
+              docker logs --tail 120 "$CANARY_NAME" || true
+              docker rm -f "$CANARY_NAME" || true
+              exit 1
+            fi
+
+            echo "Swap para produção"
+            docker rm -f ecomed-web 2>/dev/null || true
             docker run -d \
               --name ecomed-web \
               --restart unless-stopped \
-              -p 3010:3010 \
+              -p ${PROD_PORT}:3010 \
               --env-file /opt/ecomed/.env \
-              "$IMAGE"
+              ecomed-app:latest
 
-            echo "✅ Deploy concluído — status:"
+            echo "Limpando canário"
+            docker rm -f "$CANARY_NAME" 2>/dev/null || true
+
+            echo "Health-check produção"
+            curl -fsS "http://127.0.0.1:${PROD_PORT}/api/health" >/dev/null
+
+            echo "Prune de imagens antigas"
+            docker image prune -f --filter "until=168h" || true
+
+            echo "Deploy concluído"
             docker ps --filter name=ecomed-web --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
