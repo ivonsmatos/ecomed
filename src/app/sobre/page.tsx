@@ -261,7 +261,7 @@ export default function SobrePage() {
                 { file: "3-VIDA-SAUDAVEL.png", alt: "ODS 3 — Vida Saudável" },
                 { file: "4-EDUCACAO-DE-QUALIDADE.png", alt: "ODS 4 — Educação de Qualidade" },
                 { file: "6-AGUA-E-SANEAMENTO.png", alt: "ODS 6 — Água e Saneamento" },
-                { file: "9 INOVACAO-E-INFRAESTRUTURA.png", alt: "ODS 9 — Inovação e Infraestrutura" },
+                { file: "9-INOVACAO-E-INFRAESTRUTURA.png", alt: "ODS 9 — Inovação e Infraestrutura" },
                 { file: "12-PRODUCAO-E-CONSUMO.png", alt: "ODS 12 — Produção e Consumo Sustentáveis" },
                 { file: "17-PARCERIAS-GLOBAIS.png", alt: "ODS 17 — Parcerias Globais" },
               ].map((ods, i) => (
