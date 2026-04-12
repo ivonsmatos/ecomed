@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, ChevronRight } from "lucide-react";
 
@@ -157,6 +157,7 @@ export function Footer() {
             <h4 className="font-sans text-2xl text-white font-semibold mb-[30px]">Parceiro</h4>
             <ul>
               {[
+                { label: "Programa de Parcerias", href: "/parceiros" },
                 { label: "Cadastre seu ponto", href: "/cadastrar" },
                 { label: "Dashboard", href: "/parceiro/dashboard" },
                 { label: "Estatísticas", href: "/parceiro/estatisticas" },

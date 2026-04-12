@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Leaf } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { auth } from "@/../auth";
@@ -36,6 +36,12 @@ export async function Header() {
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             Quem somos
+          </Link>
+          <Link
+            href="/parceiros"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Parceiros
           </Link>
           <Link
             href="/compromisso"
