@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Leaf } from "lucide-react";
+import { Leaf, Menu } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { auth } from "@/../auth";
 import { signOut } from "@/../auth";
 import { PwaInstallButton } from "@/components/shared/PwaInstallButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -109,6 +110,26 @@ export async function Header() {
               <Link href="/cadastrar" className={buttonVariants({ size: "sm" }) + " bg-eco-green hover:bg-eco-green/90 text-white hidden sm:inline-flex"}>Seja parceiro</Link>
             </>
           )}
+          
+          <div className="md:hidden flex items-center">
+            <Sheet>
+              <SheetTrigger className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground border-none bg-transparent cursor-pointer">
+                <Menu className="size-6 text-eco-teal-dark" />
+                <span className="sr-only">Abrir menu</span>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[80vw] sm:w-[350px]">
+                <nav className="flex flex-col gap-5 mt-6 text-lg font-medium">
+                  <Link href="/o-que-fazemos" className="hover:text-eco-teal transition-colors">O que fazemos</Link>
+                  <Link href="/sobre" className="hover:text-eco-teal transition-colors">Quem somos</Link>
+                  <Link href="/parceiros" className="hover:text-eco-teal transition-colors">Parceiros</Link>
+                  <Link href="/compromisso" className="hover:text-eco-teal transition-colors">Compromisso</Link>
+                  <Link href="/blog" className="hover:text-eco-teal transition-colors">Blog</Link>
+                  <Link href="/contato" className="hover:text-eco-teal transition-colors">Contato</Link>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+
         </div>
       </div>
     </header>

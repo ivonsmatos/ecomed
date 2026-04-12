@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -6,7 +6,7 @@ import { Home, MapPin, BookOpen, MessageCircle, User, Heart, Trophy } from "luci
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/app", label: "Início", icon: Home, exact: true },
+  { href: "/", label: "Início", icon: Home, exact: true },
   { href: "/mapa", label: "Mapa", icon: MapPin },
   { href: "/app/quiz", label: "Quiz", icon: BookOpen },
   { href: "/app/chat", label: "EcoBot", icon: MessageCircle },

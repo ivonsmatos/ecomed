@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "EcoMed — Seu remédio tem destino certo.",
     short_name: "EcoMed",
     description: "Encontre pontos de coleta de medicamentos vencidos perto de você.",
-    start_url: "/mapa",
+    start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#16a34a",
