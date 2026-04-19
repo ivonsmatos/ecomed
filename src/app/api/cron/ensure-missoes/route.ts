@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       active: true,
       role: "CITIZEN",
       OR: [
-        { wallet: { coinTransactions: { some: { createdAt: { gt: trintaDiasAtras } } } } },
+        { wallet: { transactions: { some: { createdAt: { gt: trintaDiasAtras } } } } },
         { checkins: { some: { createdAt: { gt: trintaDiasAtras } } } },
       ],
     },
