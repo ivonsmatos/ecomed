@@ -34,22 +34,28 @@ jobs:
 
             source /opt/ecomed/.env
 
-            echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
-            # Prisma 7 carrega prisma.config.ts automaticamente e exige Node>=22.
-            # Para evitar criar node_modules na árvore do app (root-owned), instala num /tmp
-            # e copia só o que precisamos (schema + config + migrations).
             MIGRATION_URL="${DIRECT_URL:-$DATABASE_URL}"
-            rm -rf /tmp/ecomed-migrate
-            mkdir -p /tmp/ecomed-migrate/prisma
-            cp prisma.config.ts /tmp/ecomed-migrate/
-            cp -r prisma/schema.prisma prisma/migrations /tmp/ecomed-migrate/prisma/
+
+            echo "🔨 Build estágio 'builder' (com cache; usado para migrar e gerar runner)..."
+            docker build \
+              --target builder \
+              --build-arg "DATABASE_URL=${DATABASE_URL}" \
+              --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
+              --build-arg "AUTH_URL=${NEXTAUTH_URL}" \
+              --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
+              --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
+              --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
+              --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
+              --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
+              -t ecomed-builder:latest .
+
+            echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
+            # O estágio builder tem node_modules + prisma + prisma.config.ts no CWD (/app)
             docker run --rm \
-              -v /tmp/ecomed-migrate:/app \
-              -w /app \
               -e DATABASE_URL="${MIGRATION_URL}" \
               -e DIRECT_URL="${MIGRATION_URL}" \
-              node:22-alpine sh -c "apk add --no-cache openssl >/dev/null 2>&1 && npm init -y >/dev/null && npm install --silent --ignore-scripts prisma@7.6.0 dotenv && npx prisma migrate deploy"
-            rm -rf /tmp/ecomed-migrate
+              ecomed-builder:latest \
+              pnpm exec prisma migrate deploy
 
             echo "♻️  Sincronizando scripts de manutenção..."
             mkdir -p /opt/ecomed/scripts/maintenance
@@ -75,7 +81,7 @@ jobs:
               printf '%s\n' "$new_cron" | sed '/^$/d' | crontab -
             fi
 
-            echo "🔨 Build Docker (com cache de camadas)..."
+            echo "🔨 Build runner final (reaproveita cache do builder)..."
             docker build \
               --build-arg "DATABASE_URL=${DATABASE_URL}" \
               --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
