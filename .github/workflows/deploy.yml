@@ -35,13 +35,21 @@ jobs:
             source /opt/ecomed/.env
 
             echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
-            # Usa DIRECT_URL para DDL (pgbouncer-friendly); fallback p/ DATABASE_URL
+            # Prisma 7 carrega prisma.config.ts automaticamente e exige Node>=22.
+            # Para evitar criar node_modules na árvore do app (root-owned), instala num /tmp
+            # e copia só o que precisamos (schema + config + migrations).
             MIGRATION_URL="${DIRECT_URL:-$DATABASE_URL}"
+            rm -rf /tmp/ecomed-migrate
+            mkdir -p /tmp/ecomed-migrate/prisma
+            cp prisma.config.ts /tmp/ecomed-migrate/
+            cp -r prisma/schema.prisma prisma/migrations /tmp/ecomed-migrate/prisma/
             docker run --rm \
-              -v "$(pwd)/prisma":/work/prisma:ro \
-              -w /work \
+              -v /tmp/ecomed-migrate:/app \
+              -w /app \
               -e DATABASE_URL="${MIGRATION_URL}" \
-              node:20-alpine sh -c "apk add --no-cache openssl >/dev/null 2>&1 && npx --yes prisma@7.6.0 migrate deploy --schema=/work/prisma/schema.prisma"
+              -e DIRECT_URL="${MIGRATION_URL}" \
+              node:22-alpine sh -c "apk add --no-cache openssl >/dev/null 2>&1 && npm init -y >/dev/null && npm install --silent --ignore-scripts prisma@7.6.0 dotenv && npx prisma migrate deploy"
+            rm -rf /tmp/ecomed-migrate
 
             echo "♻️  Sincronizando scripts de manutenção..."
             mkdir -p /opt/ecomed/scripts/maintenance
