@@ -32,8 +32,42 @@ jobs:
             echo "📥 Atualizando código..."
             git pull origin master
 
-            echo "🔨 Build Docker (com cache de camadas)..."
             source /opt/ecomed/.env
+
+            echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
+            # Usa DIRECT_URL para DDL (pgbouncer-friendly); fallback p/ DATABASE_URL
+            MIGRATION_URL="${DIRECT_URL:-$DATABASE_URL}"
+            docker run --rm \
+              -v "$(pwd)/prisma":/work/prisma:ro \
+              -w /work \
+              -e DATABASE_URL="${MIGRATION_URL}" \
+              node:20-alpine sh -c "apk add --no-cache openssl >/dev/null 2>&1 && npx --yes prisma@7.6.0 migrate deploy --schema=/work/prisma/schema.prisma"
+
+            echo "♻️  Sincronizando scripts de manutenção..."
+            mkdir -p /opt/ecomed/scripts/maintenance
+            install -m 0755 ops/maintenance/healthcheck.sh   /opt/ecomed/scripts/maintenance/healthcheck.sh
+            install -m 0755 ops/maintenance/cron-missoes.sh  /opt/ecomed/scripts/maintenance/cron-missoes.sh
+
+            # Garante crons (idempotentes)
+            current_cron=$(crontab -l 2>/dev/null || true)
+            new_cron="$current_cron"
+            if ! echo "$current_cron" | grep -q '/opt/ecomed/scripts/maintenance/healthcheck.sh'; then
+              new_cron="$new_cron"$'\n'"*/2 * * * * /opt/ecomed/scripts/maintenance/healthcheck.sh"
+              echo "✅ Cron healthcheck adicionado"
+            fi
+            if ! echo "$current_cron" | grep -q 'cron-missoes.sh reset'; then
+              new_cron="$new_cron"$'\n'"0 3 * * * /opt/ecomed/scripts/maintenance/cron-missoes.sh reset"
+              echo "✅ Cron reset-missoes adicionado"
+            fi
+            if ! echo "$current_cron" | grep -q 'cron-missoes.sh ensure'; then
+              new_cron="$new_cron"$'\n'"15 3 * * * /opt/ecomed/scripts/maintenance/cron-missoes.sh ensure"
+              echo "✅ Cron ensure-missoes adicionado"
+            fi
+            if [ "$new_cron" != "$current_cron" ]; then
+              printf '%s\n' "$new_cron" | sed '/^$/d' | crontab -
+            fi
+
+            echo "🔨 Build Docker (com cache de camadas)..."
             docker build \
               --build-arg "DATABASE_URL=${DATABASE_URL}" \
               --build-arg "AUTH_SECRET=${AUTH_SECRET}" \

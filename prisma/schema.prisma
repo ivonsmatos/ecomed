@@ -119,6 +119,7 @@ model User {
   dailyLimits       DailyLimitTracker[]
   quizAttempts      QuizAttempt[]
   chatFeedbacks     ChatFeedback[]
+  aiPromptLogs      AiPromptLog[]
 }
 
 model Account {
@@ -472,4 +473,26 @@ model ChatFeedback {
 
   @@index([createdAt])
   @@index([rating, reviewed])
+}
+
+// ---- Observabilidade de IA — Log de prompts do EcoBot ----
+
+model AiPromptLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  messageId String   @unique
+  prompt    String   @db.Text
+  response  String?  @db.Text
+  model     String?
+  latencyMs Int?
+  ragScore  Float?
+  status    String // "ok" | "timeout" | "error" | "rate_limited"
+  errorCode String?
+  ip        String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([status, createdAt])
 }
