@@ -51,9 +51,20 @@ jobs:
             docker run -d \
               --name ecomed-web \
               --restart unless-stopped \
+              --network ia_default \
               -p 3010:3010 \
               --env-file /opt/ecomed/.env \
               ecomed-app:latest
+
+            echo "⏳ Aguardando healthcheck..."
+            for i in $(seq 1 20); do
+              status=$(docker inspect ecomed-web --format '{{.State.Health.Status}}' 2>/dev/null || echo "starting")
+              if [ "$status" = "healthy" ]; then
+                echo "✅ Container saudável"
+                break
+              fi
+              sleep 3
+            done
 
             echo "✅ Deploy concluído!"
             docker ps --filter name=ecomed-web
