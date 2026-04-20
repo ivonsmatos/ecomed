@@ -24,7 +24,13 @@ docker build -t ecomed-web \
   --build-arg NEXT_PUBLIC_SANITY_DATASET="${NEXT_PUBLIC_SANITY_DATASET:-production}" \
   .
 
-echo '=== [4/4] Reiniciando container ==='
+echo '=== [4/5] Re-indexando base de conhecimento EcoBot ==='
+cd /opt/ecomed/ia
+pip install -q -r requirements.txt
+python -m app.ingest --reset
+cd /opt/ecomed
+
+echo '=== [5/5] Reiniciando container ==='
 docker stop ecomed-web 2>/dev/null || true
 docker rm -f ecomed-web 2>/dev/null || true
 # aguarda remoção completa antes do docker run

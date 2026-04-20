@@ -95,7 +95,7 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${iaToken}`,
       },
-      body: JSON.stringify({ pergunta }),
+      body: JSON.stringify({ pergunta, session_id: userId ?? ip }),
       signal: AbortSignal.timeout(55_000),
     });
 
