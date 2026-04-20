@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import {
-  Leaf,
   Menu,
   Sparkles,
   Users,
@@ -62,9 +62,14 @@ export function MobileMenu({ user, signOutAction }: MobileMenuProps) {
         <div className="px-6 pt-6 pb-5 border-b border-eco-teal/10 bg-eco-teal-dark text-white">
           <SheetClose
             render={
-              <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-                <Leaf className="size-6" />
-                <span>EcoMed</span>
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/logo.svg"
+                  alt="EcoMed"
+                  width={130}
+                  height={32}
+                  className="h-8 w-auto brightness-0 invert"
+                />
               </Link>
             }
           />

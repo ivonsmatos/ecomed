@@ -106,7 +106,14 @@ export function Footer() {
           {/* Coluna 1 — Logo + contato */}
           <div>
             <Link href="/" className="inline-block">
-              <span className="font-sans font-bold text-2xl text-eco-lime">EcoMed</span>
+              {/* brightness-0 invert: converte o logo verde para branco no fundo escuro do footer */}
+              <Image
+                src="/logo.svg"
+                alt="EcoMed"
+                width={150}
+                height={37}
+                className="h-9 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="font-sans text-white/80 mt-7 mb-5">
               Descarte correto de medicamentos para um Brasil mais sustentável e protegido.

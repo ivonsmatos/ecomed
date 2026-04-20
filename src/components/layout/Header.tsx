@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Leaf } from "lucide-react";
+import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { auth } from "@/../auth";
 import { PwaInstallButton } from "@/components/shared/PwaInstallButton";
@@ -13,9 +13,15 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold text-eco-teal-dark">
-          <Leaf className="size-5" />
-          <span>EcoMed</span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.svg"
+            alt="EcoMed"
+            width={120}
+            height={29}
+            priority
+            className="h-7 w-auto"
+          />
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm md:flex">

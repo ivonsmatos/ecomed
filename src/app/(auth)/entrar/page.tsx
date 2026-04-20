@@ -7,7 +7,8 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Leaf, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { loginSchema } from "@/lib/schemas/user";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -59,9 +60,8 @@ function LoginContent() {
   return (
     <Card>
       <CardHeader className="space-y-1 text-center">
-        <Link href="/" className="mx-auto flex items-center gap-2 text-eco-teal-dark">
-          <Leaf className="size-6" />
-          <span className="text-xl font-bold">EcoMed</span>
+        <Link href="/" className="mx-auto flex items-center">
+          <Image src="/logo.svg" alt="EcoMed" width={110} height={27} className="h-7 w-auto" />
         </Link>
         <CardTitle className="text-2xl">Entrar</CardTitle>
         <CardDescription>Acesse sua conta para continuar</CardDescription>
