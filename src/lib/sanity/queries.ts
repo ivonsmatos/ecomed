@@ -64,6 +64,31 @@ export async function getArticles(): Promise<ArticleListItem[]> {
   );
 }
 
+export async function getArticlesPaginated(
+  page: number,
+  perPage: number,
+): Promise<ArticleListItem[]> {
+  if (!sanityClient) return [];
+  const start = (page - 1) * perPage;
+  const end = start + perPage;
+  return sanityClient.fetch(
+    groq`*[_type == "article" && defined(publishedAt)] | order(publishedAt desc) [$start...$end] {
+      ${articleListFields}
+    }`,
+    { start, end },
+    { next: { revalidate: 60 } },
+  );
+}
+
+export async function getArticleCount(): Promise<number> {
+  if (!sanityClient) return 0;
+  return sanityClient.fetch(
+    groq`count(*[_type == "article" && defined(publishedAt)])`,
+    {},
+    { next: { revalidate: 60 } },
+  );
+}
+
 export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
   if (!sanityClient) return [];
   return sanityClient.fetch(
