@@ -69,14 +69,17 @@ export default withSentryConfig(withSerwistConfig, {
   // Build silencioso a menos que esteja em CI
   silent: !process.env.CI,
 
-  // Reduz tamanho de bundle eliminando código de debug
-  disableLogger: true,
-
   // Source maps só se houver auth token (precisa de SENTRY_AUTH_TOKEN no build)
   sourcemaps: {
     disable: !process.env.SENTRY_AUTH_TOKEN,
   },
 
-  // Auto-instrument pra capturar erros de Server Actions / Route Handlers
-  automaticVercelMonitors: false,
+  webpack: {
+    // Remove código de debug do bundle de produção (substitui disableLogger deprecado)
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    // Desativa monitors automáticos do Vercel (usamos VPS)
+    automaticVercelMonitors: false,
+  },
 });
