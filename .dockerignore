@@ -22,5 +22,8 @@ test-results
 # Diretório app/ legado no servidor (artefato de deployments anteriores)
 app/
 
+# Arquivos de backup/arquivo — não devem entrar no build de produção
+_archive/
+
 # Sentry artefatos locais
 .sentryclirc
