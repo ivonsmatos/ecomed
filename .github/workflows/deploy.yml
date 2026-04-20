@@ -57,12 +57,13 @@ jobs:
           command_timeout: 18m
           script: |
             set -e
-            cd /opt/ecomed/app
+            cd /opt/ecomed
 
             echo "📥 Atualizando código..."
-            git pull origin master
+            git fetch origin
+            git reset --hard origin/master
 
-            source /opt/ecomed/.env
+            set -a; source /opt/ecomed/.env; set +a
 
             MIGRATION_URL="${DIRECT_URL:-$DATABASE_URL}"
 
@@ -71,7 +72,7 @@ jobs:
               --target builder \
               --build-arg "DATABASE_URL=${DATABASE_URL}" \
               --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
-              --build-arg "AUTH_URL=${NEXTAUTH_URL}" \
+              --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
               --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
@@ -80,7 +81,6 @@ jobs:
               -t ecomed-builder:latest .
 
             echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
-            # O estágio builder tem node_modules + prisma + prisma.config.ts no CWD (/app)
             docker run --rm \
               -e DATABASE_URL="${MIGRATION_URL}" \
               -e DIRECT_URL="${MIGRATION_URL}" \
@@ -115,7 +115,7 @@ jobs:
             docker build \
               --build-arg "DATABASE_URL=${DATABASE_URL}" \
               --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
-              --build-arg "AUTH_URL=${NEXTAUTH_URL}" \
+              --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
               --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
