@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma"
 import { creditCoins } from "@/lib/coins"
+import { sendPushToUser } from "@/lib/push"
 
 type MissionPoolItem = {
   slug: string
@@ -319,6 +320,14 @@ export async function aplicarProgressoMissoes(userId: string, event: string) {
         userMission.mission.coinReward,
         `Missão concluída: ${userMission.mission.title}`,
       )
+
+      // Push notification (silently fails se VAPID nao configurado ou usuario sem subscription)
+      sendPushToUser(userId, {
+        title: "Missão concluída! 🎉",
+        body: `${userMission.mission.title} · +${userMission.mission.coinReward} EcoCoins`,
+        url: "/recompensas",
+        tag: `mission-${userMission.id}`,
+      }).catch((err) => console.error("[push:mission] falhou:", err))
     }
   }
 

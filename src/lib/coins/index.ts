@@ -1,4 +1,13 @@
 import { prisma } from "@/lib/db/prisma"
+import { sendPushToUser } from "@/lib/push"
+
+const NIVEL_LABEL: Record<string, string> = {
+  SEMENTE: "Semente 🌱",
+  BROTO: "Broto 🌿",
+  ARVORE: "Árvore 🌳",
+  GUARDIAO: "Guardião 🛡️",
+  LENDA_ECO: "Lenda Eco ⭐",
+}
 
 // ---- Início do dia em UTC (usado como chave do DailyLimitTracker) ----
 function diaUTC(): Date {
@@ -252,6 +261,27 @@ export async function creditCoins(
   if (milestone) {
     await creditCoins(userId, milestone)
     streakBonus = milestone
+  }
+
+  // Push de level-up
+  if (levelUp) {
+    sendPushToUser(userId, {
+      title: "Você subiu de nível! 🎊",
+      body: `Agora você é ${NIVEL_LABEL[levelUp] ?? levelUp}. Continue assim!`,
+      url: "/recompensas",
+      tag: `levelup-${levelUp}`,
+    }).catch((err) => console.error("[push:levelup] falhou:", err))
+  }
+
+  // Push de milestone de streak
+  if (milestone) {
+    const dias = milestone === "STREAK_30_DAYS" ? 30 : milestone === "STREAK_7_DAYS" ? 7 : 3
+    sendPushToUser(userId, {
+      title: `${dias} dias seguidos! 🔥`,
+      body: `Sua sequência continua. Bônus de EcoCoins creditado.`,
+      url: "/recompensas",
+      tag: `streak-${milestone}`,
+    }).catch((err) => console.error("[push:streak] falhou:", err))
   }
 
   return { ok: true, newBalance: novoBalance, levelUp, streakBonus }

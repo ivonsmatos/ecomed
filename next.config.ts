@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
@@ -54,4 +55,26 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSerwist(nextConfig);
+const withSerwistConfig = withSerwist(nextConfig);
+
+// Sentry envolve o config final. Sem SENTRY_AUTH_TOKEN, source maps não são enviados
+// mas a captura de erros runtime ainda funciona (config inicializado em sentry.*.config.ts).
+export default withSentryConfig(withSerwistConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Build silencioso a menos que esteja em CI
+  silent: !process.env.CI,
+
+  // Reduz tamanho de bundle eliminando código de debug
+  disableLogger: true,
+
+  // Source maps só se houver auth token (precisa de SENTRY_AUTH_TOKEN no build)
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
+
+  // Auto-instrument pra capturar erros de Server Actions / Route Handlers
+  automaticVercelMonitors: false,
+});

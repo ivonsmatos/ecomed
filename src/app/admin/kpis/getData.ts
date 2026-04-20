@@ -18,6 +18,13 @@ function weeksAgo(n: number): Date {
   return startOfISOWeek(d)
 }
 
+function daysAgo(n: number): Date {
+  const d = new Date()
+  d.setDate(d.getDate() - n)
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
 // ── Tipo de retorno ──────────────────────────────────────────────────────────
 
 export interface KpiData {
@@ -44,6 +51,9 @@ export async function getKpiData(): Promise<KpiData> {
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
 
+  const d7ago  = daysAgo(7)
+  const d30ago = daysAgo(30)
+
   // ── Queries paralelas principais ─────────────────────────────────────────
   const [
     totalUsers,
@@ -65,6 +75,19 @@ export async function getKpiData(): Promise<KpiData> {
     wauWallets,
     activeStreaks,
     quizPerfRaw,
+    // Education
+    articleReads,
+    // Social (from coin transactions)
+    totalReferrals,
+    totalShares,
+    // Impact: cidades únicas de pontos aprovados
+    uniqueCities,
+    // Retention cohort d7: users created >7d ago that interacted in last 7d
+    retentionD7cohort,
+    retentionD7active,
+    // Retention cohort d30
+    retentionD30cohort,
+    retentionD30active,
   ] = await Promise.all([
     prisma.user.count({ where: { role: "CITIZEN", active: true } }),
     prisma.user.count({ where: { role: "CITIZEN", createdAt: { gte: weekStart } } }),
@@ -82,7 +105,8 @@ export async function getKpiData(): Promise<KpiData> {
     prisma.userMission.count({ where: { completed: true } }),
     prisma.userMission.count({ where: { expiresAt: { gte: weekStart } } }),
     prisma.quizAttempt.count(),
-    prisma.chatFeedback.count(),
+    // Chat: conta prompts com status ok no AiPromptLog (fonte de verdade)
+    prisma.aiPromptLog.count({ where: { status: "ok" } }),
     prisma.point.count({ where: { status: "APPROVED" } }),
     prisma.userReward.count(),
     prisma.coinTransaction.aggregate({
@@ -103,6 +127,54 @@ export async function getKpiData(): Promise<KpiData> {
       SELECT AVG(CAST(score AS float) / NULLIF(total, 0) * 100) AS avg_pct
       FROM "QuizAttempt"
     `,
+    // Artigos lidos: CoinTransactions de ARTICLE_READ
+    prisma.coinTransaction.count({ where: { event: "ARTICLE_READ" as never } }),
+    // Referrals bem-sucedidos
+    prisma.coinTransaction.count({ where: { event: "REFERRAL" as never } }),
+    // Compartilhamentos (artigos + badges)
+    prisma.coinTransaction.count({
+      where: { event: { in: ["SHARE_ARTICLE", "SHARE_BADGE"] as never[] } },
+    }),
+    // Cidades únicas de pontos aprovados
+    prisma.point
+      .groupBy({ by: ["city"], where: { status: "APPROVED" } })
+      .then((r) => r.length),
+    // Retenção D7: cohort de usuários criados há mais de 7 dias
+    prisma.user.count({
+      where: { role: "CITIZEN", active: true, createdAt: { lt: d7ago } },
+    }),
+    // Retenção D7: desses, quantos tiveram transação nos últimos 7 dias
+    prisma.coinTransaction
+      .groupBy({
+        by: ["walletId"],
+        where: { createdAt: { gte: d7ago } },
+      })
+      .then((r) =>
+        prisma.wallet.count({
+          where: {
+            id: { in: r.map((x) => x.walletId) },
+            user: { createdAt: { lt: d7ago } },
+          },
+        }),
+      ),
+    // Retenção D30: cohort
+    prisma.user.count({
+      where: { role: "CITIZEN", active: true, createdAt: { lt: d30ago } },
+    }),
+    // Retenção D30: ativos
+    prisma.coinTransaction
+      .groupBy({
+        by: ["walletId"],
+        where: { createdAt: { gte: d30ago } },
+      })
+      .then((r) =>
+        prisma.wallet.count({
+          where: {
+            id: { in: r.map((x) => x.walletId) },
+            user: { createdAt: { lt: d30ago } },
+          },
+        }),
+      ),
   ])
 
   // ── Weekly sparkline: últimas 6 semanas ──────────────────────────────────
@@ -140,36 +212,42 @@ export async function getKpiData(): Promise<KpiData> {
   const missionRate =
     missionsThisWeek > 0 ? Math.round((totalMissions / missionsThisWeek) * 100) : 0
 
-  // Impacto: estimativa ~200ml por medicamento descartado, média 5 medicamentos por descarte
-  const litersProtected = totalCheckins * 5 * 0.2 * 1000 // em mL → litros × 1000 = mL
+  // Retenção (% de cohort que voltou)
+  const d7Rate  = retentionD7cohort  > 0 ? Math.round((retentionD7active  / retentionD7cohort)  * 100) : 0
+  const d30Rate = retentionD30cohort > 0 ? Math.round((retentionD30active / retentionD30cohort) * 100) : 0
+
+  // Impacto: 5 medicamentos × 200 mL = 1 L por descarte
+  const litersProtected = Math.round(totalCheckins * 5 * 0.2)
 
   return {
     northStar: { current: weekCheckins, target: 10, label: "Descartes/semana" },
     users: { total: totalUsers, dau: dauWallets, wau: wauWallets, newWeek: newUsersWeek, target: 100 },
-    retention: { d7: 0, d30: 0 }, // requer event-tracking dedicado
+    retention: { d7: d7Rate, d30: d30Rate },
     coins: { total: totalEarned, avg: coinsAvg, spent: coinsSpent, rewards: totalRewards },
     disposals: { total: totalCheckins, week: weekCheckins, gps: gpsCheckins, points: uniquePoints },
-    education: { articles: 0, quizzes: totalQuizzes, chat: totalChat, quizAvg },
+    education: { articles: articleReads, quizzes: totalQuizzes, chat: totalChat, quizAvg },
     levels: {
       semente: levelMap["SEMENTE"] ?? 0,
-      broto: levelMap["BROTO"] ?? 0,
-      arvore: levelMap["ARVORE"] ?? 0,
+      broto:   levelMap["BROTO"]   ?? 0,
+      arvore:  levelMap["ARVORE"]  ?? 0,
       guardiao: levelMap["GUARDIAO"] ?? 0,
-      lenda: levelMap["LENDA_ECO"] ?? 0,
+      lenda:   levelMap["LENDA_ECO"] ?? 0,
     },
     streaks: { avg: streakAvg, best: streakBest, active: activeStreaks },
     missions: { completed: totalMissions, rate: missionRate },
-    // Métricas técnicas sem fonte no DB — mantidas como referência estática
+    // Métricas técnicas sem fonte no DB — mantidas como referência estática.
+    // Para valores em tempo real: integrar Lighthouse CI (tests), UptimeRobot API (uptime),
+    // e medir latências de produção via AiPromptLog.latencyMs.
     tech: { uptime: 99.9, lighthouse: 92, api: 1.2, chat: 3.8, fcp: 1.3, tests: 0 },
-    // Social: sem fonte no DB
-    social: { ig: 0, tt: 0, li: 0, refs: 0, shares: 0, nps: 0 },
+    // Social: sem integração com APIs externas (Instagram/TikTok/LinkedIn)
+    social: { ig: 0, tt: 0, li: 0, refs: totalReferrals, shares: totalShares, nps: 0 },
     impact: {
-      liters: Math.round(litersProtected),
+      liters: litersProtected,
       people: totalUsers,
       points: totalPoints,
-      cities: 0,
+      cities: uniqueCities,
     },
-    // Tarefas: sem fonte no DB
+    // Tarefas: sem fonte no DB — alimentar manualmente ou via integração Linear/Jira
     tasks: { total: 0, done: 0, progress: 0, review: 0, blocked: 0, notStarted: 0 },
     weekly,
   }
