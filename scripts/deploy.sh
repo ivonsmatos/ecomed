@@ -27,7 +27,10 @@ docker build -t ecomed-web \
 echo '=== [4/4] Reiniciando container ==='
 docker stop ecomed-web 2>/dev/null || true
 docker rm -f ecomed-web 2>/dev/null || true
+# aguarda remoção completa antes do docker run
+sleep 2
 docker run -d --name ecomed-web --restart unless-stopped \
+  --network ia_default \
   -p 3010:3010 --env-file .env ecomed-web
 
 echo '=== Aguardando health check ==='
