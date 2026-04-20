@@ -120,7 +120,7 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
     const latencyMs = Date.now() - startedAt;
 
     if (userId && pergunta.trim().length >= 10) {
-      const coinResult = await creditCoins(userId, "ECOBOT_QUESTION", messageId);
+      const coinResult = await creditCoins(userId, "ECOBOT_QUESTION", messageId, undefined, "Pergunta ao EcoBot");
       if (coinResult.ok) {
         await aplicarProgressoMissoes(userId, "ECOBOT_QUESTION").catch(() => null);
       }
@@ -194,7 +194,7 @@ app.post("/feedback", zValidator("json", feedbackSchema), async (c) => {
   // Creditar ECOBOT_RATING apenas para usuários autenticados
   let coinsEarned = 0;
   if (session?.user?.id) {
-    const result = await creditCoins(session.user.id, "ECOBOT_RATING", messageId);
+    const result = await creditCoins(session.user.id, "ECOBOT_RATING", messageId, undefined, "Avaliação do EcoBot");
     if (result.ok) {
       await aplicarProgressoMissoes(session.user.id, "ECOBOT_RATING").catch(() => null);
       coinsEarned = 1;
