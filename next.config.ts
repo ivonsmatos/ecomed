@@ -11,6 +11,10 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Prisma 7 usa imports node: (node:crypto, node:fs, node:module).
+  // Esses esquemas não são suportados pelo bundler webpack — o pacote deve ser
+  // tratado como externo (require em runtime, não bundled).
+  serverExternalPackages: ["@prisma/client", "prisma"],
   // instrumentation.ts é auto-detectado no Next.js 15 (stable).
   // Não requer flag experimental — apenas ter o arquivo na raiz do projeto é suficiente.
   images: {
