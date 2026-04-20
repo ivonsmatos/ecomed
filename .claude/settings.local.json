@@ -111,7 +111,26 @@
       "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"sleep 15 && curl -s -o /dev/null -w '%{http_code}' http://localhost:3010/api/health && echo '' && docker logs ecomed-web --tail 10\")",
       "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"curl -s -I http://localhost:3010/ | head -5 && echo '---' && curl -s -I http://localhost:3010/entrar | head -5 && echo '---' && curl -s -I http://localhost:3010/blog | head -5\")",
       "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"docker logs ecomed-web --tail 20 2>&1\")",
-      "Bash(npx vitest *)"
+      "Bash(npx vitest *)",
+      "Bash(python -c \"import sys,json; p=json.load\\(sys.stdin\\); print\\('test script:', p.get\\('scripts',{}\\).get\\('test'\\)\\); print\\('vitest dep:', p.get\\('devDependencies',{}\\).get\\('vitest'\\) or p.get\\('dependencies',{}\\).get\\('vitest'\\) or 'NOT FOUND'\\)\")",
+      "Bash(pnpm test *)",
+      "Bash(curl -s \"https://api.github.com/repos/ivonsmatos/ecomed/actions/runs?per_page=5\")",
+      "Bash(python -c \"import sys,json; runs=json.load\\(sys.stdin\\)['workflow_runs']; [print\\(r['id'], r['conclusion'], r['name'], r['head_commit']['message'][:60]\\) for r in runs]\")",
+      "Bash(curl -s \"https://api.github.com/repos/ivonsmatos/ecomed/actions/runs/24661854506/jobs\")",
+      "Bash(python -c \"import sys,json; jobs=json.load\\(sys.stdin\\)['jobs']; [print\\(j['name'], j['conclusion'], '---steps:', [\\(s['name'],s['conclusion']\\) for s in j['steps']]\\) for j in jobs]\")",
+      "Bash(cp \"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Clientes\\\\EcoMedIdent\\\\logo ecomedR.svg\" \"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Github\\\\ecomed\\\\public\\\\logo.svg\")",
+      "Bash(cp \"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Clientes\\\\EcoMedIdent\\\\ecomedfavicon.svg\" \"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Github\\\\ecomed\\\\public\\\\favicon.svg\")",
+      "Bash(favicon\")",
+      "Bash(cmd /c \"copy \\\\\"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Clientes\\\\EcoMedIdent\\\\logo ecomedR.svg\\\\\" \\\\\"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Github\\\\ecomed\\\\public\\\\logo.svg\\\\\" && copy \\\\\"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Clientes\\\\EcoMedIdent\\\\ecomedfavicon.svg\\\\\" \\\\\"C:\\\\Users\\\\ivonm\\\\OneDrive - CONDOMINIO CONJUNTO RESIDENCIAL PARQUE BRASIL\\\\Github\\\\ecomed\\\\public\\\\favicon.svg\\\\\" && echo ok\")",
+      "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"cd /opt/ecomed && bash scripts/deploy.sh 2>&1\")",
+      "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"docker stop ecomed-web; docker rm -f ecomed-web; set -a; source /opt/ecomed/.env; set +a; docker run -d --name ecomed-web --restart unless-stopped --network ia_default -p 3010:3010 --env-file /opt/ecomed/.env ecomed-web && sleep 10 && curl -s -o /dev/null -w '%{http_code}' http://localhost:3010/api/health\")",
+      "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"cd /opt/ecomed && bash scripts/deploy.sh 2>&1 | tail -15\")",
+      "Bash(plink -ssh root@45.151.122.234 -pw \"Protonsysdba@1986\" -batch \"cd /opt/ecomed && bash scripts/deploy.sh 2>&1 | tail -8\")",
+      "WebFetch(domain:groq.com)",
+      "Bash(python3 -c ' *)",
+      "Bash(python -c ' *)",
+      "Bash(sshpass -p 'Protonsysdba@1986' ssh -o StrictHostKeyChecking=no root@45.151.122.234 \"echo OK && whoami && pwd\")",
+      "Bash(ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=yes root@45.151.122.234 \"echo connected\")"
     ]
   }
 }
