@@ -11,6 +11,8 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // instrumentation.ts é auto-detectado no Next.js 15 (stable).
+  // Não requer flag experimental — apenas ter o arquivo na raiz do projeto é suficiente.
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "*.r2.dev" },

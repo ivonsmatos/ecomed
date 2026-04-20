@@ -120,3 +120,59 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// ── Push notifications ────────────────────────────────────────────────────────
+// Serwist não gerencia o evento push — adicionamos manualmente.
+
+self.addEventListener("push", (event: PushEvent) => {
+  let data: {
+    title?: string;
+    body?: string;
+    url?: string;
+    icon?: string;
+    badge?: string;
+    tag?: string;
+  } = {};
+
+  try {
+    data = event.data?.json() ?? {};
+  } catch {
+    data = { title: "EcoMed", body: event.data?.text() ?? "" };
+  }
+
+  const title = data.title ?? "EcoMed";
+  const options: NotificationOptions = {
+    body: data.body ?? "",
+    icon: data.icon ?? "/icons/icon-192.png",
+    badge: data.badge ?? "/icons/icon-72.png",
+    tag: data.tag ?? "ecomed-default",
+    data: { url: data.url ?? "/" },
+    // Mantém notificação visível até o usuário interagir
+    requireInteraction: false,
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event: NotificationEvent) => {
+  event.notification.close();
+
+  const url: string = event.notification.data?.url ?? "/";
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        // Foca em aba já aberta se houver
+        for (const client of clientList) {
+          if (client.url === url && "focus" in client) {
+            return (client as WindowClient).focus();
+          }
+        }
+        // Abre nova aba
+        if (self.clients.openWindow) {
+          return self.clients.openWindow(url);
+        }
+      }),
+  );
+});
