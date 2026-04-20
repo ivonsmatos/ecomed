@@ -54,6 +54,7 @@ const articleListFields = groq`
 `;
 
 export async function getArticles(): Promise<ArticleListItem[]> {
+  if (!sanityClient) return [];
   return sanityClient.fetch(
     groq`*[_type == "article" && defined(publishedAt)] | order(publishedAt desc) [0...20] {
       ${articleListFields}
@@ -64,6 +65,7 @@ export async function getArticles(): Promise<ArticleListItem[]> {
 }
 
 export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
+  if (!sanityClient) return [];
   return sanityClient.fetch(
     groq`*[_type == "article" && defined(publishedAt)] | order(publishedAt desc) [0...$limit] {
       ${articleListFields}
@@ -74,6 +76,7 @@ export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
 }
 
 export async function getArticleBySlug(slug: string): Promise<ArticleFull | null> {
+  if (!sanityClient) return null;
   return sanityClient.fetch(
     groq`*[_type == "article" && defined(publishedAt) && slug.current == $slug][0] {
       ${articleListFields},
@@ -91,6 +94,7 @@ export async function getArticleBySlug(slug: string): Promise<ArticleFull | null
 }
 
 export async function getArticleSlugs(): Promise<{ slug: string }[]> {
+  if (!sanityClient) return [];
   return sanityClient.fetch(
     groq`*[_type == "article" && defined(publishedAt)] { "slug": slug.current }`,
     {},
