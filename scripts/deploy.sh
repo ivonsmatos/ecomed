@@ -25,10 +25,7 @@ docker build -t ecomed-web \
   .
 
 echo '=== [4/5] Re-indexando base de conhecimento EcoBot ==='
-cd /opt/ecomed/ia
-pip install -q -r requirements.txt
-python -m app.ingest --reset
-cd /opt/ecomed
+docker exec ecomed-ia python -m app.ingest --reset 2>/dev/null || echo "⚠ ingest skipped (container not running yet)"
 
 echo '=== [5/5] Reiniciando container ==='
 docker stop ecomed-web 2>/dev/null || true
