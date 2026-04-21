@@ -25,9 +25,10 @@ export const metadata: Metadata = {
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [{ url: "/icons/icon-192.png", sizes: "192x192" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+      shortcut: "/favicon.svg",
   },
-  appleWebApp: { capable: true, title: "EcoMed", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "EcoMed", statusBarStyle: "black-translucent" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
