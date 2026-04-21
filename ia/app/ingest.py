@@ -81,6 +81,11 @@ def indexar(chunks: list[Document], reset: bool = False) -> int:
         print("[ERRO] DATABASE_URL não definida no .env")
         sys.exit(1)
 
+    # langchain-postgres exige driver psycopg3 na URL
+    db_url = db_url.strip('"').strip("'")
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
+
     embeddings = FastEmbedEmbeddings(model_name=EMBED_MODEL)
 
     if reset:
