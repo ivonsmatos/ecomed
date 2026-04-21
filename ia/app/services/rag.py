@@ -202,8 +202,9 @@ class RAGService:
             self._save_turn(session_id, pergunta, saida.resposta_final)
 
         latency = round((time.time() - start) * 1000)
+        rag_str = f"{rag_score:.3f}" if rag_score is not None else "N/A"
         logger.info(
-            f"[chat] latency={latency}ms | rag_score={rag_score:.3f if rag_score else 'N/A'}"
+            f"[chat] latency={latency}ms | rag_score={rag_str}"
             f" | model={self._model} | sessao={session_id or 'none'}"
         )
 
