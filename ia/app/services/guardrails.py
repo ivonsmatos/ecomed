@@ -160,14 +160,16 @@ def verificar_guardrails(pergunta: str) -> GuardrailResult:
 
 # ── Filtro de saída ───────────────────────────────────────────────────────────
 
-# Nomes de marcas comerciais — serão substituídos por aviso genérico
-_MARCAS = re.compile(
+# Filtro de marcas: APENAS quando combinado com linguagem de uso/recomendação.
+# Nomes de medicamentos são permitidos em contexto de DESCARTE (escopo do EcoBot).
+# Só bloqueia se o LLM recomendar um medicamento específico pelo nome (ex: "tome Tylenol para...").
+_MARCA_COM_USO = re.compile(
+    r"\b(tome|tomar|usar|use|ingira|ingerir|aplicar|aplique|compre)\b.{0,40}"
     r"\b(tylenol|paracetamol|dipirona|ibuprofeno|rivotril|ritalina|gardenal"
     r"|voltaren|cataflan|nimesulida|omeprazol|pantoprazol|losartana|sinvastatina"
     r"|metformina|amoxicilina|azitromicina|ciprofloxacino|dorflex|buscopan"
-    r"|maalox|engov|benegrip|coristina|neosaldina|sempre livre|vick|fluimucil"
-    r"|acetilcisteína)\b",
-    re.IGNORECASE,
+    r"|maalox|engov|benegrip|coristina|neosaldina|fluimucil|acetilcisteína)\b",
+    re.IGNORECASE | re.DOTALL,
 )
 
 # Detecção de dosagem na saída
@@ -229,10 +231,16 @@ def filtrar_saida(resposta: str) -> FiltroSaidaResult:
         resposta = resposta + DISCLAIMER_SAUDE
         motivos.append("dosagem_detectada")
 
-    # Prioridade 3 — marcas comerciais → substituir por aviso
-    if _MARCAS.search(resposta):
-        resposta = _MARCAS.sub(_AVISO_MARCA, resposta)
-        motivos.append("marca_comercial")
+    # Prioridade 3 — recomendação de medicamento pelo nome → fallback completo
+    if _MARCA_COM_USO.search(resposta):
+        return FiltroSaidaResult(
+            resposta_final=(
+                "Para orientações sobre uso de medicamentos, consulte um farmacêutico ou médico. "
+                "Posso ajudar com o descarte correto de medicamentos! 🌿"
+            ),
+            modificada=True,
+            motivo="recomendacao_de_marca",
+        )
 
     return FiltroSaidaResult(
         resposta_final=resposta,
