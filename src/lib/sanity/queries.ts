@@ -118,6 +118,68 @@ export async function getArticleBySlug(slug: string): Promise<ArticleFull | null
   );
 }
 
+// Tipo mínimo para navegação prev/next
+export interface ArticleNav {
+  _id: string;
+  title: string;
+  slug: string;
+  coverImage?: { asset: { _ref: string }; alt?: string };
+}
+
+/** 3 posts relacionados — mesma categoria primeiro, fallback para recentes */
+export async function getRelatedArticles(
+  slug: string,
+  categoryId: string | undefined,
+): Promise<ArticleListItem[]> {
+  if (!sanityClient) return [];
+
+  // Tenta mesma categoria
+  if (categoryId) {
+    const related = await sanityClient.fetch<ArticleListItem[]>(
+      groq`*[_type == "article" && defined(publishedAt) && slug.current != $slug && category._ref == $categoryId]
+        | order(publishedAt desc) [0...3] { ${articleListFields} }`,
+      { slug, categoryId },
+      { next: { revalidate: 3600 } },
+    );
+    if (related.length >= 3) return related;
+  }
+
+  // Fallback: recentes excluindo o atual
+  return sanityClient.fetch<ArticleListItem[]>(
+    groq`*[_type == "article" && defined(publishedAt) && slug.current != $slug]
+      | order(publishedAt desc) [0...3] { ${articleListFields} }`,
+    { slug },
+    { next: { revalidate: 3600 } },
+  );
+}
+
+/** Post anterior (mais antigo) e próximo (mais recente) em relação ao publishedAt */
+export async function getPrevNextArticles(
+  publishedAt: string,
+  slug: string,
+): Promise<{ prev: ArticleNav | null; next: ArticleNav | null }> {
+  if (!sanityClient) return { prev: null, next: null };
+
+  const navFields = groq`_id, title, "slug": slug.current, coverImage { asset, alt }`;
+
+  const [prevArr, nextArr] = await Promise.all([
+    sanityClient.fetch<ArticleNav[]>(
+      groq`*[_type == "article" && defined(publishedAt) && publishedAt < $publishedAt && slug.current != $slug]
+        | order(publishedAt desc) [0...1] { ${navFields} }`,
+      { publishedAt, slug },
+      { next: { revalidate: 3600 } },
+    ),
+    sanityClient.fetch<ArticleNav[]>(
+      groq`*[_type == "article" && defined(publishedAt) && publishedAt > $publishedAt && slug.current != $slug]
+        | order(publishedAt asc) [0...1] { ${navFields} }`,
+      { publishedAt, slug },
+      { next: { revalidate: 3600 } },
+    ),
+  ]);
+
+  return { prev: prevArr[0] ?? null, next: nextArr[0] ?? null };
+}
+
 export async function getArticleSlugs(): Promise<{ slug: string }[]> {
   if (!sanityClient) return [];
   return sanityClient.fetch(
