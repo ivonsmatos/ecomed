@@ -92,6 +92,12 @@ class RAGService:
         if not db_url:
             raise RuntimeError("DATABASE_URL não configurada")
 
+        # langchain-postgres exige driver psycopg3 na URL
+        db_url = db_url.strip('"').strip("'")
+        if db_url.startswith("postgresql://") or db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+            db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
+
         logger.info("Carregando modelo de embeddings (fastembed)...")
         self._embeddings = FastEmbedEmbeddings(model_name=EMBED_MODEL)
 
