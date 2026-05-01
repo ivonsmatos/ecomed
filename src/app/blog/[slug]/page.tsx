@@ -5,9 +5,10 @@ import { FaqAccordion } from "@/components/blog/FaqAccordion";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
-import { getArticleBySlug } from "@/lib/sanity/queries";
+import { getArticleBySlug, getRelatedArticles, getPrevNextArticles } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
-import { User, Calendar } from "lucide-react";
+import { User, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { ArticleReadTracker } from "@/components/blog/ArticleReadTracker";
 
 // O Header usa auth() que lê cookies — a página deve ser dinâmica (on-demand).
@@ -108,6 +109,13 @@ export default async function ArticlePage({ params }: Params) {
   const article = await getArticleBySlug(slug);
 
   if (!article) notFound();
+
+  const [related, { prev, next }] = await Promise.all([
+    getRelatedArticles(slug, article.category?._id),
+    article.publishedAt
+      ? getPrevNextArticles(article.publishedAt, slug)
+      : Promise.resolve({ prev: null, next: null }),
+  ]);
 
   const coverUrl = article.coverImage
     ? urlFor(article.coverImage).width(900).height(500).url()
@@ -254,6 +262,128 @@ export default async function ArticlePage({ params }: Params) {
           {/* FAQ Accordion */}
           {article.faqs && article.faqs.length > 0 && (
             <FaqAccordion faqs={article.faqs} />
+          )}
+
+          {/* ── Posts relacionados ───────────────────────────────────── */}
+          {related.length > 0 && (
+            <section className="mt-14 pt-10 border-t">
+              <h2 className="text-xl font-bold text-eco-teal-dark mb-6">Posts relacionados</h2>
+              <div className="grid gap-5 sm:grid-cols-3">
+                {related.map((r) => {
+                  const thumb = r.coverImage
+                    ? urlFor(r.coverImage).width(400).height(220).url()
+                    : null;
+                  return (
+                    <Link
+                      key={r._id}
+                      href={`/blog/${r.slug}`}
+                      className="group rounded-xl border overflow-hidden hover:shadow-md transition-shadow"
+                    >
+                      {thumb ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={thumb}
+                          alt={r.coverImage?.alt ?? r.title}
+                          className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-32 bg-eco-teal/10 flex items-center justify-center text-eco-teal-dark/30 text-4xl">
+                          📰
+                        </div>
+                      )}
+                      <div className="p-3 space-y-1">
+                        {r.category && (
+                          <Badge variant="secondary" className="text-[10px]">
+                            {r.category.title}
+                          </Badge>
+                        )}
+                        <p className="text-sm font-semibold leading-snug group-hover:text-eco-teal-dark transition-colors line-clamp-2">
+                          {r.title}
+                        </p>
+                        {r.publishedAt && (
+                          <p className="text-[11px] text-muted-foreground">
+                            {new Date(r.publishedAt).toLocaleDateString("pt-BR", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {/* ── Navegação prev / next ────────────────────────────────── */}
+          {(prev || next) && (
+            <nav
+              aria-label="Navegação entre posts"
+              className="mt-10 pt-8 border-t grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              {/* Post anterior — mais antigo */}
+              {prev ? (
+                <Link
+                  href={`/blog/${prev.slug}`}
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-xl min-h-36 border hover:shadow-lg transition-shadow"
+                >
+                  {prev.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={urlFor(prev.coverImage).width(600).height(300).url()}
+                      alt={prev.coverImage.alt ?? prev.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-eco-teal/20" />
+                  )}
+                  {/* Gradiente overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+                  <div className="relative z-10 p-4 space-y-1">
+                    <span className="flex items-center gap-1 text-white/70 text-xs font-medium">
+                      <ChevronLeft className="size-3.5" /> Post anterior
+                    </span>
+                    <p className="text-white text-sm font-semibold leading-snug line-clamp-2">
+                      {prev.title}
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                <div /> /* placeholder para manter o grid */
+              )}
+
+              {/* Próximo post — mais recente */}
+              {next ? (
+                <Link
+                  href={`/blog/${next.slug}`}
+                  className="group relative flex flex-col justify-end overflow-hidden rounded-xl min-h-36 border hover:shadow-lg transition-shadow"
+                >
+                  {next.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={urlFor(next.coverImage).width(600).height(300).url()}
+                      alt={next.coverImage.alt ?? next.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-eco-teal/20" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+                  <div className="relative z-10 p-4 space-y-1 text-right">
+                    <span className="flex items-center justify-end gap-1 text-white/70 text-xs font-medium">
+                      Próximo post <ChevronRight className="size-3.5" />
+                    </span>
+                    <p className="text-white text-sm font-semibold leading-snug line-clamp-2">
+                      {next.title}
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                <div />
+              )}
+            </nav>
           )}
 
         </div>

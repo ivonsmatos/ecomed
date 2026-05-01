@@ -1,18 +1,11 @@
 import Link from "next/link";
-import { Leaf, Menu } from "lucide-react";
+import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { auth } from "@/../auth";
-import { signOut } from "@/../auth";
 import { PwaInstallButton } from "@/components/shared/PwaInstallButton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { UserMenu } from "@/components/layout/UserMenu";
+import { MobileMenu } from "@/components/layout/MobileMenu";
+import { signOutAction } from "@/lib/actions/auth";
 
 export async function Header() {
   const session = await auth();
@@ -20,9 +13,15 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold text-eco-teal-dark">
-          <Leaf className="size-5" />
-          <span>EcoMed</span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.svg"
+            alt="EcoMed"
+            width={120}
+            height={29}
+            priority
+            className="h-7 w-auto"
+          />
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm md:flex">
@@ -68,42 +67,15 @@ export async function Header() {
           <PwaInstallButton />
 
           {session?.user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="relative size-9 rounded-full bg-transparent border-0 p-0 cursor-pointer inline-flex items-center justify-center hover:bg-muted transition-colors">
-                <Avatar className="size-8">
-                    <AvatarImage src={session.user.image ?? undefined} />
-                    <AvatarFallback className="bg-eco-teal/10 text-eco-teal-dark">
-                      {session.user.name?.[0]?.toUpperCase() ?? "U"}
-                    </AvatarFallback>
-                  </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem render={<Link href="/app" />}>Minha área</DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/app/missoes" />}>🏆 Missões</DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/app/recompensas" />}>🎁 Recompensas</DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/app/perfil" />}>Meu perfil</DropdownMenuItem>
-                {(session.user as { role?: string }).role === "PARTNER" && (
-                  <DropdownMenuItem render={<Link href="/parceiro/dashboard" />}>Parceiro</DropdownMenuItem>
-                )}
-                {(session.user as { role?: string }).role === "ADMIN" && (
-                  <DropdownMenuItem render={<Link href="/admin" />}>Admin</DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <form
-                    action={async () => {
-                      "use server";
-                      await signOut({ redirectTo: "/" });
-                    }}
-                    className="w-full"
-                  >
-                    <button type="submit" className="w-full text-left">
-                      Sair
-                    </button>
-                  </form>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserMenu
+              user={{
+                name: session.user.name,
+                email: session.user.email,
+                image: session.user.image,
+                role: (session.user as { role?: string }).role,
+              }}
+              signOutAction={signOutAction}
+            />
           ) : (
             <>
               <Link href="/entrar" className={buttonVariants({ variant: "ghost", size: "sm" })}>Acesse aqui</Link>
@@ -112,22 +84,15 @@ export async function Header() {
           )}
           
           <div className="md:hidden flex items-center">
-            <Sheet>
-              <SheetTrigger className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-muted hover:text-foreground border-none bg-transparent cursor-pointer">
-                <Menu className="size-6 text-eco-teal-dark" />
-                <span className="sr-only">Abrir menu</span>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[80vw] sm:w-[350px] bg-eco-teal text-white">
-                <nav className="flex flex-col gap-5 mt-6 text-lg font-medium">
-                  <Link href="/o-que-fazemos" className="hover:text-eco-green transition-colors">O que fazemos</Link>
-                  <Link href="/sobre" className="hover:text-eco-green transition-colors">Quem somos</Link>
-                  <Link href="/parceiros" className="hover:text-eco-green transition-colors">Parceiros</Link>
-                  <Link href="/compromisso" className="hover:text-eco-green transition-colors">Compromisso</Link>
-                  <Link href="/blog" className="hover:text-eco-green transition-colors">Blog</Link>
-                  <Link href="/contato" className="hover:text-eco-green transition-colors">Contato</Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
+            <MobileMenu
+              user={session?.user ? {
+                name: session.user.name,
+                email: session.user.email,
+                image: session.user.image,
+                role: (session.user as { role?: string }).role,
+              } : null}
+              signOutAction={signOutAction}
+            />
           </div>
 
         </div>

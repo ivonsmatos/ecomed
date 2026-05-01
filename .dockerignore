@@ -1,0 +1,29 @@
+# Dependências locais — reinstaladas no build
+node_modules
+.pnpm-store
+
+# Build outputs
+.next
+out
+
+# Arquivos de desenvolvimento
+.env.local
+.env.development
+.env.*.local
+
+# Ferramentas de dev e cache
+.claude
+.git
+.github
+*.log
+playwright-report
+test-results
+
+# Diretório app/ legado no servidor (artefato de deployments anteriores)
+app/
+
+# Arquivos de backup/arquivo — não devem entrar no build de produção
+_archive/
+
+# Sentry artefatos locais
+.sentryclirc

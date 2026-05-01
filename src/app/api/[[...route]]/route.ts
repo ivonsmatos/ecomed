@@ -3,7 +3,6 @@ import { handle } from "hono/vercel";
 import { pontosRouter } from "./routes/pontos";
 import { favoritosRouter } from "./routes/favoritos";
 import { reportesRouter } from "./routes/reportes";
-import { authRouter } from "./routes/authRoutes";
 import { chatRouter } from "./routes/chat";
 import { pushRouter } from "./routes/push";
 import { adminRouter } from "./routes/admin";
@@ -18,6 +17,7 @@ import missions from "./routes/missions";
 import rewards from "./routes/rewards";
 import quiz from "./routes/quiz";
 import { lgpdRouter } from "./routes/lgpd";
+import { userRouter } from "./routes/user";
 
 export const maxDuration = 60;
 
@@ -30,7 +30,6 @@ app.get("/health", (c) =>
 app.route("/pontos", pontosRouter);
 app.route("/favoritos", favoritosRouter);
 app.route("/reportes", reportesRouter);
-app.route("/auth", authRouter);
 app.route("/chat", chatRouter);
 app.route("/push", pushRouter);
 app.route("/admin", adminRouter);
@@ -45,6 +44,7 @@ app.route("/missions", missions);
 app.route("/rewards", rewards);
 app.route("/quiz", quiz);
 app.route("/lgpd", lgpdRouter);
+app.route("/user", userRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);

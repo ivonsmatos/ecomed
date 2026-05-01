@@ -10,8 +10,38 @@ on:
   workflow_dispatch:
 
 jobs:
+  # ── Job 1: Testes unitários (rápido, sem dependências externas) ───────────
+  test:
+    name: Unit Tests (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm test --run
+        env:
+          NODE_ENV: test
+
+  # ── Job 2: Deploy no VPS (só roda se testes passarem) ────────────────────
   deploy:
     name: Deploy → VPS
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -27,17 +57,65 @@ jobs:
           command_timeout: 18m
           script: |
             set -e
-            cd /opt/ecomed/app
+            cd /opt/ecomed
 
             echo "📥 Atualizando código..."
-            git pull origin master
+            git fetch origin
+            git reset --hard origin/master
 
-            echo "🔨 Build Docker (com cache de camadas)..."
-            source /opt/ecomed/.env
+            set -a; source /opt/ecomed/.env; set +a
+
+            MIGRATION_URL="${DIRECT_URL:-$DATABASE_URL}"
+
+            echo "🔨 Build estágio 'builder' (com cache; usado para migrar e gerar runner)..."
+            docker build \
+              --target builder \
+              --build-arg "DATABASE_URL=${DATABASE_URL}" \
+              --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
+              --build-arg "AUTH_URL=${AUTH_URL}" \
+              --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
+              --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
+              --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
+              --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
+              --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
+              -t ecomed-builder:latest .
+
+            echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
+            docker run --rm \
+              -e DATABASE_URL="${MIGRATION_URL}" \
+              -e DIRECT_URL="${MIGRATION_URL}" \
+              ecomed-builder:latest \
+              pnpm exec prisma migrate deploy
+
+            echo "♻️  Sincronizando scripts de manutenção..."
+            mkdir -p /opt/ecomed/scripts/maintenance
+            install -m 0755 ops/maintenance/healthcheck.sh   /opt/ecomed/scripts/maintenance/healthcheck.sh
+            install -m 0755 ops/maintenance/cron-missoes.sh  /opt/ecomed/scripts/maintenance/cron-missoes.sh
+
+            # Garante crons (idempotentes)
+            current_cron=$(crontab -l 2>/dev/null || true)
+            new_cron="$current_cron"
+            if ! echo "$current_cron" | grep -q '/opt/ecomed/scripts/maintenance/healthcheck.sh'; then
+              new_cron="$new_cron"$'\n'"*/2 * * * * /opt/ecomed/scripts/maintenance/healthcheck.sh"
+              echo "✅ Cron healthcheck adicionado"
+            fi
+            if ! echo "$current_cron" | grep -q 'cron-missoes.sh reset'; then
+              new_cron="$new_cron"$'\n'"0 3 * * * /opt/ecomed/scripts/maintenance/cron-missoes.sh reset"
+              echo "✅ Cron reset-missoes adicionado"
+            fi
+            if ! echo "$current_cron" | grep -q 'cron-missoes.sh ensure'; then
+              new_cron="$new_cron"$'\n'"15 3 * * * /opt/ecomed/scripts/maintenance/cron-missoes.sh ensure"
+              echo "✅ Cron ensure-missoes adicionado"
+            fi
+            if [ "$new_cron" != "$current_cron" ]; then
+              printf '%s\n' "$new_cron" | sed '/^$/d' | crontab -
+            fi
+
+            echo "🔨 Build runner final (reaproveita cache do builder)..."
             docker build \
               --build-arg "DATABASE_URL=${DATABASE_URL}" \
               --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
-              --build-arg "AUTH_URL=${NEXTAUTH_URL}" \
+              --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
               --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
@@ -51,9 +129,20 @@ jobs:
             docker run -d \
               --name ecomed-web \
               --restart unless-stopped \
+              --network ia_default \
               -p 3010:3010 \
               --env-file /opt/ecomed/.env \
               ecomed-app:latest
+
+            echo "⏳ Aguardando healthcheck..."
+            for i in $(seq 1 20); do
+              status=$(docker inspect ecomed-web --format '{{.State.Health.Status}}' 2>/dev/null || echo "starting")
+              if [ "$status" = "healthy" ]; then
+                echo "✅ Container saudável"
+                break
+              fi
+              sleep 3
+            done
 
             echo "✅ Deploy concluído!"
             docker ps --filter name=ecomed-web

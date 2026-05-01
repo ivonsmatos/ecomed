@@ -19,7 +19,16 @@ export const metadata: Metadata = {
   keywords: ["descarte medicamentos", "coleta medicamentos", "farmácia coleta", "ecoponto"],
   authors: [{ name: "EcoMed" }],
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "EcoMed", statusBarStyle: "default" },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+      shortcut: "/favicon.svg",
+  },
+  appleWebApp: { capable: true, title: "EcoMed", statusBarStyle: "black-translucent" },
   openGraph: {
     type: "website",
     locale: "pt_BR",
@@ -27,6 +36,7 @@ export const metadata: Metadata = {
     siteName: "EcoMed",
     title: "EcoMed — Seu remédio tem destino certo.",
     description: "Encontre pontos de coleta de medicamentos vencidos perto de você.",
+    images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: "EcoMed" }],
   },
 };
 

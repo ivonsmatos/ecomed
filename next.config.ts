@@ -11,6 +11,12 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Prisma 7 usa imports node: (node:crypto, node:fs, node:module).
+  // Esses esquemas não são suportados pelo bundler webpack — o pacote deve ser
+  // tratado como externo (require em runtime, não bundled).
+  serverExternalPackages: ["@prisma/client", "prisma"],
+  // instrumentation.ts é auto-detectado no Next.js 15 (stable).
+  // Não requer flag experimental — apenas ter o arquivo na raiz do projeto é suficiente.
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "*.r2.dev" },
@@ -55,14 +61,29 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(withSerwist(nextConfig), {
+const withSerwistConfig = withSerwist(nextConfig);
+
+// Sentry envolve o config final. Sem SENTRY_AUTH_TOKEN, source maps não são enviados
+// mas a captura de erros runtime ainda funciona (config inicializado em sentry.*.config.ts).
+export default withSentryConfig(withSerwistConfig, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  // Silencia output do Sentry CLI durante o build
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Build silencioso a menos que esteja em CI
   silent: !process.env.CI,
-  // Upload de source maps apenas em CI/CD
-  widenClientFileUpload: true,
-  hideSourceMaps: true,
-  disableLogger: true,
-  automaticVercelMonitors: false,
+
+  // Source maps só se houver auth token (precisa de SENTRY_AUTH_TOKEN no build)
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
+
+  webpack: {
+    // Remove código de debug do bundle de produção (substitui disableLogger deprecado)
+    treeshake: {
+      removeDebugLogging: true,
+    },
+    // Desativa monitors automáticos do Vercel (usamos VPS)
+    automaticVercelMonitors: false,
+  },
 });

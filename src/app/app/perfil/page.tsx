@@ -50,11 +50,19 @@ const EVENT_LABEL: Record<string, string> = {
 };
 
 function labelTransacao(note: string | null, event: string): string {
+  // Sem nota: usa label do evento
   if (!note) return EVENT_LABEL[event] ?? event;
-  // Transações antigas: "QUIZ · cuid" ou "QUIZ_PERFECT · cuid" — mostrar label limpo
+
   const eventLabel = EVENT_LABEL[event];
-  if (eventLabel && /^[A-Z_]+ · c[a-z0-9]+$/.test(note)) return eventLabel;
-  // Nota legível gravada após o fix
+
+  // Nota no formato legado "EVENT · <id>" (cuid ou UUID) — descarta o ID e exibe só o label
+  // Exemplos: "ECOBOT_RATING · bd4a69ef-…", "QUIZ · cma1b2c3d4…"
+  if (eventLabel && /^[A-Z_]+ · [a-z0-9-]+$/i.test(note)) return eventLabel;
+
+  // Nota é só um ID solto (sem prefixo de evento) — usa label do evento
+  if (eventLabel && /^[a-z0-9-]{8,}$/i.test(note)) return eventLabel;
+
+  // Nota já é texto legível gravado após os fixes
   return note;
 }
 

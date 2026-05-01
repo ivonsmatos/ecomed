@@ -1,0 +1,19 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-dotenv>=1.0.0
+
+# LLM — Groq via API compatível com OpenAI
+openai>=1.40.0
+
+# LangChain
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-postgres>=0.0.12
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
+
+# Embeddings locais (sem API externa, multilingual)
+fastembed>=0.3.0
+
+# PostgreSQL
+psycopg[binary]>=3.1.0

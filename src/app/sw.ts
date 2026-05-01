@@ -120,3 +120,88 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// ── Push notifications ────────────────────────────────────────────────────────
+// Serwist não gerencia o evento push — adicionamos manualmente.
+// O TypeScript do Next.js não carrega a lib "webworker" no build,
+// então usamos o cast `swSelf` para acessar a API do Service Worker.
+
+interface SwPushEvent extends Event {
+  data: { json(): Record<string, unknown>; text(): string } | null;
+  waitUntil(promise: Promise<unknown>): void;
+}
+
+interface SwNotificationEvent extends Event {
+  notification: {
+    close(): void;
+    tag: string;
+    data: Record<string, unknown>;
+  };
+  waitUntil(promise: Promise<unknown>): void;
+}
+
+interface SwClients {
+  matchAll(options?: { type?: string; includeUncontrolled?: boolean }): Promise<{ url: string; focus(): Promise<void> }[]>;
+  openWindow(url: string): Promise<void> | null;
+}
+
+interface SwRegistration {
+  showNotification(title: string, options?: NotificationOptions): Promise<void>;
+}
+
+// Cast que expõe APIs do SW sem depender da lib webworker no compilador do Next.js
+const swSelf = self as unknown as {
+  addEventListener(type: string, listener: (event: SwPushEvent | SwNotificationEvent) => void): void;
+  registration: SwRegistration;
+  clients: SwClients;
+};
+
+swSelf.addEventListener("push", (ev) => {
+  const event = ev as SwPushEvent;
+  let data: {
+    title?: string;
+    body?: string;
+    url?: string;
+    icon?: string;
+    badge?: string;
+    tag?: string;
+  } = {};
+
+  try {
+    data = (event.data?.json() as typeof data) ?? {};
+  } catch {
+    data = { title: "EcoMed", body: event.data?.text() ?? "" };
+  }
+
+  const title = data.title ?? "EcoMed";
+  const options: NotificationOptions = {
+    body: data.body ?? "",
+    icon: data.icon ?? "/icons/icon-192.png",
+    badge: data.badge ?? "/icons/icon-72.png",
+    tag: data.tag ?? "ecomed-default",
+    data: { url: data.url ?? "/" },
+    requireInteraction: false,
+  };
+
+  event.waitUntil(swSelf.registration.showNotification(title, options));
+});
+
+swSelf.addEventListener("notificationclick", (ev) => {
+  const event = ev as SwNotificationEvent;
+  event.notification.close();
+
+  const url: string = (event.notification.data?.url as string) ?? "/";
+
+  event.waitUntil(
+    swSelf.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url === url) {
+            return client.focus();
+          }
+        }
+        return swSelf.clients.openWindow?.(url) ?? undefined;
+      }),
+  );
+});

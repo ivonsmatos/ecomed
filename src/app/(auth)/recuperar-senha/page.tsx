@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Leaf, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,7 @@ export default function RecuperarSenhaPage() {
     <Card className="w-full max-w-md">
       <CardHeader className="text-center space-y-2">
         <div className="flex justify-center">
-          <Leaf className="h-10 w-10 text-eco-teal-dark" />
+          <Image src="/favicon.svg" alt="EcoMed" width={56} height={46} className="h-11 w-auto" />
         </div>
         <CardTitle className="text-2xl">Recuperar senha</CardTitle>
         <CardDescription>

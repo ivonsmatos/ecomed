@@ -321,12 +321,13 @@ export async function aplicarProgressoMissoes(userId: string, event: string) {
         `Missão concluída: ${userMission.mission.title}`,
       )
 
-      // Notificação push ao completar missão
+      // Push notification (silently fails se VAPID nao configurado ou usuario sem subscription)
       sendPushToUser(userId, {
-        title: "🎯 Missão concluída!",
-        body: `${userMission.mission.title} — +${userMission.mission.coinReward} EcoCoins`,
-        url: "/app/missoes",
-      }).catch(() => null) // fire-and-forget, não bloqueia
+        title: "Missão concluída! 🎉",
+        body: `${userMission.mission.title} · +${userMission.mission.coinReward} EcoCoins`,
+        url: "/recompensas",
+        tag: `mission-${userMission.id}`,
+      }).catch((err) => console.error("[push:mission] falhou:", err))
     }
   }
 
