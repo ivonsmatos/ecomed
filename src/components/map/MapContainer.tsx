@@ -28,35 +28,48 @@ export function MapContainer({ initialPoints = [] }: MapContainerProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
-  const fetchNearby = useCallback(
-    async (lat: number, lng: number) => {
-      abortRef.current?.abort();
-      const ctrl = new AbortController();
-      abortRef.current = ctrl;
+  // Carrega todos os pontos aprovados ao montar o mapa
+  useEffect(() => {
+    const ctrl = new AbortController();
 
-      try {
-        const res = await fetch(
-          `/api/pontos/proximos?lat=${lat}&lng=${lng}&raio=5000`,
-          { signal: ctrl.signal }
-        );
-        if (!res.ok) return;
-        const data: MapPoint[] = await res.json();
-        setPoints(data);
-      } catch {
-        // abortado — ignorar
-      }
-    },
-    []
-  );
+    fetch("/api/pontos/mapa", { signal: ctrl.signal })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: MapPoint[]) => setPoints(data))
+      .catch(() => {
+        // abortado ou erro de rede — ignorar
+      });
+
+    return () => ctrl.abort();
+  }, []);
+
+  const fetchNearby = useCallback(async (lat: number, lng: number) => {
+    abortRef.current?.abort();
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+
+    try {
+      const res = await fetch(
+        `/api/pontos/proximos?lat=${lat}&lng=${lng}&raio=5000`,
+        { signal: ctrl.signal }
+      );
+      if (!res.ok) return;
+      const data: MapPoint[] = await res.json();
+      // Mescla pontos próximos (com distância) mantendo demais pontos
+      setPoints((prev) => {
+        const ids = new Set(data.map((p) => p.id));
+        const rest = prev.filter((p) => !ids.has(p.id));
+        return [...data, ...rest];
+      });
+    } catch {
+      // abortado — ignorar
+    }
+  }, []);
 
   useEffect(() => {
     if (!coords) return;
-
-    // Defer one tick to avoid synchronous state updates in effect body.
     const timeoutId = window.setTimeout(() => {
       void fetchNearby(coords.latitude, coords.longitude);
     }, 0);
-
     return () => window.clearTimeout(timeoutId);
   }, [coords, fetchNearby]);
 
@@ -69,10 +82,13 @@ export function MapContainer({ initialPoints = [] }: MapContainerProps) {
     ? [coords.latitude, coords.longitude]
     : [-15.7801, -47.9292]; // Brasília como fallback
 
+  const userZoom = coords ? 14 : 5;
+
   return (
     <div className="relative h-full w-full">
       <MapView
         center={center}
+        zoom={userZoom}
         points={points}
         userLocation={coords ? [coords.latitude, coords.longitude] : undefined}
         onPinClick={handlePinClick}

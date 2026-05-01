@@ -10,7 +10,7 @@ const app = new Hono();
 // POST /api/favoritos
 app.post("/", zValidator("json", z.object({ pontoId: z.string().cuid() })), async (c) => {
   const ip = c.req.header("CF-Connecting-IP") ?? c.req.header("x-forwarded-for") ?? "unknown";
-  const { success } = await checkRateLimit("favoritos", ip);
+  const { success } = await checkRateLimit("map", ip);
   if (!success) return c.json({ error: "Muitas requisições" }, 429);
 
   const session = await auth();

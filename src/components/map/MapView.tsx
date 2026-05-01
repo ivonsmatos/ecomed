@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -37,26 +37,33 @@ const greenIcon = new L.Icon({
   popupAnchor: [1, -34],
 });
 
-function FlyToCenter({ center }: { center: [number, number] }) {
+function FlyToCenter({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap();
+  const prevCenter = useRef<[number, number] | null>(null);
+
   useEffect(() => {
-    map.flyTo(center, map.getZoom(), { duration: 1 });
-  }, [map, center]);
+    const prev = prevCenter.current;
+    prevCenter.current = center;
+    if (!prev) return; // primeira renderização — sem animação
+    if (prev[0] === center[0] && prev[1] === center[1]) return;
+    map.flyTo(center, zoom, { duration: 1.5 });
+  }, [map, center, zoom]);
   return null;
 }
 
 interface MapViewProps {
   center: [number, number];
+  zoom?: number;
   points: MapPoint[];
   userLocation?: [number, number];
   onPinClick: (point: MapPoint) => void;
 }
 
-export default function MapView({ center, points, userLocation, onPinClick }: MapViewProps) {
+export default function MapView({ center, zoom = 5, points, userLocation, onPinClick }: MapViewProps) {
   return (
     <MapContainer
       center={center}
-      zoom={14}
+      zoom={zoom}
       className="h-full w-full z-0"
       attributionControl={false}
     >
@@ -66,7 +73,7 @@ export default function MapView({ center, points, userLocation, onPinClick }: Ma
         maxZoom={19}
       />
 
-      <FlyToCenter center={center} />
+      <FlyToCenter center={center} zoom={zoom} />
 
       {userLocation && (
         <>
