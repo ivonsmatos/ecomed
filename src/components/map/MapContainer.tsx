@@ -33,10 +33,20 @@ export function MapContainer({ initialPoints = [] }: MapContainerProps) {
     const ctrl = new AbortController();
 
     fetch("/api/pontos/mapa", { signal: ctrl.signal })
-      .then((res) => (res.ok ? res.json() : []))
+      .then(async (res) => {
+        if (!res.ok) {
+          console.error("[mapa] /api/pontos/mapa retornou", res.status);
+          return [];
+        }
+        const data: MapPoint[] = await res.json();
+        console.log("[mapa] pontos carregados:", data.length);
+        return data;
+      })
       .then((data: MapPoint[]) => setPoints(data))
-      .catch(() => {
-        // abortado ou erro de rede — ignorar
+      .catch((err) => {
+        if ((err as Error).name !== "AbortError") {
+          console.error("[mapa] erro ao buscar pontos:", err);
+        }
       });
 
     return () => ctrl.abort();

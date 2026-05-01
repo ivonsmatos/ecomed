@@ -27,8 +27,13 @@ const querySchema = z.object({
 // GET /api/pontos/mapa — todos os pontos aprovados (usado pelo mapa completo)
 app.get("/mapa", async (c) => {
   const ip = c.req.header("CF-Connecting-IP") ?? c.req.header("x-forwarded-for") ?? "unknown";
-  const { success } = await checkRateLimit("map", ip);
-  if (!success) return c.json({ error: "Muitas requisições" }, 429);
+  // Rate limit: falha aberta — se Redis indisponível, continua normalmente
+  try {
+    const { success } = await checkRateLimit("map", ip);
+    if (!success) return c.json({ error: "Muitas requisições" }, 429);
+  } catch (err) {
+    console.warn("[pontos/mapa] rate limit unavailable, proceeding:", err);
+  }
 
   try {
     const points = await prisma.point.findMany({
@@ -56,8 +61,12 @@ app.get("/mapa", async (c) => {
 // GET /api/pontos/proximos?lat=&lng=&raio=
 app.get("/proximos", zValidator("query", querySchema), async (c) => {
   const ip = c.req.header("CF-Connecting-IP") ?? c.req.header("x-forwarded-for") ?? "unknown";
-  const { success } = await checkRateLimit("map", ip);
-  if (!success) return c.json({ error: "Muitas requisições" }, 429);
+  try {
+    const { success } = await checkRateLimit("map", ip);
+    if (!success) return c.json({ error: "Muitas requisições" }, 429);
+  } catch (err) {
+    console.warn("[pontos/proximos] rate limit unavailable, proceeding:", err);
+  }
 
   const { lat, lng, raio } = c.req.valid("query");
 
