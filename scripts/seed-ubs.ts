@@ -38,7 +38,8 @@ const UF_MAP: Record<number, string> = {
 };
 
 // Tipos CNES consultados separadamente via filtro na API
-const TIPOS_UBS = [1, 2, 5] as const;
+// 01 = Posto de Saúde | 02 = Centro de Saúde/UBS | 20 = Pronto-Atendimento (UPA) | 32 = Unidade de Saúde da Família (ESF/PSF)
+const TIPOS_UBS = [1, 2, 20, 32] as const;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -240,7 +241,7 @@ async function main() {
 
   // 4. Busca por tipo e insere em lotes
   console.log("4. Importando da API CNES por tipo de unidade...");
-  console.log("   (tipos: 01=Posto de Saúde, 02=Centro de Saúde/UBS, 05=PSF)\n");
+  console.log("   (tipos: 01=Posto de Saúde, 02=Centro de Saúde/UBS, 20=Pronto-Atendimento/UPA, 32=Unidade Saúde da Família)\n");
 
   let totalInserido = 0;
   let totalIgnorado = 0;

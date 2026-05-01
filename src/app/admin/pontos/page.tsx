@@ -1,9 +1,54 @@
-﻿import { requireAdmin } from "@/lib/auth/session";
+import { requireAdmin } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+
+function Pagination({ current, total, status }: { current: number; total: number; status?: string }) {
+  const qs = status ? `status=${status}&` : "";
+  const href = (p: number) => `/admin/pontos?${qs}page=${p}`;
+
+  const pages: (number | "…")[] = [];
+  const WING = 2;
+
+  if (total <= 9) {
+    for (let i = 1; i <= total; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (current - WING > 2) pages.push("…");
+    for (let i = Math.max(2, current - WING); i <= Math.min(total - 1, current + WING); i++) pages.push(i);
+    if (current + WING < total - 1) pages.push("…");
+    pages.push(total);
+  }
+
+  return (
+    <div className="flex flex-wrap justify-center gap-1">
+      {current > 1 && (
+        <Link href={href(current - 1)} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>‹</Link>
+      )}
+      {pages.map((p, i) =>
+        p === "…" ? (
+          <span key={`ellipsis-${i}`} className="px-2 py-1 text-sm text-muted-foreground">…</span>
+        ) : (
+          <Link
+            key={p}
+            href={href(p)}
+            className={cn(
+              buttonVariants({ variant: current === p ? "default" : "outline", size: "sm" }),
+              current === p && "bg-eco-green hover:bg-eco-green/90",
+            )}
+          >
+            {p}
+          </Link>
+        )
+      )}
+      {current < total && (
+        <Link href={href(current + 1)} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>›</Link>
+      )}
+    </div>
+  );
+}
 
 export const metadata = { title: "Pontos de Coleta | Admin EcoMed" };
 
@@ -92,17 +137,7 @@ export default async function AdminPontosPage({
       </div>
 
       {pages > 1 && (
-        <div className="flex justify-center gap-2">
-          {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-            <Link
-              key={p}
-              href={`/admin/pontos?${validStatus ? `status=${validStatus}&` : ""}page=${p}`}
-              className={cn(buttonVariants({ variant: page === p ? "default" : "outline", size: "sm" }))}
-            >
-              {p}
-            </Link>
-          ))}
-        </div>
+        <Pagination current={page} total={pages} status={validStatus} />
       )}
     </div>
   );
