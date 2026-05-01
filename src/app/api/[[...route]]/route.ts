@@ -17,6 +17,7 @@ import coins from "./routes/coins";
 import missions from "./routes/missions";
 import rewards from "./routes/rewards";
 import quiz from "./routes/quiz";
+import { lgpdRouter } from "./routes/lgpd";
 
 export const maxDuration = 60;
 
@@ -43,6 +44,7 @@ app.route("/coins", coins);
 app.route("/missions", missions);
 app.route("/rewards", rewards);
 app.route("/quiz", quiz);
+app.route("/lgpd", lgpdRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);

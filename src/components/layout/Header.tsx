@@ -117,14 +117,14 @@ export async function Header() {
                 <Menu className="size-6 text-eco-teal-dark" />
                 <span className="sr-only">Abrir menu</span>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[80vw] sm:w-[350px]">
+              <SheetContent side="right" className="w-[80vw] sm:w-[350px] bg-eco-teal text-white">
                 <nav className="flex flex-col gap-5 mt-6 text-lg font-medium">
-                  <Link href="/o-que-fazemos" className="hover:text-eco-teal transition-colors">O que fazemos</Link>
-                  <Link href="/sobre" className="hover:text-eco-teal transition-colors">Quem somos</Link>
-                  <Link href="/parceiros" className="hover:text-eco-teal transition-colors">Parceiros</Link>
-                  <Link href="/compromisso" className="hover:text-eco-teal transition-colors">Compromisso</Link>
-                  <Link href="/blog" className="hover:text-eco-teal transition-colors">Blog</Link>
-                  <Link href="/contato" className="hover:text-eco-teal transition-colors">Contato</Link>
+                  <Link href="/o-que-fazemos" className="hover:text-eco-green transition-colors">O que fazemos</Link>
+                  <Link href="/sobre" className="hover:text-eco-green transition-colors">Quem somos</Link>
+                  <Link href="/parceiros" className="hover:text-eco-green transition-colors">Parceiros</Link>
+                  <Link href="/compromisso" className="hover:text-eco-green transition-colors">Compromisso</Link>
+                  <Link href="/blog" className="hover:text-eco-green transition-colors">Blog</Link>
+                  <Link href="/contato" className="hover:text-eco-green transition-colors">Contato</Link>
                 </nav>
               </SheetContent>
             </Sheet>

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
-import { Heart, Flag, Calendar, ShieldCheck, Building2, Coins, Flame, Trophy, ChevronRight, Medal } from "lucide-react";
+import { Heart, Flag, Calendar, ShieldCheck, Building2, Coins, Flame, Trophy, ChevronRight, Medal, Share2, Lock } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { QRCodeDisplay } from "@/components/coins/QRCodeDisplay";
@@ -245,6 +245,22 @@ export default async function PerfilPage() {
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="size-4" />
           Membro desde {new Date(user.createdAt).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
+        </div>
+        <div className="flex flex-col gap-2 pt-1">
+          <Link
+            href="/app/indicacao"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "justify-between")}
+          >
+            <span className="flex items-center gap-2"><Share2 className="size-4 text-eco-teal-dark" /> Indicar amigos</span>
+            <ChevronRight className="size-4" />
+          </Link>
+          <Link
+            href="/app/privacidade"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "justify-between")}
+          >
+            <span className="flex items-center gap-2"><Lock className="size-4 text-muted-foreground" /> Privacidade e LGPD</span>
+            <ChevronRight className="size-4" />
+          </Link>
         </div>
       </section>
 

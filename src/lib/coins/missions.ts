@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db/prisma"
 import { creditCoins } from "@/lib/coins"
+import { sendPushToUser } from "@/lib/push"
 
 type MissionPoolItem = {
   slug: string
@@ -319,6 +320,13 @@ export async function aplicarProgressoMissoes(userId: string, event: string) {
         userMission.mission.coinReward,
         `Missão concluída: ${userMission.mission.title}`,
       )
+
+      // Notificação push ao completar missão
+      sendPushToUser(userId, {
+        title: "🎯 Missão concluída!",
+        body: `${userMission.mission.title} — +${userMission.mission.coinReward} EcoCoins`,
+        url: "/app/missoes",
+      }).catch(() => null) // fire-and-forget, não bloqueia
     }
   }
 
@@ -366,7 +374,15 @@ export async function aplicarProgressoMissoes(userId: string, event: string) {
     if (jaConcedido) continue
 
     const bonusResult = await creditCoins(userId, eventBonus, reference)
-    if (bonusResult.ok) bonusEarned += 1
+    if (bonusResult.ok) {
+      bonusEarned += 1
+      const bonusValor = tipo === "DAILY" ? 10 : 15
+      sendPushToUser(userId, {
+        title: tipo === "DAILY" ? "🏆 Missões do dia completas!" : "🏆 Missões semanais completas!",
+        body: `Bônus +${bonusValor} EcoCoins por completar todas as missões ${tipo === "DAILY" ? "diárias" : "semanais"}!`,
+        url: "/app/missoes",
+      }).catch(() => null)
+    }
   }
 
   return { updated, completed, bonusEarned }

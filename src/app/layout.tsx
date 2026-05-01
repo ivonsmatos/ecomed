@@ -104,6 +104,13 @@ export default function RootLayout({
           </noscript>
         )}
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          {/* Skip-link de acessibilidade: permite usuários de teclado/leitores de tela pular nav */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-md focus:bg-eco-teal-dark focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            Pular para o conteúdo principal
+          </a>
           {children}
           <CookieBanner />
           <Toaster richColors position="top-right" />
