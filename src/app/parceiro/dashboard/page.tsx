@@ -1,10 +1,9 @@
 ﻿import type { Metadata } from "next";
 import { requirePartner } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
-import { cn } from "@/lib/utils";
 import { MapPin, Eye, Flag, Plus } from "lucide-react";
 import Link from "next/link";
 

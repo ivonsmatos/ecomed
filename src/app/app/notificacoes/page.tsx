@@ -1,4 +1,4 @@
-import { Bell, BellOff, Check } from "lucide-react";
+import { Bell } from "lucide-react";
 import { requireSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { NotificationsClient } from "@/components/app/NotificationsClient";

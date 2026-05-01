@@ -33,7 +33,6 @@ for (const { path, label } of publicPages) {
     const blockers = results.violations.filter((v) => seriousImpacts.has(v.impact ?? ""))
     if (blockers.length > 0) {
       // Loga para facilitar debug em CI
-      // eslint-disable-next-line no-console
       console.error(
         `[a11y] ${label} violations:`,
         JSON.stringify(

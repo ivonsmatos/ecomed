@@ -188,7 +188,6 @@ export default async function QuizListPage() {
                 {/* Cards dos quizzes */}
                 <ul className="space-y-2">
                   {(niveis[nivel] ?? []).map((q) => {
-                    const qWithLevel = q as typeof q & { level: number; levelOrder: number };
                     const diff = DIFFICULTY_LABEL[q.difficulty] ?? DIFFICULTY_LABEL.FACIL;
                     const jáFezHoje = quizzesHoje.has(q.id);
                     const jáFez = quizzesFeitos.has(q.id);

@@ -7,15 +7,25 @@
  * O que faz:
  *   1. Cria um parceiro-sistema "DATASUS" (User + Partner) se não existir
  *   2. Baixa o catálogo de municípios do IBGE (para nomes de cidades)
- *   3. Pagina a API do CNES e extrai todos os estabelecimentos de saúde primária
- *      (tipos 01 = Posto de Saúde e 02 = Centro de Saúde / UBS)
- *   4. Pula registros sem coordenadas válidas
+ *   3. Consulta a API do CNES filtrando diretamente por tipo de unidade
+ *      (tipos 01 = Posto de Saúde, 02 = Centro de Saúde/UBS, 05 = PSF)
+ *      usando o parâmetro ?codigo_tipo_unidade=XX — muito mais eficiente
+ *      do que baixar todos os estabelecimentos e filtrar localmente.
+ *   4. Pula registros sem coordenadas válidas ou desabilitados
  *   5. Apaga os pontos anteriores do parceiro DATASUS e insere os novos
  */
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const prisma = new PrismaClient({ log: ["error"] });
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+  ssl: { rejectUnauthorized: false }, // AWS RDS requer SSL; cert não validado (necessário em produção e dev)
+});
+const prisma = new PrismaClient({ adapter, log: ["error"] });
+
+// A API limita a 20 registros por página independente do valor de limit
+const PAGE_SIZE = 20;
 
 // ─── Mapeamento UF code (IBGE) → sigla ───────────────────────────────────────
 const UF_MAP: Record<number, string> = {
@@ -27,8 +37,8 @@ const UF_MAP: Record<number, string> = {
   50: "MS", 51: "MT", 52: "GO", 53: "DF",
 };
 
-// Tipos CNES que correspondem a UBS / atenção primária
-const TIPOS_UBS = new Set([1, 2, 5]);
+// Tipos CNES consultados separadamente via filtro na API
+const TIPOS_UBS = [1, 2, 5] as const;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -73,46 +83,49 @@ interface CnesRecord {
   codigo_motivo_desabilitacao_estabelecimento?: unknown;
 }
 
-/** Gerador que pagina a API do CNES e retorna lotes de estabelecimentos */
-async function* fetchCnesPages(limit = 100): AsyncGenerator<CnesRecord[]> {
+/**
+ * Pagina a API do CNES filtrando por tipo de unidade.
+ * A API aceita ?codigo_tipo_unidade=XX e limita a 20 registros por página.
+ */
+async function* fetchCnesByTipo(tipo: number): AsyncGenerator<CnesRecord[]> {
   let offset = 0;
-  let pagesWithoutUbs = 0;
+  let emptyPages = 0;
 
   while (true) {
     const url =
       `https://apidadosabertos.saude.gov.br/cnes/estabelecimentos` +
-      `?limit=${limit}&offset=${offset}`;
+      `?limit=${PAGE_SIZE}&offset=${offset}&codigo_tipo_unidade=${String(tipo).padStart(2, "0")}`;
 
     let data: { estabelecimentos?: CnesRecord[] } | null = null;
 
-    // 3 tentativas com back-off
+    // 3 tentativas com back-off exponencial
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         data = (await fetchJson(url)) as { estabelecimentos?: CnesRecord[] };
         break;
       } catch (err) {
         if (attempt === 3) throw err;
-        await sleep(1000 * attempt);
+        await sleep(1500 * attempt);
       }
     }
 
     const items = data?.estabelecimentos ?? [];
-    if (items.length === 0) break;
 
-    yield items;
-
-    // Heurística de parada: se 20 páginas seguidas não têm nenhum UBS, provavelmente acabou
-    const hasUbs = items.some((r) => TIPOS_UBS.has(r.codigo_tipo_unidade ?? -1));
-    pagesWithoutUbs = hasUbs ? 0 : pagesWithoutUbs + 1;
-
-    if (items.length < limit) break; // última página
-    if (pagesWithoutUbs > 20) {
-      console.log("   Sem UBS por 20 páginas consecutivas — interrompendo.");
-      break;
+    if (items.length === 0) {
+      emptyPages++;
+      if (emptyPages >= 3) break; // 3 páginas vazias consecutivas = fim
+      await sleep(500);
+      offset += PAGE_SIZE;
+      continue;
     }
 
-    offset += limit;
-    await sleep(150); // gentil com a API
+    emptyPages = 0;
+    yield items;
+
+    if (items.length < PAGE_SIZE) break; // última página
+
+    offset += PAGE_SIZE;
+    await sleep(200); // gentil com a API
   }
 }
 
@@ -128,7 +141,7 @@ async function getOrCreateDatasusPartner() {
   let user = await prisma.user.findUnique({ where: { email: DATASUS_EMAIL } });
 
   if (!user) {
-    user = await (prisma.user as any).create({
+    user = await prisma.user.create({
       data: {
         email: DATASUS_EMAIL,
         name: "DATASUS — Ministério da Saúde",
@@ -157,6 +170,51 @@ async function getOrCreateDatasusPartner() {
   return partner;
 }
 
+// ─── Converte registro CNES → objeto Point ────────────────────────────────────
+
+function cnesToPoint(
+  r: CnesRecord,
+  partnerId: string,
+  municipios: Map<number, string>,
+) {
+  if (r.codigo_motivo_desabilitacao_estabelecimento) return null;
+
+  const lat = r.latitude_estabelecimento_decimo_grau ?? 0;
+  const lng = r.longitude_estabelecimento_decimo_grau ?? 0;
+
+  if (!lat || !lng || Math.abs(lat) < 0.01 || Math.abs(lng) < 0.01) return null;
+
+  const uf = UF_MAP[r.codigo_uf ?? 0] ?? "BR";
+  const cidade = municipios.get(r.codigo_municipio ?? 0) ?? "Não informado";
+  const nome = (r.nome_fantasia?.trim() || r.nome_razao_social?.trim() || "UBS").slice(0, 255);
+
+  const logradouro = [r.endereco_estabelecimento?.trim(), r.numero_estabelecimento?.trim()]
+    .filter(Boolean)
+    .join(", ");
+  const endereco = [logradouro, r.bairro_estabelecimento?.trim()]
+    .filter(Boolean)
+    .join(" — ")
+    .slice(0, 255) || "Endereço não informado";
+
+  const cep = (r.codigo_cep_estabelecimento ?? "")
+    .replace(/\D/g, "").padStart(8, "0").slice(0, 8);
+
+  return {
+    partnerId,
+    name: nome,
+    address: endereco,
+    city: cidade,
+    state: uf,
+    zipCode: cep || "00000000",
+    latitude: lat,
+    longitude: lng,
+    phone: r.numero_telefone_estabelecimento?.trim().slice(0, 20) || null,
+    email: r.endereco_email_estabelecimento?.trim().slice(0, 100) || null,
+    status: "APPROVED" as const,
+    residueTypes: ["medicamentos", "seringas"],
+  };
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -180,102 +238,41 @@ async function main() {
   });
   console.log(`   ${removidos} pontos removidos.\n`);
 
-  // 4. Busca e insere
-  console.log("4. Importando da API CNES (pode demorar 15–30 min)...\n");
+  // 4. Busca por tipo e insere em lotes
+  console.log("4. Importando da API CNES por tipo de unidade...");
+  console.log("   (tipos: 01=Posto de Saúde, 02=Centro de Saúde/UBS, 05=PSF)\n");
 
   let totalInserido = 0;
   let totalIgnorado = 0;
-  let page = 0;
 
-  for await (const batch of fetchCnesPages(100)) {
-    page++;
-    const toInsert: Parameters<typeof prisma.point.createMany>[0]["data"] = [];
+  for (const tipo of TIPOS_UBS) {
+    console.log(`\n▶ Tipo ${String(tipo).padStart(2, "0")}...`);
+    let pageTipo = 0;
+    let inseridoTipo = 0;
 
-    for (const r of batch) {
-      // Filtra apenas UBS (tipos 01, 02, 05)
-      if (!TIPOS_UBS.has(r.codigo_tipo_unidade ?? -1)) continue;
+    for await (const batch of fetchCnesByTipo(tipo)) {
+      pageTipo++;
+      const toInsert = batch
+        .map((r) => cnesToPoint(r, partner.id, municipios))
+        .filter((p): p is NonNullable<typeof p> => p !== null);
 
-      // Pula desabilitados
-      if (r.codigo_motivo_desabilitacao_estabelecimento) {
-        totalIgnorado++;
-        continue;
+      totalIgnorado += batch.length - toInsert.length;
+
+      if (toInsert.length > 0) {
+        await prisma.point.createMany({ data: toInsert, skipDuplicates: true });
+        totalInserido += toInsert.length;
+        inseridoTipo += toInsert.length;
       }
 
-      const lat = r.latitude_estabelecimento_decimo_grau ?? 0;
-      const lng = r.longitude_estabelecimento_decimo_grau ?? 0;
-
-      // Pula sem coordenadas válidas
-      if (!lat || !lng || Math.abs(lat) < 0.01 || Math.abs(lng) < 0.01) {
-        totalIgnorado++;
-        continue;
-      }
-
-      const uf = UF_MAP[r.codigo_uf ?? 0] ?? "BR";
-      const cidade =
-        municipios.get(r.codigo_municipio ?? 0) ?? "Não informado";
-
-      const nome =
-        (r.nome_fantasia?.trim() || r.nome_razao_social?.trim() || "UBS")
-          .slice(0, 255);
-
-      const logradouro = [
-        r.endereco_estabelecimento?.trim(),
-        r.numero_estabelecimento?.trim(),
-      ]
-        .filter(Boolean)
-        .join(", ");
-
-      const endereco = [logradouro, r.bairro_estabelecimento?.trim()]
-        .filter(Boolean)
-        .join(" — ")
-        .slice(0, 255) || "Endereço não informado";
-
-      const cep = (r.codigo_cep_estabelecimento ?? "")
-        .replace(/\D/g, "")
-        .padStart(8, "0")
-        .slice(0, 8);
-
-      const phone = r.numero_telefone_estabelecimento?.trim().slice(0, 20) ||
-        null;
-      const email = r.endereco_email_estabelecimento?.trim().slice(0, 100) ||
-        null;
-
-      toInsert.push({
-        partnerId: partner.id,
-        name: nome,
-        address: endereco,
-        city: cidade,
-        state: uf,
-        zipCode: cep || "00000000",
-        latitude: lat,
-        longitude: lng,
-        phone,
-        email,
-        status: "APPROVED",
-        residueTypes: ["medicamentos", "seringas"],
-      });
-    }
-
-    if (toInsert.length > 0) {
-      await prisma.point.createMany({ data: toInsert, skipDuplicates: true });
-      totalInserido += toInsert.length;
-    }
-
-    const skippedBatch = batch.length - toInsert.length - batch.filter((r) =>
-      !TIPOS_UBS.has(r.codigo_tipo_unidade ?? -1)
-    ).length;
-    totalIgnorado += Math.max(0, skippedBatch);
-
-    if (page % 10 === 0 || toInsert.length > 0) {
       process.stdout.write(
-        `\r   Página ${page} | Inseridas: ${totalInserido} | Ignoradas: ${totalIgnorado}   `,
+        `\r   Página ${pageTipo} | Inseridas este tipo: ${inseridoTipo} | Total: ${totalInserido}   `,
       );
     }
+
+    console.log(`\n   Tipo ${String(tipo).padStart(2, "0")} concluído: ${inseridoTipo} UBS inseridas.`);
   }
 
-  console.log(
-    `\n\n═══════════════════════════════════════════════════════`,
-  );
+  console.log(`\n\n═══════════════════════════════════════════════════════`);
   console.log(`✅ Concluído!`);
   console.log(`   UBS inseridas : ${totalInserido}`);
   console.log(`   Ignoradas     : ${totalIgnorado} (sem coord. ou desabilitadas)`);

@@ -24,7 +24,6 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([INITIAL]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [lastUserMsg, setLastUserMsg] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,7 +37,6 @@ export default function ChatPage() {
 
     const userMessage: Message = { role: "user", content: text };
     setMessages((prev) => [...prev, userMessage]);
-    setLastUserMsg(text);
     setInput("");
     setIsLoading(true);
 

@@ -12,7 +12,7 @@ export default async function IndicacaoPage() {
   const session = await requireSession();
   const userId = session.user!.id!;
 
-  const [user, wallet] = await Promise.all([
+  const [user] = await Promise.all([
     prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -27,10 +27,6 @@ export default async function IndicacaoPage() {
           take: 20,
         },
       },
-    }),
-    prisma.wallet.findUnique({
-      where: { userId },
-      select: { balance: true, totalEarned: true },
     }),
   ]);
 

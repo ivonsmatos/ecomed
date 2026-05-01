@@ -2827,6 +2827,7 @@ A **RDC ANVISA nº 222/2018** obriga estabelecimentos de saúde a implantarem si
 
   // === BLOCO ANTIGO REMOVIDO — mantido apenas para referência ===
   // O código abaixo foi substituído pelo sistema de níveis acima
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _legacyQuizzesData = [
     {
       slug: "descarte-basico",

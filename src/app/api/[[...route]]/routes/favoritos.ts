@@ -9,6 +9,10 @@ const app = new Hono();
 
 // POST /api/favoritos
 app.post("/", zValidator("json", z.object({ pontoId: z.string().cuid() })), async (c) => {
+  const ip = c.req.header("CF-Connecting-IP") ?? c.req.header("x-forwarded-for") ?? "unknown";
+  const { success } = await checkRateLimit("favoritos", ip);
+  if (!success) return c.json({ error: "Muitas requisições" }, 429);
+
   const session = await auth();
   if (!session?.user?.id) return c.json({ error: "Não autenticado" }, 401);
 

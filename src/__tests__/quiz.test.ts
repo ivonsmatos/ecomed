@@ -53,7 +53,6 @@ vi.mock('@/lib/quiz/shuffle', () => ({
 
 // ── Imports após mocks ────────────────────────────────────────────────────────
 
-// eslint-disable-next-line import/order
 import quiz from '../app/api/[[...route]]/routes/quiz'
 import { auth } from '@/../auth'
 import { prisma } from '@/lib/db/prisma'

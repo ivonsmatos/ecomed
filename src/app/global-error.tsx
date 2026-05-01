@@ -33,6 +33,7 @@ export default function GlobalError({
           color: "#1a3a2a",
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/icons/icon-192.png" alt="EcoMed" width={72} height={72} style={{ borderRadius: 16 }} />
         <h1 style={{ fontSize: "1.5rem", margin: 0 }}>Algo deu errado</h1>
         <p style={{ color: "#4b7a5e", margin: 0 }}>

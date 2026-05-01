@@ -92,7 +92,6 @@ function GrupoCard({ grupo }: { grupo: Grupo }) {
             <span>Próximo: {proximoMarco.name}</span>
           </div>
           <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-            {/* eslint-disable-next-line react/forbid-dom-props */}
             <div
               className="h-full rounded-full bg-eco-teal transition-all"
               style={{ width: `${pct}%` }}

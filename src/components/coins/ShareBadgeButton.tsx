@@ -10,11 +10,10 @@ interface Props {
   nivelLabel: string
 }
 
-export function ShareBadgeButton({ nome, nivel, nivelLabel }: Props) {
+export function ShareBadgeButton({ nome, nivelLabel }: Props) {
   const [enviado, setEnviado] = useState(false)
 
   const handleShare = async () => {
-    const ogUrl = `https://ecomed.eco.br/api/og/conquista?nome=${encodeURIComponent(nome)}&badge=${encodeURIComponent(nivelLabel)}&nivel=${encodeURIComponent(nivelLabel)}`
     const texto = `Alcancei o nível ${nivelLabel} no EcoMed! 🌿 Juntos pelo descarte correto de medicamentos. ecomed.eco.br`
 
     try {
