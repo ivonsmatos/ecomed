@@ -79,7 +79,7 @@ const sliderItems = [
 
 const services = [
   {
-    img: "/echofy/service-thumb.webp",
+    img: "/echofy/service-thumb.png",
     icon: "/echofy/service-icon1.png",
     shape: "/echofy/service-shape.png",
     title: "📍 Encontre — Mapa Interativo",
@@ -87,7 +87,7 @@ const services = [
     href: "/mapa",
   },
   {
-    img: "/echofy/service-thumb2.webp",
+    img: "/echofy/service-thumb2.png",
     icon: "/echofy/service-icon2.png",
     shape: "/echofy/service-shape.png",
     title: "💬 Pergunte — EcoBot com IA",
@@ -95,7 +95,7 @@ const services = [
     href: "/app/chat",
   },
   {
-    img: "/echofy/service-thumb3.webp",
+    img: "/echofy/service-thumb3.png",
     icon: "/echofy/service-icon3.png",
     shape: "/echofy/service-shape.png",
     title: "🪙 Ganhe — EcoMed Coins",
