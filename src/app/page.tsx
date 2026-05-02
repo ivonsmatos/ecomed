@@ -256,7 +256,7 @@ export default async function HomePage() {
 
               {/* Esquerda: about.png com about-award.png flutuando */}
               <div className="relative">
-                <Image src="/echofy/about.png" alt="Sobre o EcoMed" width={550} height={500}
+                <Image src="/echofy/about.webp" alt="Sobre o EcoMed" width={550} height={500}
                   className="w-full" draggable={false} />
                 <Image src="/echofy/about-award.png" alt="" width={180} height={180}
                   draggable={false}
