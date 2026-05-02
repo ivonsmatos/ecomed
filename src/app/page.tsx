@@ -258,9 +258,6 @@ export default async function HomePage() {
               <div className="relative">
                 <Image src="/echofy/about.webp" alt="Sobre o EcoMed" width={550} height={500}
                   className="w-full" draggable={false} />
-                <Image src="/echofy/about-award.png" alt="" width={180} height={180}
-                  draggable={false}
-                  className="absolute bottom-10 left-0 animate-echofy-float hidden sm:block" />
               </div>
 
               {/* Direita: texto */}
