@@ -124,10 +124,10 @@ export function Footer() {
                              before:bg-eco-lime before:w-[22px] before:h-[2px]">
                 Contato
               </h6>
-              <a href="tel:+5500000000000" className="mt-[18px] flex items-center gap-3 font-sans text-white/80
+              <a href="tel:+5511941906079" className="mt-[18px] flex items-center gap-3 font-sans text-white/80
                                                        transition-all duration-500 hover:text-eco-lime">
                 <Phone className="size-4 text-eco-lime" />
-                +55 (00) 0000-0000
+                (11) 94190-6079
               </a>
               <a href="mailto:contato@ecomed.eco.br" className="mt-[18px] flex items-center gap-3 font-sans text-white/80
                                                                   transition-all duration-500 hover:text-eco-lime">

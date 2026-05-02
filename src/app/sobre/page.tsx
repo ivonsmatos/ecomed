@@ -163,32 +163,32 @@ export default function SobrePage() {
                     {
                       i: "🌍",
                       n: "Impacto Real",
-                      d: "Cada ação no EcoMed tem resultado mensurável no meio ambiente",
+                      d: "Não somos só mais um app. Cada descarte correto registrado representa menos veneno no solo e na água.",
                     },
                     {
                       i: "🔓",
                       n: "Transparência",
-                      d: "Código aberto, dados com fonte, IA que admite quando não sabe",
+                      d: "O código está no GitHub, aberto pra quem quiser auditar. Sem caixa preta.",
                     },
                     {
                       i: "🤝",
                       n: "Acessibilidade",
-                      d: "Gratuito, sem download, linguagem simples, fontes grandes",
+                      d: "Funciona em qualquer celular, sem instalação. Pensamos em quem não tem plano de dados generoso.",
                     },
                     {
                       i: "🎓",
                       n: "Educação Primeiro",
-                      d: "Informamos antes de gamificar. Conhecimento é a base da mudança",
+                      d: "Quem entende o porquê age diferente. Informamos antes de gamificar.",
                     },
                     {
                       i: "🛡️",
                       n: "Privacidade",
-                      d: "IA local (Ollama), LGPD compliant, dados protegidos",
+                      d: "Nossa IA roda no nosso servidor. Suas perguntas não viram dados de terceiros.",
                     },
                     {
                       i: "🌱",
-                      n: "Melhoria Contínua",
-                      d: "Feedback dos usuários melhora o sistema constantemente",
+                      n: "Aprendizado Aberto",
+                      d: "Somos 70 estudantes aprendendo em público. Erramos, corrigimos e melhoramos juntos.",
                     },
                   ].map((v, i) => (
                     <div key={i} className="flex gap-3 items-start">
@@ -293,7 +293,7 @@ export default function SobrePage() {
             </h2>
             <p className="text-base text-gray-600 leading-relaxed mb-8 max-w-xl">
               Projeto interdisciplinar coordenado pelo Prof. Ivon Matos,
-              desenvolvido por alunos de Escola Técnica Estadual.
+              desenvolvido por alunos da Escola Técnica Estadual Ilda Vieira Vilela.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {[
@@ -338,7 +338,7 @@ export default function SobrePage() {
                   Coordenação: Prof. Ivon Matos
                 </div>
                 <div className="text-sm text-[#D9D6D0]">
-                  Escola Técnica Estadual | Projeto Interdisciplinar 2026
+                  Escola Técnica Estadual Ilda Vieira Vilela | Projeto Interdisciplinar 2026
                 </div>
               </div>
               <div className="text-sm text-eco-lime font-medium sm:text-right">

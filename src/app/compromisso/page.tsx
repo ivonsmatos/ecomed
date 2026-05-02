@@ -17,7 +17,7 @@ import { Footer } from "@/components/layout/Footer";
 export const metadata: Metadata = {
   title: "Compromisso | EcoMed",
   description:
-    "Conheca os compromissos institucionais do EcoMed com sustentabilidade, educacao acessivel, inovacao responsavel e impacto mensuravel.",
+    "Conheça os compromissos institucionais do EcoMed com sustentabilidade, educação acessível, inovação responsável e impacto mensurável.",
   alternates: { canonical: "https://ecomed.eco.br/compromisso" },
 };
 
@@ -26,61 +26,61 @@ const compromissos = [
     icon: MapPin,
     title: "Facilitar o descarte correto",
     description:
-      "Transformar informacao dispersa em acao simples, com mapa inteligente e mais de 7.500 pontos de coleta visiveis para qualquer pessoa.",
+      "Transformar informação dispersa em ação simples, com mapa inteligente e mais de 7.500 pontos de coleta visíveis para qualquer pessoa.",
   },
   {
     icon: BookOpen,
-    title: "Educar em linguagem acessivel",
+    title: "Educar em linguagem acessível",
     description:
-      "Traduzir legislacao e orientacoes tecnicas para uma comunicacao clara, sem jargao, para reduzir o descarte incorreto de medicamentos.",
+      "Traduzir legislação e orientações técnicas para uma comunicação clara, sem jargão, para reduzir o descarte incorreto de medicamentos.",
   },
   {
     icon: BrainCircuit,
     title: "Usar IA com responsabilidade",
     description:
-      "Aplicar inteligencia artificial com guardrails: sem prescricao medica, sem substituicao de profissionais de saude e com redirecionamento seguro.",
+      "Aplicar inteligência artificial com guardrails: sem prescrição médica, sem substituição de profissionais de saúde e com redirecionamento seguro.",
   },
   {
     icon: BarChart3,
     title: "Medir e publicar impacto",
     description:
-      "Acompanhar resultados com indicadores reais, como pessoas educadas, descartes corretos e litros de agua potencialmente protegidos.",
+      "Acompanhar resultados com indicadores reais, como pessoas educadas, descartes corretos e litros de água potencialmente protegidos.",
   },
 ];
 
 const marcos = [
-  "Lei 12.305/2010 (PNRS): responsabilidade compartilhada no ciclo de residuos.",
-  "Decreto 10.388/2020: logistica reversa de medicamentos domiciliares (LogMed).",
-  "RDC 222/2018 (ANVISA): boas praticas de gerenciamento de residuos de saude.",
-  "ODS 3, ODS 6 e ODS 12 (ONU): saude, agua potavel e consumo responsavel.",
+  "Lei 12.305/2010 (PNRS): responsabilidade compartilhada no ciclo de resíduos.",
+  "Decreto 10.388/2020: logística reversa de medicamentos domiciliares (LogMed).",
+  "RDC 222/2018 (ANVISA): boas práticas de gerenciamento de resíduos de saúde.",
+  "ODS 3, ODS 6 e ODS 12 (ONU): saúde, água potável e consumo responsável.",
 ];
 
 const pilaresConfianca = [
   {
     icon: ShieldCheck,
-    title: "Transparencia e confianca",
+    title: "Transparência e confiança",
     points: [
-      "Projeto open source com codigo publico.",
-      "Politicas de privacidade claras e alinhadas a LGPD.",
-      "Nao comercializacao de dados pessoais dos usuarios.",
+      "Projeto open source com código público.",
+      "Políticas de privacidade claras e alinhadas à LGPD.",
+      "Não comercialização de dados pessoais dos usuários.",
     ],
   },
   {
     icon: Scale,
-    title: "Inovacao responsavel",
+    title: "Inovação responsável",
     points: [
-      "IA orientada a educacao ambiental, nao a diagnostico clinico.",
-      "Fontes oficiais como base de conhecimento (ANVISA e Ministerio da Saude).",
-      "Revisao continua para reduzir respostas imprecisas e alucinacoes.",
+      "IA orientada à educação ambiental, não a diagnóstico clínico.",
+      "Fontes oficiais como base de conhecimento (ANVISA e Ministério da Saúde).",
+      "Revisão contínua para reduzir respostas imprecisas e alucinações.",
     ],
   },
   {
     icon: Users,
-    title: "Colaboracao e aprendizado",
+    title: "Colaboração e aprendizado",
     points: [
-      "Construido por cerca de 70 estudantes de perfis multidisciplinares.",
-      "Integracao entre farmacia, IA, frontend, design e negocios.",
-      "Formacao profissional com impacto social mensuravel.",
+      "Construído por cerca de 70 estudantes de perfis multidisciplinares.",
+      "Integração entre farmácia, IA, frontend, design e negócios.",
+      "Formação profissional com impacto social mensurável.",
     ],
   },
 ];
@@ -101,9 +101,9 @@ export default function CompromissoPage() {
               <span className="text-eco-lime"> descarte correto de medicamentos</span>
             </h1>
             <p className="text-lg leading-relaxed text-white/80">
-              Nosso compromisso e transformar desconhecimento em acao. O problema nao e falta de
-              vontade: e falta de orientacao. Por isso, unimos educacao, mapa inteligente, IA
-              responsavel e gamificacao para facilitar escolhas sustentaveis no dia a dia.
+              Nosso compromisso é transformar desconhecimento em ação. O problema não é falta de
+              vontade: é falta de orientação. Por isso, unimos educação, mapa inteligente, IA
+              responsável e gamificação para facilitar escolhas sustentáveis no dia a dia.
             </p>
           </div>
         </section>
@@ -111,10 +111,10 @@ export default function CompromissoPage() {
         <section className="bg-white py-20">
           <div className="container mx-auto max-w-5xl px-4">
             <div className="mb-10 text-center">
-              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Nossos compromissos praticos</h2>
+              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Nossos compromissos práticos</h2>
               <p className="mx-auto max-w-2xl text-gray-500">
-                O EcoMed foi desenhado para gerar impacto ambiental e de saude publica com
-                acessibilidade, consistencia tecnica e foco em resultado real.
+                O EcoMed foi desenhado para gerar impacto ambiental e de saúde pública com
+                acessibilidade, consistência técnica e foco em resultado real.
               </p>
             </div>
 
@@ -145,8 +145,8 @@ export default function CompromissoPage() {
                 Manifesto EcoMed
               </p>
               <p className="text-lg leading-relaxed text-gray-700">
-                &quot;A maioria das pessoas descarta medicamentos errado nao por descaso, mas por falta
-                de informacao. Nosso compromisso e tornar o descarte correto simples, acessivel e
+                &quot;A maioria das pessoas descarta medicamentos errado não por descaso, mas por falta
+                de informação. Nosso compromisso é tornar o descarte correto simples, acessível e
                 recompensador para todos.&quot;
               </p>
             </div>
@@ -156,10 +156,10 @@ export default function CompromissoPage() {
         <section className="bg-white py-20">
           <div className="container mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 lg:grid-cols-[1.2fr_1fr]">
             <div>
-              <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Compromisso com politicas publicas</h2>
+              <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Compromisso com políticas públicas</h2>
               <p className="mb-6 text-gray-600">
                 Atuamos em alinhamento direto com normas brasileiras e compromissos internacionais
-                que orientam a saude ambiental e o descarte adequado de residuos.
+                que orientam a saúde ambiental e o descarte adequado de resíduos.
               </p>
               <ul className="space-y-3">
                 {marcos.map((item) => (
@@ -173,7 +173,7 @@ export default function CompromissoPage() {
 
             <aside className="rounded-2xl bg-[#0d3b1a] p-8 text-white">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-eco-lime">Contexto do problema</p>
-              <h3 className="mb-4 text-2xl font-bold">Por que esse compromisso e urgente?</h3>
+              <h3 className="mb-4 text-2xl font-bold">Por que esse compromisso é urgente?</h3>
               <ul className="space-y-4 text-sm text-white/85">
                 <li>
                   <strong className="text-white">91%</strong> dos brasileiros descartam medicamentos de forma incorreta.
@@ -192,9 +192,9 @@ export default function CompromissoPage() {
         <section className="bg-gray-50 py-20">
           <div className="container mx-auto max-w-5xl px-4">
             <div className="mb-10 text-center">
-              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Compromissos de confianca</h2>
+              <h2 className="mb-3 font-sans text-3xl font-bold text-gray-900">Compromissos de Confiança</h2>
               <p className="mx-auto max-w-2xl text-gray-500">
-                O EcoMed combina transparencia institucional, inovacao tecnica e colaboracao
+                O EcoMed combina transparência institucional, inovação técnica e colaboração
                 multidisciplinar para manter qualidade e credibilidade em escala.
               </p>
             </div>
@@ -225,11 +225,11 @@ export default function CompromissoPage() {
 
         <section className="bg-white py-20">
           <div className="container mx-auto max-w-4xl px-4 text-center">
-            <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Compromisso que vira acao</h2>
+            <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Compromisso que vira ação</h2>
             <p className="mx-auto mb-8 max-w-2xl text-gray-600">
-              O EcoMed nasceu como projeto academico colaborativo em 2026 e e construido por
-              aproximadamente 70 estudantes. Nosso foco e gerar impacto ambiental real com uma
-              plataforma gratuita, aberta e util para toda a populacao.
+              O EcoMed nasceu como projeto acadêmico colaborativo em 2026 e é construído por
+              aproximadamente 70 estudantes. Nosso foco é gerar impacto ambiental real com uma
+              plataforma gratuita, aberta e útil para toda a população.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
