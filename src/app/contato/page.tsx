@@ -16,7 +16,7 @@ const orgaos = [
   {
     nome: "ANVISA",
     descricao:
-      "Agência Nacional de Vigilância Sanitária — regula a destinação de resíduos farmacêuticos e fiscaliza a logística reversa de medicamentos no Brasil.",
+      "Agência Nacional de Vigilância Sanitária regula a destinação de resíduos farmacêuticos e fiscaliza a logística reversa de medicamentos no Brasil.",
     href: "https://www.gov.br/anvisa/pt-br",
     telefone: "0800 642 9782",
     icon: Shield,
@@ -50,7 +50,7 @@ const orgaos = [
   {
     nome: "Ministério do Meio Ambiente (MMA)",
     descricao:
-      "Coordena a Política Nacional de Resíduos Sólidos (PNRS — Lei 12.305/2010) e supervisiona os programas de logística reversa de produtos pós-consumo.",
+      "Coordena a Política Nacional de Resíduos Sólidos (PNRS Lei 12.305/2010) e supervisiona os programas de logística reversa de produtos pós-consumo.",
     href: "https://www.gov.br/mma/pt-br",
     icon: Leaf,
     tag: "Resíduos sólidos",
@@ -58,7 +58,7 @@ const orgaos = [
   {
     nome: "SINIR",
     descricao:
-      "Sistema Nacional de Informações sobre a Gestão dos Resíduos Sólidos — portal oficial para consulta de dados sobre geração e destinação de resíduos sólidos no Brasil.",
+      "Sistema Nacional de Informações sobre a Gestão dos Resíduos Sólidos portal oficial para consulta de dados sobre geração e destinação de resíduos sólidos no Brasil.",
     href: "https://sinir.gov.br",
     icon: Globe,
     tag: "Dados e relatórios",
@@ -66,7 +66,7 @@ const orgaos = [
   {
     nome: "ABRADILAN",
     descricao:
-      "Associação Brasileira de Drogarias e Farmácias Independentes — representa os pontos de coleta LogMed em farmácias independentes em todo o país.",
+      "Associação Brasileira de Drogarias e Farmácias Independentes representa os pontos de coleta LogMed em farmácias independentes em todo o país.",
     href: "https://www.abradilan.com.br",
     icon: Building2,
     tag: "Setor farmacêutico",
@@ -82,7 +82,7 @@ const orgaos = [
   {
     nome: "IBAMA",
     descricao:
-      "Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis — fiscaliza o cumprimento das normas ambientais relativas ao descarte de resíduos farmacêuticos.",
+      "Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis fiscaliza o cumprimento das normas ambientais relativas ao descarte de resíduos farmacêuticos.",
     href: "https://www.gov.br/ibama/pt-br",
     icon: Shield,
     tag: "Fiscalização ambiental",
@@ -131,8 +131,8 @@ const contatosInstitucionais = [
   },
   {
     label: "Parcerias",
-    value: "parceiro@ecomed.eco.br",
-    href: "mailto:parceiro@ecomed.eco.br",
+    value: "parcerias@ecomed.eco.br",
+    href: "mailto:parcerias@ecomed.eco.br",
     description: "Farmácias, instituições, empresas e órgãos públicos.",
     icon: Building2,
   },
@@ -184,7 +184,7 @@ export default function ContatoPage() {
                 Fale com o EcoMed
               </h2>
               <p className="text-gray-500 max-w-xl mx-auto">
-                Para dúvidas, parcerias, imprensa ou suporte técnico — estamos
+                Para dúvidas, parcerias, imprensa ou suporte técnico estamos
                 disponíveis pelos canais abaixo.
               </p>
             </div>

@@ -12,7 +12,7 @@ import {
 export const metadata: Metadata = {
   title: "Parcerias | EcoMed",
   description:
-    "Seja parceiro do EcoMed. Farmácias, indústria farmacêutica, escolas, secretarias de saúde e ONGs — juntos pelo descarte consciente de medicamentos no Brasil.",
+    "Seja parceiro do EcoMed. Farmácias, indústria farmacêutica, escolas, secretarias de saúde e ONGs juntos pelo descarte consciente de medicamentos no Brasil.",
   alternates: { canonical: "https://ecomed.eco.br/parceiros" },
 };
 
@@ -71,7 +71,7 @@ export default function ParceirosPage() {
                 {
                   i: "📊",
                   t: "Relatórios de Impacto",
-                  d: "Dados mensuráveis de descarte, litros protegidos e engajamento — prontos para relatório ESG.",
+                  d: "Dados mensuráveis de descarte, litros protegidos e engajamento prontos para relatório ESG.",
                 },
                 {
                   i: "📍",
@@ -81,12 +81,12 @@ export default function ParceirosPage() {
                 {
                   i: "🎯",
                   t: "Tráfego Qualificado",
-                  d: "Usuários chegam até você com intenção real de descartar — potencial de up-sell natural.",
+                  d: "Usuários chegam até você com intenção real de descartar potencial de up-sell natural.",
                 },
                 {
                   i: "🏅",
                   t: "Selo de Parceiro",
-                  d: 'Badge "Parceiro EcoMed" visível no mapa, site e materiais — diferenciação competitiva.',
+                  d: 'Badge "Parceiro EcoMed" visível no mapa, site e materiais diferenciação competitiva.',
                 },
                 {
                   i: "📚",

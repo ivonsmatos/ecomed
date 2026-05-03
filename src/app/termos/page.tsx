@@ -70,7 +70,7 @@ export default function TermosPage() {
           </section>
 
           <section id="ecocoins">
-            <h2>3. EcoMed Coins — Natureza Jurídica e Regras</h2>
+            <h2>3. EcoMed Coins Natureza Jurídica e Regras</h2>
 
             <h3>3.1 Definição legal</h3>
             <p>
@@ -113,7 +113,7 @@ export default function TermosPage() {
               plataforma. Ao resgatar uma recompensa, o usuário concorda que:
             </p>
             <ul>
-              <li>o resgate é <strong>irreversível</strong> — os Coins gastos não são devolvidos;</li>
+              <li>o resgate é <strong>irreversível</strong>  os Coins gastos não são devolvidos;</li>
               <li>recompensas digitais são entregues instantaneamente; recompensas físicas ou de parceiros seguem o prazo indicado no catálogo;</li>
               <li>cada recompensa pode ter um período mínimo de espera entre resgates consecutivos (cooldown);</li>
               <li>o nível mínimo exigido deve ser atingido antes do resgate;</li>

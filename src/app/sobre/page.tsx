@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 export const metadata: Metadata = {
   title: "Sobre o EcoMed",
   description:
-    "Plataforma brasileira que combina mapa inteligente, inteligência artificial e gamificação para transformar o descarte de medicamentos — e proteger o meio ambiente.",
+    "Plataforma brasileira que combina mapa inteligente, inteligência artificial e gamificação para transformar o descarte de medicamentos e proteger o meio ambiente.",
   alternates: { canonical: "https://ecomed.eco.br/sobre" },
 };
 
@@ -53,7 +53,7 @@ export default function SobrePage() {
             </h2>
             <p className="text-base text-gray-600 leading-relaxed mb-10 max-w-2xl">
               Mais de 30 mil toneladas de medicamentos são descartadas
-              incorretamente no Brasil todos os anos — no lixo comum, na pia,
+              incorretamente no Brasil todos os anos no lixo comum, na pia,
               no vaso sanitário. Essa contaminação chega aos rios, ao solo e à
               água que bebemos. Existem mais de 7.500 pontos de coleta em
               farmácias, mas quase ninguém sabe que eles existem.
