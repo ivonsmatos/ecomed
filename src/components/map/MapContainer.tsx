@@ -22,40 +22,18 @@ interface MapContainerProps {
 }
 
 export function MapContainer({ initialPoints = [] }: MapContainerProps) {
-  const { coords, loading: geoLoading } = useGeolocation();
+  const { coords, loading: geoLoading, error: geoError } = useGeolocation();
   const [points, setPoints] = useState<MapPoint[]>(initialPoints);
+  const [nearbyLoading, setNearbyLoading] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState<MapPoint | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
-
-  // Carrega todos os pontos aprovados ao montar o mapa
-  useEffect(() => {
-    const ctrl = new AbortController();
-
-    fetch("/api/pontos/mapa", { signal: ctrl.signal })
-      .then(async (res) => {
-        if (!res.ok) {
-          console.error("[mapa] /api/pontos/mapa retornou", res.status);
-          return [];
-        }
-        const data: MapPoint[] = await res.json();
-        console.log("[mapa] pontos carregados:", data.length);
-        return data;
-      })
-      .then((data: MapPoint[]) => setPoints(data))
-      .catch((err) => {
-        if ((err as Error).name !== "AbortError") {
-          console.error("[mapa] erro ao buscar pontos:", err);
-        }
-      });
-
-    return () => ctrl.abort();
-  }, []);
 
   const fetchNearby = useCallback(async (lat: number, lng: number) => {
     abortRef.current?.abort();
     const ctrl = new AbortController();
     abortRef.current = ctrl;
+    setNearbyLoading(true);
 
     try {
       const res = await fetch(
@@ -64,14 +42,11 @@ export function MapContainer({ initialPoints = [] }: MapContainerProps) {
       );
       if (!res.ok) return;
       const data: MapPoint[] = await res.json();
-      // Mescla pontos próximos (com distância) mantendo demais pontos
-      setPoints((prev) => {
-        const ids = new Set(data.map((p) => p.id));
-        const rest = prev.filter((p) => !ids.has(p.id));
-        return [...data, ...rest];
-      });
+      setPoints(data);
     } catch {
       // abortado — ignorar
+    } finally {
+      setNearbyLoading(false);
     }
   }, []);
 
@@ -104,9 +79,41 @@ export function MapContainer({ initialPoints = [] }: MapContainerProps) {
         onPinClick={handlePinClick}
       />
 
-      {geoLoading && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background/90 px-4 py-2 text-sm shadow">
-          Obtendo sua localização…
+      {/* Estado: aguardando permissão de localização */}
+      {geoLoading && points.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm z-1000">
+          <div className="flex flex-col items-center gap-3 rounded-2xl bg-background px-8 py-6 shadow-lg text-center max-w-xs">
+            <span className="text-3xl">📍</span>
+            <p className="text-sm font-semibold text-foreground">Obtendo sua localização…</p>
+            <p className="text-xs text-muted-foreground">Os pontos de coleta próximos aparecerão automaticamente.</p>
+          </div>
+        </div>
+      )}
+
+      {/* Estado: localização negada ou indisponível */}
+      {geoError && points.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm z-1000">
+          <div className="flex flex-col items-center gap-3 rounded-2xl bg-background px-8 py-6 shadow-lg text-center max-w-xs">
+            <span className="text-3xl">🔒</span>
+            <p className="text-sm font-semibold text-foreground">Localização não autorizada</p>
+            <p className="text-xs text-muted-foreground">
+              Ative a localização no seu navegador para ver os pontos de coleta mais próximos de você.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Estado: carregando pontos próximos */}
+      {nearbyLoading && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background/90 px-4 py-2 text-sm shadow z-1000">
+          Buscando pontos próximos…
+        </div>
+      )}
+
+      {/* Estado: sem pontos no raio */}
+      {!nearbyLoading && !geoLoading && coords && points.length === 0 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-background/90 px-4 py-2 text-sm shadow z-1000">
+          Nenhum ponto encontrado em 5 km
         </div>
       )}
 
