@@ -24,10 +24,11 @@ const querySchema = z.object({
   raio: z.coerce.number().min(500).max(50_000).default(5000),
 });
 
-// GET /api/pontos/mapa — todos os pontos aprovados (usado pelo mapa completo)
+// GET /api/pontos/mapa — pontos aprovados para o mapa (amostra distribuída por cidade)
+// Com 58k+ pontos no banco, retornamos 1 ponto por cidade (até ~780 marcadores) para
+// o overview inicial. O endpoint /proximos carrega pontos detalhados ao usar geolocalização.
 app.get("/mapa", async (c) => {
   const ip = c.req.header("CF-Connecting-IP") ?? c.req.header("x-forwarded-for") ?? "unknown";
-  // Rate limit: falha aberta — se Redis indisponível, continua normalmente
   try {
     const { success } = await checkRateLimit("map", ip);
     if (!success) return c.json({ error: "Muitas requisições" }, 429);
@@ -36,22 +37,29 @@ app.get("/mapa", async (c) => {
   }
 
   try {
-    const points = await prisma.point.findMany({
-      where: { status: "APPROVED" },
-      select: {
-        id: true,
-        name: true,
-        address: true,
-        city: true,
-        state: true,
-        latitude: true,
-        longitude: true,
-        phone: true,
-        photoUrl: true,
-        residueTypes: true,
-      },
-    });
-    return c.json(points);
+    // 1 ponto representativo por cidade (o mais recente) — evita saturar o mapa
+    const rows = await prisma.$queryRaw<
+      Array<{
+        id: string;
+        name: string;
+        address: string;
+        city: string;
+        state: string;
+        latitude: number;
+        longitude: number;
+        phone: string | null;
+        photoUrl: string | null;
+        residueTypes: string[];
+      }>
+    >`
+      SELECT DISTINCT ON (city, state)
+        id, name, address, city, state, latitude, longitude,
+        phone, "photoUrl", "residueTypes"
+      FROM "Point"
+      WHERE status = 'APPROVED'
+      ORDER BY city, state, "createdAt" DESC
+    `;
+    return c.json(rows);
   } catch (err) {
     console.error("[pontos/mapa] query error:", err);
     return c.json([], 200);
