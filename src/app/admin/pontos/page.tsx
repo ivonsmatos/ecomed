@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db/prisma";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
+// v2
 import { cn } from "@/lib/utils";
 import { DeletePointRowButton } from "./DeletePointRowButton";
 import { Plus } from "lucide-react";
