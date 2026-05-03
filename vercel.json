@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.ecomed.eco.br" }],
+      "destination": "https://ecomed.eco.br/$1",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/reset-missoes",

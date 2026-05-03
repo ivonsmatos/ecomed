@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://ecomed.eco.br"),
   title: {
     template: "%s | EcoMed",
-    default: "EcoMed — Seu remédio tem destino certo.",
+    default: "EcoMed — Descarte Correto de Medicamentos no Brasil",
   },
   description:
-    "Encontre pontos de coleta de medicamentos vencidos perto de você. Farmácias, UBS e ecopontos para descarte seguro e sustentável.",
+    "Encontre mais de 58 mil pontos de coleta de medicamentos vencidos perto de você. Farmácias, UBS e ecopontos para descarte seguro, gratuito e sustentável em todo o Brasil.",
   keywords: ["descarte medicamentos", "coleta medicamentos", "farmácia coleta", "ecoponto"],
   authors: [{ name: "EcoMed" }],
   manifest: "/manifest.webmanifest",
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: "https://ecomed.eco.br",
     siteName: "EcoMed",
-    title: "EcoMed — Seu remédio tem destino certo.",
-    description: "Encontre pontos de coleta de medicamentos vencidos perto de você.",
+    title: "EcoMed — Descarte Correto de Medicamentos no Brasil",
+    description: "Encontre mais de 58 mil pontos de coleta de medicamentos vencidos perto de você. Farmácias, UBS e ecopontos para descarte seguro e sustentável.",
     images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: "EcoMed" }],
   },
 };
@@ -117,7 +117,7 @@ export default function RootLayout({
           {/* Skip-link de acessibilidade: permite usuários de teclado/leitores de tela pular nav */}
           <a
             href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-md focus:bg-eco-teal-dark focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-white"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-9999 focus:rounded-md focus:bg-eco-teal-dark focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-white"
           >
             Pular para o conteúdo principal
           </a>

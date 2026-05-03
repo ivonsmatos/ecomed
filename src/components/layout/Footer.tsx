@@ -130,9 +130,10 @@ export function Footer() {
                 (11) 94190-6079
               </a>
               <a href="mailto:contato@ecomed.eco.br" className="mt-[18px] flex items-center gap-3 font-sans text-white/80
-                                                                  transition-all duration-500 hover:text-eco-lime">
+                                                                  transition-all duration-500 hover:text-eco-lime"
+                aria-label="Enviar e-mail para contato@ecomed.eco.br">
                 <Mail className="size-4 text-eco-lime" />
-                contato@ecomed.eco.br
+                Fale conosco
               </a>
             </div>
           </div>

@@ -33,6 +33,12 @@ const nextConfig: NextConfig = {
       { source: "/sitemap-llm.xml", destination: "/sitemap-llm" },
     ];
   },
+  async redirects() {
+    return [
+      // favicon.ico → favicon.svg (SEO crawlers esperam /favicon.ico na raiz)
+      { source: "/favicon.ico", destination: "/favicon.svg", permanent: false },
+    ];
+  },
   async headers() {
     return [
       // Service Worker: nunca cachear — o próprio SW gerencia seu ciclo de atualização
