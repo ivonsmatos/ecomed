@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { UserActions } from "./UserActions";
+import { Plus } from "lucide-react";
 
 export const metadata = { title: "Usuários | Admin EcoMed" };
 
@@ -36,7 +38,12 @@ export default async function AdminUsuariosPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Usuários <span className="text-muted-foreground text-lg font-normal">({total})</span></h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold">Usuários <span className="text-muted-foreground text-lg font-normal">({total})</span></h1>
+        <Link href="/admin/usuarios/novo" className={cn(buttonVariants({ size: "sm" }), "bg-eco-green hover:bg-eco-green/90 text-white")}>
+          <Plus className="size-4 mr-1" /> Novo usuário
+        </Link>
+      </div>
 
       <div className="divide-y rounded-xl border overflow-hidden">
         {users.map((u) => (
@@ -49,6 +56,7 @@ export default async function AdminUsuariosPage({
             <div className="flex items-center gap-2 shrink-0">
               {!u.active && <Badge variant="destructive" className="text-xs">Inativo</Badge>}
               <Badge variant={ROLE_VARIANT[u.role]}>{ROLE_LABEL[u.role]}</Badge>
+              <UserActions userId={u.id} role={u.role as "CITIZEN" | "PARTNER" | "ADMIN"} active={u.active} />
             </div>
           </div>
         ))}

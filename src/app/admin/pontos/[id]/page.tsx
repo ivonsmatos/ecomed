@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import { ReviewActions } from "./ReviewActions";
+import { DeletePointButton } from "./DeletePointButton";
 import { MapPin, Phone, Mail, Calendar } from "lucide-react";
 
 export const metadata = { title: "Revisar Ponto | Admin EcoMed" };
@@ -127,6 +128,9 @@ export default async function ReviewPointPage({ params }: { params: Promise<{ id
       <section className="rounded-xl border p-5 space-y-3">
         <h2 className="font-semibold">Ações</h2>
         <ReviewActions pointId={point.id} currentStatus={point.status} />
+        <div className="pt-2 border-t">
+          <DeletePointButton pointId={point.id} />
+        </div>
       </section>
     </div>
   );

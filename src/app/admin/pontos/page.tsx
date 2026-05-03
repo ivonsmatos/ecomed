@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button-variants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { DeletePointRowButton } from "./DeletePointRowButton";
+import { Plus } from "lucide-react";
 
 function Pagination({ current, total, status }: { current: number; total: number; status?: string }) {
   const qs = status ? `status=${status}&` : "";
@@ -95,7 +97,10 @@ export default async function AdminPontosPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold">Pontos de coleta</h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap items-center">
+          <Link href="/admin/pontos/novo" className={cn(buttonVariants({ size: "sm" }), "bg-eco-green hover:bg-eco-green/90 text-white")}>
+            <Plus className="size-4 mr-1" /> Novo ponto
+          </Link>
           {[undefined, "PENDING", "APPROVED", "REJECTED"].map((s) => (
             <Link
               key={s ?? "all"}
@@ -130,6 +135,7 @@ export default async function AdminPontosPage({
                 <Link href={`/admin/pontos/${p.id}`} className={buttonVariants({ size: "sm" })}>
                   Revisar
                 </Link>
+                <DeletePointRowButton pointId={p.id} />
               </div>
             </div>
           ))

@@ -152,6 +152,89 @@ app.patch(
   },
 );
 
+// DELETE /api/admin/usuarios/:id
+app.delete("/usuarios/:id", async (c) => {
+  const r = await requireAdminSession(c);
+  if (r && typeof r === "object" && "json" in r) return r;
+
+  const session = r as Awaited<ReturnType<typeof import("@/../auth").auth>>;
+  if (session?.user?.id === c.req.param("id")) return c.json({ error: "Não é possível excluir seu próprio usuário" }, 400);
+
+  await prisma.user.delete({ where: { id: c.req.param("id") } });
+  return c.json({ ok: true });
+});
+
+// POST /api/admin/usuarios — cria usuário diretamente pelo admin
+app.post(
+  "/usuarios",
+  zValidator("json", z.object({
+    name: z.string().min(2),
+    email: z.string().email(),
+    password: z.string().min(6).optional(),
+    role: z.enum(["CITIZEN", "PARTNER", "ADMIN"]).default("CITIZEN"),
+  })),
+  async (c) => {
+    const r = await requireAdminSession(c);
+    if (r && typeof r === "object" && "json" in r) return r;
+
+    const { name, email, password, role } = c.req.valid("json");
+
+    const exists = await prisma.user.findUnique({ where: { email } });
+    if (exists) return c.json({ error: "E-mail já cadastrado" }, 409);
+
+    let passwordHash: string | undefined;
+    if (password) {
+      const bcrypt = await import("bcryptjs");
+      passwordHash = await bcrypt.hash(password, 12);
+    }
+
+    const user = await prisma.user.create({
+      data: { name, email, role, passwordHash, active: true },
+      select: { id: true, name: true, email: true, role: true },
+    });
+    return c.json({ ok: true, user }, 201);
+  },
+);
+
+// DELETE /api/admin/pontos/:id
+app.delete("/pontos/:id", async (c) => {
+  const r = await requireAdminSession(c);
+  if (r && typeof r === "object" && "json" in r) return r;
+
+  await prisma.point.delete({ where: { id: c.req.param("id") } });
+  return c.json({ ok: true });
+});
+
+// POST /api/admin/pontos — cria ponto diretamente pelo admin
+app.post(
+  "/pontos",
+  zValidator("json", z.object({
+    partnerId: z.string().min(1),
+    name: z.string().min(2),
+    address: z.string().min(5),
+    city: z.string().min(2),
+    state: z.string().length(2),
+    zipCode: z.string().min(8),
+    latitude: z.number(),
+    longitude: z.number(),
+    phone: z.string().optional(),
+    email: z.string().email().optional().or(z.literal("")),
+    residueTypes: z.array(z.string()).default([]),
+    status: z.enum(["PENDING", "APPROVED", "REJECTED"]).default("APPROVED"),
+  })),
+  async (c) => {
+    const r = await requireAdminSession(c);
+    if (r && typeof r === "object" && "json" in r) return r;
+
+    const data = c.req.valid("json");
+    const point = await prisma.point.create({
+      data: { ...data, email: data.email || null },
+      select: { id: true, name: true, status: true },
+    });
+    return c.json({ ok: true, point }, 201);
+  },
+);
+
 // GET /api/admin/reportes
 app.get(
   "/reportes",
