@@ -6,9 +6,13 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { DeletePointRowButton } from "./DeletePointRowButton";
 import { Plus } from "lucide-react";
+import { AdminSearchInput } from "../AdminSearchInput";
 
-function Pagination({ current, total, status }: { current: number; total: number; status?: string }) {
-  const qs = status ? `status=${status}&` : "";
+function Pagination({ current, total, status, q }: { current: number; total: number; status?: string; q?: string }) {
+  const parts: string[] = [];
+  if (status) parts.push(`status=${status}`);
+  if (q) parts.push(`q=${encodeURIComponent(q)}`);
+  const qs = parts.length ? parts.join("&") + "&" : "";
   const href = (p: number) => `/admin/pontos?${qs}page=${p}`;
 
   const pages: (number | "…")[] = [];
@@ -69,26 +73,39 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive"> = 
 export default async function AdminPontosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; page?: string }>;
+  searchParams: Promise<{ status?: string; page?: string; q?: string }>;
 }) {
   await requireAdmin();
 
-  const { status, page: pageParam } = await searchParams;
+  const { status, page: pageParam, q } = await searchParams;
   const page = Math.max(1, Number(pageParam ?? 1));
   const take = 20;
   const skip = (page - 1) * take;
 
   const validStatus = ["PENDING", "APPROVED", "REJECTED"].includes(status ?? "") ? status as "PENDING" | "APPROVED" | "REJECTED" : undefined;
 
+  const search = q?.trim();
+  const where = {
+    ...(validStatus ? { status: validStatus } : {}),
+    ...(search ? {
+      OR: [
+        { name: { contains: search, mode: "insensitive" as const } },
+        { city: { contains: search, mode: "insensitive" as const } },
+        { state: { contains: search, mode: "insensitive" as const } },
+        { partner: { companyName: { contains: search, mode: "insensitive" as const } } },
+      ],
+    } : {}),
+  };
+
   const [points, total] = await Promise.all([
     prisma.point.findMany({
-      where: validStatus ? { status: validStatus } : undefined,
+      where,
       include: { partner: { select: { companyName: true } } },
       orderBy: { createdAt: "desc" },
       take,
       skip,
     }),
-    prisma.point.count({ where: validStatus ? { status: validStatus } : undefined }),
+    prisma.point.count({ where }),
   ]);
 
   const pages = Math.ceil(total / take);
@@ -115,6 +132,8 @@ export default async function AdminPontosPage({
           ))}
         </div>
       </div>
+
+      <AdminSearchInput placeholder="Buscar por nome, cidade, UF, parceiro…" />
 
       <p className="text-sm text-muted-foreground">{total} ponto{total !== 1 ? "s" : ""} encontrado{total !== 1 ? "s" : ""}</p>
 
@@ -143,7 +162,7 @@ export default async function AdminPontosPage({
       </div>
 
       {pages > 1 && (
-        <Pagination current={page} total={pages} status={validStatus} />
+        <Pagination current={page} total={pages} status={validStatus} q={search} />
       )}
     </div>
   );

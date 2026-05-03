@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { UserActions } from "./UserActions";
 import { Plus } from "lucide-react";
+import { AdminSearchInput } from "../AdminSearchInput";
 
 export const metadata = { title: "Usuários | Admin EcoMed" };
 
@@ -15,23 +16,34 @@ const ROLE_VARIANT: Record<string, "default" | "secondary" | "destructive"> = { 
 export default async function AdminUsuariosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
 }) {
   await requireAdmin();
 
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, q } = await searchParams;
   const page = Math.max(1, Number(pageParam ?? 1));
   const take = 30;
   const skip = (page - 1) * take;
 
+  const search = q?.trim();
+  const where = search
+    ? {
+        OR: [
+          { name: { contains: search, mode: "insensitive" as const } },
+          { email: { contains: search, mode: "insensitive" as const } },
+        ],
+      }
+    : {};
+
   const [users, total] = await Promise.all([
     prisma.user.findMany({
+      where,
       select: { id: true, name: true, email: true, role: true, active: true, createdAt: true },
       orderBy: { createdAt: "desc" },
       take,
       skip,
     }),
-    prisma.user.count(),
+    prisma.user.count({ where }),
   ]);
 
   const pages = Math.ceil(total / take);
@@ -44,6 +56,8 @@ export default async function AdminUsuariosPage({
           <Plus className="size-4 mr-1" /> Novo usuário
         </Link>
       </div>
+
+      <AdminSearchInput placeholder="Buscar por nome ou e-mail…" />
 
       <div className="divide-y rounded-xl border overflow-hidden">
         {users.map((u) => (
@@ -67,7 +81,7 @@ export default async function AdminUsuariosPage({
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <Link
               key={p}
-              href={`/admin/usuarios?page=${p}`}
+              href={`/admin/usuarios?page=${p}${search ? `&q=${encodeURIComponent(search)}` : ""}`}
               className={cn(buttonVariants({ variant: page === p ? "default" : "outline", size: "sm" }))}
             >
               {p}
