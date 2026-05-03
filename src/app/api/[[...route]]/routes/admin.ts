@@ -12,7 +12,7 @@ async function requireAdminSession(c: Parameters<Parameters<typeof app.use>[1]>[
   if (!session?.user?.id) return c.json({ error: "Não autenticado" }, 401);
   const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { role: true } });
   if (user?.role !== "ADMIN") return c.json({ error: "Sem permissão" }, 403);
-  return session;
+  return null;
 }
 
 // GET /api/admin/stats
@@ -155,9 +155,9 @@ app.patch(
 // DELETE /api/admin/usuarios/:id
 app.delete("/usuarios/:id", async (c) => {
   const r = await requireAdminSession(c);
-  if (r && typeof r === "object" && "json" in r) return r;
+  if (r) return r;
 
-  const session = r as Awaited<ReturnType<typeof import("@/../auth").auth>>;
+  const session = await auth();
   if (session?.user?.id === c.req.param("id")) return c.json({ error: "Não é possível excluir seu próprio usuário" }, 400);
 
   await prisma.user.delete({ where: { id: c.req.param("id") } });
