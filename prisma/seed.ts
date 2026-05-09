@@ -2811,6 +2811,205 @@ A **RDC ANVISA nº 222/2018** obriga estabelecimentos de saúde a implantarem si
           correct: 1 },
       ],
     },
+
+    // ════════════════════════════════════════════════════
+    // NOVOS QUIZZES — CIÊNCIAS AMBIENTAIS E MEDICAMENTOS
+    // Distribuídos pelos níveis conforme complexidade
+    // ════════════════════════════════════════════════════
+
+    // NÍVEL 2 — FÁCIL · Micropoluentes (introdução)
+    {
+      slug: "n2-q17-micropoluentes-intro",
+      title: "Remédios Invisíveis na Água",
+      description: "O que são micropoluentes farmacêuticos e por que eles preocupam.",
+      category: "MEIO_AMBIENTE", difficulty: "FACIL", level: 2, levelOrder: 17,
+      questions: [
+        { order: 1, text: "O que são micropoluentes farmacêuticos?",
+          options: JSON.stringify(["Comprimidos visíveis flutuando no rio", "Princípios ativos de remédios em concentrações mínimas na água", "Microplásticos das embalagens de remédios", "Fungos que se formam em remédios vencidos"]),
+          correct: 1 },
+        { order: 2, text: "De onde vêm os micropoluentes farmacêuticos nos rios?",
+          options: JSON.stringify(["Apenas de fábricas de medicamentos", "Do descarte incorreto no esgoto e lixo comum", "Da chuva ácida sobre plantações", "Dos filtros de água domésticos"]),
+          correct: 1 },
+        { order: 3, text: "A água da torneira pode conter resíduos de medicamentos?",
+          options: JSON.stringify(["Nunca — o tratamento elimina tudo", "Em traços, pois ETEs convencionais não removem fármacos completamente", "Apenas em cidades sem saneamento básico", "Só em períodos de seca"]),
+          correct: 1 },
+        { order: 4, text: "Qual ação do cidadão mais reduz micropoluentes farmacêuticos na água?",
+          options: JSON.stringify(["Beber apenas água mineral", "Nunca jogar remédios na pia ou no vaso — usar dispensadores das farmácias", "Ferver a água antes de beber", "Comprar filtros de osmose reversa"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 3 — MÉDIO · ETEs e suas limitações
+    {
+      slug: "n3-q16-etes-farmacos",
+      title: "Estações de Tratamento e Remédios",
+      description: "Por que as ETEs convencionais não conseguem remover fármacos da água.",
+      category: "MEIO_AMBIENTE", difficulty: "MEDIO", level: 3, levelOrder: 16,
+      questions: [
+        { order: 1, text: "O que significa ETE?",
+          options: JSON.stringify(["Empresa de Tratamento de Embalagens", "Estação de Tratamento de Esgoto", "Esterilização Total de Efluentes", "Escoamento de Tratamento Especial"]),
+          correct: 1 },
+        { order: 2, text: "Por que ETEs convencionais não removem fármacos da água?",
+          options: JSON.stringify(["O processo biológico não quebra moléculas farmacêuticas complexas", "As ETEs são muito pequenas para o volume de esgoto", "Os operadores não estão treinados para isso", "A legislação proíbe filtrar medicamentos"]),
+          correct: 0 },
+        { order: 3, text: "Qual tecnologia remove até 99% dos fármacos da água?",
+          options: JSON.stringify(["Cloração simples", "Ozonização e carvão ativado granular (CAG)", "Filtro de areia", "Decantação por gravidade"]),
+          correct: 1 },
+        { order: 4, text: "Por que jogar remédio no esgoto é diferente de jogá-lo no lixo comum?",
+          options: JSON.stringify(["O esgoto trata o remédio; o lixo não", "No esgoto, o remédio vai direto aos rios sem barreira; no aterro há mais contenção", "Jogar no lixo é crime ambiental; no esgoto não", "São igualmente perigosos — não há diferença"]),
+          correct: 1 },
+        { order: 5, text: "O filtro de barro caseiro remove remédios da água da torneira?",
+          options: JSON.stringify(["Sim, remove todos os fármacos", "Não — remove partículas e alguns organismos, mas não moléculas farmacêuticas dissolvidas", "Sim, se tiver carvão ativado em casa", "Apenas remove antibióticos"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 3 — MÉDIO · One Health (introdução)
+    {
+      slug: "n3-q17-one-health-intro",
+      title: "Uma Só Saúde",
+      description: "O conceito One Health e a conexão entre saúde humana, animal e ambiental.",
+      category: "MEIO_AMBIENTE", difficulty: "MEDIO", level: 3, levelOrder: 17,
+      questions: [
+        { order: 1, text: "O que significa o conceito 'One Health' (Uma Só Saúde)?",
+          options: JSON.stringify(["Um único plano de saúde para toda a população", "A saúde humana, animal e ambiental são interligadas e interdependentes", "Um sistema de saúde unificado global", "O princípio de que apenas humanos têm direito à saúde"]),
+          correct: 1 },
+        { order: 2, text: "Como o descarte correto de medicamentos se relaciona ao One Health?",
+          options: JSON.stringify(["Não se relaciona — são temas separados", "Protege água e ecossistemas, beneficiando animais e humanos simultaneamente", "Apenas reduz custos hospitalares", "Só impacta a saúde de animais, não humanos"]),
+          correct: 1 },
+        { order: 3, text: "Um antibiótico jogado no rio pode afetar humanos como?",
+          options: JSON.stringify(["Diretamente, causando overdose em banhistas", "Selecionando bactérias resistentes que depois infectam humanos", "Apenas causa dano à pele em contato", "Não afeta humanos — apenas peixes"]),
+          correct: 1 },
+        { order: 4, text: "Segundo o One Health, cuidar do meio ambiente é:",
+          options: JSON.stringify(["Responsabilidade apenas de ecologistas", "Uma forma direta de cuidar da própria saúde humana", "Importante apenas para países ricos", "Opcional enquanto houver vacinas disponíveis"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 5 — DIFÍCIL · Resistência antimicrobiana ambiental
+    {
+      slug: "n5-q22-resistencia-ambiental",
+      title: "Superbactérias no Ambiente",
+      description: "Como o descarte de antibióticos no ambiente acelera a resistência antimicrobiana.",
+      category: "MEIO_AMBIENTE", difficulty: "DIFICIL", level: 5, levelOrder: 22,
+      questions: [
+        { order: 1, text: "O que é resistência antimicrobiana ambiental?",
+          options: JSON.stringify(["A resistência de plantas ao herbicida", "Bactérias no ambiente adquirindo resistência a antibióticos via exposição a resíduos farmacêuticos", "Fungos resistentes a fungicidas industriais", "Vírus que sobrevivem a desinfetantes"]),
+          correct: 1 },
+        { order: 2, text: "Por que concentrações sub-letais de antibióticos nos rios são perigosas?",
+          options: JSON.stringify(["Matam todos os peixes imediatamente", "Matam bactérias fracas e selecionam as resistentes, que se multiplicam", "São inofensivas — não afetam organismos", "Apenas provocam fluorescência na água"]),
+          correct: 1 },
+        { order: 3, text: "Como bactérias resistentes do ambiente retornam ao ser humano?",
+          options: JSON.stringify(["Via ar condicionado", "Por água contaminada, alimentos e contato com animais que beberam água afetada", "Apenas por transmissão direta entre humanos", "Nunca retornam — ficam confinadas nos rios"]),
+          correct: 1 },
+        { order: 4, text: "O descarte correto de antibióticos (logística reversa) contribui para:",
+          options: JSON.stringify(["Apenas o lucro das farmácias", "Reduzir a pressão seletiva sobre bactérias ambientais e frear a criação de superbactérias", "Diminuir o preço dos antibióticos", "Aumentar a produção de antibióticos novos"]),
+          correct: 1 },
+        { order: 5, text: "A resistência antimicrobiana é classificada pela OMS como:",
+          options: JSON.stringify(["Problema exclusivo de países pobres", "Uma das maiores ameaças globais à saúde pública do século XXI", "Questão resolvida com novas vacinas", "Fenômeno natural sem intervenção humana"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 6 — DIFÍCIL · Disruptores endócrinos farmacêuticos
+    {
+      slug: "n6-q7-disruptores-endocrinos",
+      title: "Hormônios nos Rios",
+      description: "O impacto de disruptores endócrinos farmacêuticos na fauna aquática.",
+      category: "MEIO_AMBIENTE", difficulty: "DIFICIL", level: 6, levelOrder: 7,
+      questions: [
+        { order: 1, text: "O que são disruptores endócrinos farmacêuticos?",
+          options: JSON.stringify(["Remédios que perturbam o sistema nervoso central", "Compostos (como hormônios sintéticos) que interferem no sistema hormonal de organismos vivos", "Antibióticos que destroem a microbiota intestinal", "Sedimentos que bloqueiam o fluxo dos rios"]),
+          correct: 1 },
+        { order: 2, text: "Qual hormônio sintético de anticoncepcional mais afeta ecossistemas aquáticos?",
+          options: JSON.stringify(["Progesterona natural", "Etinilestradiol (EE2)", "Testosterona sintética", "Cortisol artificial"]),
+          correct: 1 },
+        { order: 3, text: "O fenômeno de 'feminização de peixes machos' é causado por:",
+          options: JSON.stringify(["Aquecimento global elevando a temperatura da água", "Etinilestradiol do anticoncepcional presente nos rios", "Agrotóxicos nitrogenados de plantações", "Óleos industriais de fábricas às margens dos rios"]),
+          correct: 1 },
+        { order: 4, text: "Por que ETEs convencionais não removem hormônios sintéticos?",
+          options: JSON.stringify(["Os hormônios são muito pesados e afundam antes da ETE", "As moléculas de hormônio sintético são estáveis e resistem ao tratamento biológico convencional", "A lei proíbe tratar hormônios nas ETEs", "As ETEs os removem, mas lentamente"]),
+          correct: 1 },
+        { order: 5, text: "O colapso de populações de peixes por disruptores endócrinos afeta a cadeia alimentar?",
+          options: JSON.stringify(["Não — peixes são repostos naturalmente em semanas", "Sim — predadores dependentes de peixes também são afetados, causando desequilíbrio em cascata", "Apenas afeta espécies de peixe ornamental", "Somente se a temperatura da água for muito alta"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 7 — DIFÍCIL · Bioacumulação e ecotoxicologia
+    {
+      slug: "n7-q7-bioacumulacao-ecotoxicologia",
+      title: "Fármacos na Cadeia Alimentar",
+      description: "Bioacumulação, biomagnificação e ecotoxicologia de resíduos farmacêuticos.",
+      category: "MEIO_AMBIENTE", difficulty: "DIFICIL", level: 7, levelOrder: 7,
+      questions: [
+        { order: 1, text: "O que é bioacumulação de fármacos?",
+          options: JSON.stringify(["Acúmulo de embalagens de remédios no lixão", "Concentração progressiva de princípios ativos nos tecidos de organismos vivos", "A soma de medicamentos tomados ao longo da vida", "Acúmulo de resíduos no armazém da farmácia"]),
+          correct: 1 },
+        { order: 2, text: "O que é biomagnificação na cadeia alimentar?",
+          options: JSON.stringify(["O crescimento de bactérias em remédios vencidos", "O aumento progressivo da concentração do poluente a cada nível trófico da cadeia alimentar", "A magnificação do problema apenas em países com muita caça", "Processo de decomposição de fármacos por fungos"]),
+          correct: 1 },
+        { order: 3, text: "Qual o impacto do diclofenaco (anti-inflamatório) na fauna selvagem?",
+          options: JSON.stringify(["Nenhum impacto documentado fora do laboratório", "Quase extinguiu populações de abutres sul-asiáticos via insuficiência renal ao comerem carcaças contaminadas", "Apenas provoca sonolência em mamíferos", "Somente afeta peixes de água doce"]),
+          correct: 1 },
+        { order: 4, text: "O que é ecotoxicologia farmacêutica?",
+          options: JSON.stringify(["Estudo de toxinas produzidas por plantas medicinais", "Ciência que estuda os efeitos tóxicos de fármacos sobre organismos do ambiente natural", "Análise de efeitos colaterais de remédios em humanos", "Estudo da toxicidade de agrotóxicos em fazendas"]),
+          correct: 1 },
+        { order: 5, text: "Quais medicamentos são mais persistentes e preocupantes nos ecossistemas?",
+          options: JSON.stringify(["Apenas vitaminas e suplementos naturais", "Antibióticos, hormônios, anti-inflamatórios (ibuprofeno, diclofenaco) e antidepressivos (fluoxetina)", "Apenas anestésicos cirúrgicos", "Somente medicamentos radioativos"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 8 — DIFÍCIL · Economia circular farmacêutica
+    {
+      slug: "n8-q7-economia-circular-farma",
+      title: "Economia Circular na Farmácia",
+      description: "Sustentabilidade no ciclo de vida de medicamentos e economia circular.",
+      category: "MEIO_AMBIENTE", difficulty: "DIFICIL", level: 8, levelOrder: 7,
+      questions: [
+        { order: 1, text: "O que é economia circular aplicada à indústria farmacêutica?",
+          options: JSON.stringify(["Revender medicamentos usados entre pacientes", "Modelo que garante que resíduos farmacêuticos sejam tratados e reaproveitados (energia/matéria), sem descarte inadequado", "Fabricar remédios em ciclos sazonais para evitar vencimento", "Sistema de troca de remédios vencidos por novos"]),
+          correct: 1 },
+        { order: 2, text: "O coprocessamento de medicamentos em cimenteiras é vantajoso pois:",
+          options: JSON.stringify(["É mais barato que qualquer outro método", "Aproveita o poder calorífico dos compostos e destrói as moléculas em temperaturas de 1.400–1.800°C", "Transforma os medicamentos em cimento diretamente", "Não gera nenhuma emissão de gases"]),
+          correct: 1 },
+        { order: 3, text: "O ciclo de vida de um medicamento, do ponto de vista ambiental, começa com:",
+          options: JSON.stringify(["A prescrição médica", "A produção industrial (que gera efluentes com princípios ativos)", "A compra na farmácia", "A ingestão pelo paciente"]),
+          correct: 1 },
+        { order: 4, text: "O uso racional de medicamentos contribui para a economia circular ao:",
+          options: JSON.stringify(["Aumentar o volume de medicamentos produzidos", "Reduzir sobras e desperdício, diminuindo o volume de resíduo a ser tratado", "Fazer os medicamentos durarem mais tempo nas prateleiras", "Reduzir o preço dos remédios nas farmácias"]),
+          correct: 1 },
+        { order: 5, text: "A logística reversa conecta-se à economia circular porque:",
+          options: JSON.stringify(["Permite que os remédios sejam redistribuídos a pacientes carentes", "Garante que o resíduo farmacêutico retorne ao ciclo produtivo (energia/cimento) em vez de contaminar o ambiente", "Reduz os lucros da indústria farmacêutica", "Elimina a necessidade de incineração"]),
+          correct: 1 },
+      ],
+    },
+
+    // NÍVEL 9 — DIFÍCIL · One Health avançado + síntese global
+    {
+      slug: "n9-q7-one-health-avancado",
+      title: "One Health: Síntese Global",
+      description: "A visão integrada de saúde humana, animal e ambiental aplicada ao descarte de medicamentos.",
+      category: "MEIO_AMBIENTE", difficulty: "DIFICIL", level: 9, levelOrder: 7,
+      questions: [
+        { order: 1, text: "A OMS reconhece a contaminação por fármacos como ameaça prioritária porque:",
+          options: JSON.stringify(["Afeta apenas países em desenvolvimento", "Impacta simultaneamente saúde humana, biodiversidade e segurança alimentar global", "É um problema de curto prazo resolvido com novos antibióticos", "Afeta somente ecossistemas marinhos profundos"]),
+          correct: 1 },
+        { order: 2, text: "No contexto One Health, a resistência antimicrobiana ambiental:",
+          options: JSON.stringify(["É exclusivamente um problema hospitalar", "Conecta o descarte de antibióticos no ambiente ao surgimento de infecções intratáveis em humanos", "Afeta somente animais selvagens sem risco a humanos", "Pode ser resolvida apenas com novos antibióticos"]),
+          correct: 1 },
+        { order: 3, text: "O PNUMA (ONU) recomenda que países implementem:",
+          options: JSON.stringify(["Apenas restrições ao uso de antibióticos em hospitais", "Logística reversa de medicamentos e tecnologias avançadas de tratamento hídrico como pilares da saúde planetária", "A proibição de produção de antibióticos genéricos", "Apenas educação ambiental nas escolas"]),
+          correct: 1 },
+        { order: 4, text: "O ODS 6 (Água Limpa) da Agenda 2030 da ONU inclui:",
+          options: JSON.stringify(["Apenas infraestrutura de saneamento básico", "Redução da poluição química — incluindo fármacos — nos corpos hídricos", "Somente irrigação agrícola sustentável", "Apenas dessalinização de água do mar"]),
+          correct: 1 },
+        { order: 5, text: "Como o EcoMed contribui diretamente para o conceito One Health?",
+          options: JSON.stringify(["Apenas fornecendo consultas médicas gratuitas", "Conectando cidadãos a pontos de descarte correto, impedindo que fármacos cheguem aos rios e prejudiquem fauna, flora e humanos", "Somente educando sobre higiene pessoal", "Monitorando hospitais e clínicas"]),
+          correct: 1 },
+      ],
+    },
   ]
 
   for (const quizData of quizzesData) {
