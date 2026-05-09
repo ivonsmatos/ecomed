@@ -33,10 +33,12 @@ logger = logging.getLogger(__name__)
 # ── Configuração ──────────────────────────────────────────────────────────────
 
 COLLECTION_NAME = "ecomed_docs"
-EMBED_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"  # multilingual, leve
+EMBED_MODEL = (
+    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"  # multilingual, leve
+)
 
 SYSTEM_PROMPT = """Você é o assistente educativo do EcoMed, uma plataforma brasileira
-dedicada ao descarte correto de medicamentos.
+dedicada ao descarte correto de medicamentos e à preservação do meio ambiente.
 
 VOCÊ PODE ajudar com:
 - Como e onde descartar medicamentos vencidos ou sem uso
@@ -45,6 +47,14 @@ VOCÊ PODE ajudar com:
 - Legislação brasileira: PNRS (Lei 12.305/2010), Decreto 10.388/2020, RDC 222/2018 ANVISA
 - Educação ambiental relacionada a medicamentos
 - Tipos de resíduos farmacêuticos aceitos nos pontos de coleta
+- Contaminação de recursos hídricos por fármacos (rios, lençóis freáticos, água potável)
+- Resistência antimicrobiana no meio ambiente causada pelo descarte inadequado de antibióticos
+- Disruptores endócrinos: impacto de hormônios farmacêuticos na fauna aquática
+- Micropoluentes farmacêuticos e limitações das estações de tratamento de esgoto (ETE)
+- Sustentabilidade ambiental no ciclo de vida de medicamentos (produção, uso, descarte)
+- Economia circular aplicada à indústria farmacêutica e à logística reversa
+- Uso racional de medicamentos como estratégia de prevenção ambiental
+- Eutrofização, bioacumulação e ecotoxicologia de resíduos farmacêuticos
 
 VOCÊ NUNCA DEVE:
 - Sugerir doses, posologia ou forma de uso de qualquer medicamento
@@ -108,7 +118,9 @@ class RAGService:
             embeddings=self._embeddings,
         )
 
-        logger.info(f"RAGService pronto | model={self._model} | collection={COLLECTION_NAME}")
+        logger.info(
+            f"RAGService pronto | model={self._model} | collection={COLLECTION_NAME}"
+        )
 
     # ── Sessão ────────────────────────────────────────────────────────────────
 
@@ -141,7 +153,9 @@ class RAGService:
           - categoria_violacao: str | None
         """
         if not self._client or not self._vectorstore:
-            raise RuntimeError("RAGService não inicializado. Chame initialize() primeiro.")
+            raise RuntimeError(
+                "RAGService não inicializado. Chame initialize() primeiro."
+            )
 
         start = time.time()
 
@@ -153,9 +167,11 @@ class RAGService:
                 "model": None,
                 "ragScore": None,
                 "bloqueada": True,
-                "categoria_violacao": resultado_guardrail.categoria.name
-                if resultado_guardrail.categoria
-                else None,
+                "categoria_violacao": (
+                    resultado_guardrail.categoria.name
+                    if resultado_guardrail.categoria
+                    else None
+                ),
             }
 
         # ── 2. Recuperação RAG ────────────────────────────────────────────────
@@ -166,7 +182,9 @@ class RAGService:
             rag_score = max((s for _, s in docs_com_score), default=None)
             contexto = "\n\n".join(doc.page_content for doc, _ in docs_com_score)
         except Exception as e:
-            logger.warning(f"[RAG] Falha na busca vetorial: {e}. Usando contexto vazio.")
+            logger.warning(
+                f"[RAG] Falha na busca vetorial: {e}. Usando contexto vazio."
+            )
             contexto = "(base de conhecimento indisponível no momento)"
             rag_score = None
 

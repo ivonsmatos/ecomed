@@ -1,3 +1,67 @@
+=== CIÊNCIAS AMBIENTAIS E MEDICAMENTOS ===
+
+O que são micropoluentes farmacêuticos?
+São princípios ativos de medicamentos presentes em concentrações muito baixas (nanogramas por litro) em corpos d'água, solo e sedimentos. Embora invisíveis, causam danos significativos à fauna aquática e podem retornar ao abastecimento humano.
+
+As estações de tratamento de esgoto (ETE) removem medicamentos da água?
+Não de forma eficiente. A maioria das ETEs no Brasil utiliza tratamento biológico convencional, que não quebra moléculas farmacêuticas complexas. Tecnologias como ozonização e carvão ativado granular (CAG) podem remover até 99% dos fármacos, mas são raras no país.
+
+O que é resistência antimicrobiana ambiental?
+É o processo pelo qual bactérias presentes no ambiente (rios, solo, esgoto) adquirem resistência a antibióticos devido à exposição constante a resíduos farmacêuticos descartados incorretamente. Essas bactérias resistentes podem retornar ao ser humano via água, alimentos e contato direto.
+
+Como o descarte inadequado de antibióticos cria superbactérias no ambiente?
+Quando antibióticos chegam aos rios em concentrações sub-letais (insuficientes para matar, mas suficientes para pressionar as bactérias), as mais fortes sobrevivem e replicam. Esse processo seleciona cepas resistentes, que depois infectam humanos causando doenças de difícil tratamento.
+
+O que são disruptores endócrinos de origem farmacêutica?
+São compostos químicos presentes em medicamentos (principalmente hormônios sintéticos como estrogênio e progesterona de anticoncepcionais) que, quando lançados no ambiente, interferem no sistema hormonal de animais aquáticos e terrestres, causando malformações reprodutivas e desequilíbrio populacional.
+
+Qual o impacto dos anticoncepcionais nos ecossistemas aquáticos?
+O estrógeno sintético (EE2), principal ativo dos anticoncepcionais, não é removido pelo tratamento de esgoto convencional. Em rios, ele causa a feminização de peixes machos, reduzindo sua fertilidade e levando ao colapso de populações inteiras, com efeitos em cascata no ecossistema.
+
+O que é bioacumulação de fármacos?
+É o processo pelo qual substâncias químicas de medicamentos se acumulam progressivamente nos tecidos de organismos vivos. Peixes que bebem água contaminada concentram os compostos em seu corpo. Quando predadores os comem, recebem doses ainda maiores — é a biomagnificação na cadeia alimentar.
+
+Quais medicamentos são mais persistentes no ambiente?
+Antibióticos (especialmente fluorquinolonas e tetraciclinas), hormônios (estrogênio e progesterona), anti-inflamatórios (ibuprofeno e diclofenaco) e antidepressivos (fluoxetina) são os fármacos mais detectados em rios e lençóis freáticos ao redor do mundo.
+
+O que é ecotoxicologia farmacêutica?
+É o ramo científico que estuda os efeitos tóxicos de substâncias de origem farmacêutica sobre organismos do ambiente natural, incluindo peixes, anfíbios, insetos aquáticos e microrganismos do solo.
+
+Como o diclofenaco quase extinguiu abutres na Ásia?
+O anti-inflamatório diclofenaco, amplamente usado em gado, contaminou carcaças de animais. Abutres que se alimentavam dessas carcaças desenvolveram insuficiência renal aguda. A população de abutres sul-asiáticos caiu mais de 95% em menos de uma década — uma das extinções mais rápidas documentadas por um produto farmacêutico.
+
+O que é eutrofização causada por medicamentos?
+Alguns fármacos com nitrogênio ou fósforo em sua composição, ao chegarem a rios, funcionam como nutrientes para algas. O crescimento excessivo de algas (bloom algal) consome o oxigênio dissolvido na água, asfixiando peixes e outros organismos aquáticos — processo chamado eutrofização.
+
+Como a indústria farmacêutica impacta o meio ambiente?
+A produção industrial de medicamentos gera efluentes com princípios ativos em concentrações elevadas, solventes orgânicos e metais pesados. Países com pouca regulação ambiental, como alguns polos farmacêuticos na Índia e China, já causaram contaminações severas em rios locais.
+
+O que é o conceito de "One Health" aplicado aos medicamentos?
+"One Health" (Uma Só Saúde) é a abordagem que reconhece que a saúde humana, animal e ambiental são interdependentes. O descarte correto de medicamentos é um pilar desta visão: evitar que fármacos contaminem o ambiente protege simultaneamente os ecossistemas, os animais e os humanos.
+
+Como posso contribuir para reduzir a contaminação farmacêutica da água?
+Três ações diretas: 1) Nunca jogue medicamentos na pia ou no vaso sanitário — use os coletores das farmácias; 2) Compre apenas a quantidade prescrita (exija fracionamento); 3) Use o mapa do EcoMed (ecomed.eco.br) para encontrar o ponto de descarte correto mais próximo.
+
+A água da torneira pode conter resíduos de medicamentos?
+Em pequenas concentrações, sim. Estudos detectaram traços de antibióticos, hormônios e ansiolíticos em sistemas de abastecimento público em todo o mundo. O risco à saúde por exposição crônica a essas concentrações ainda é estudado, mas já é motivo de alerta para a OMS.
+
+O que é o Plano Nacional de Gestão de Resíduos de Saúde (PNRS-Saúde)?
+É o conjunto de políticas que regulamentam o descarte de resíduos gerados em serviços de saúde, incluindo hospitais, farmácias e ambulatórios. Para o cidadão, a consequência prática é a logística reversa obrigatória regulamentada pelo Decreto 10.388/2020.
+
+Por que medicamentos veterinários também precisam de descarte correto?
+Medicamentos veterinários (antibióticos, vermífugos, antiparasitários) também são resíduos perigosos. Quando descartados no solo ou em fossas, contaminam o lençol freático e podem matar organismos essenciais para a fertilidade do solo.
+
+O que é sustentabilidade no ciclo de vida de um medicamento?
+É a gestão responsável desde a produção (efluentes industriais), passando pelo uso racional (evitar desperdício e automedicação), até o descarte final seguro (logística reversa). O EcoMed atua especificamente na última etapa deste ciclo.
+
+Como a economia circular se aplica à indústria farmacêutica?
+Na economia circular, medicamentos coletados via logística reversa podem ter seus componentes aproveitados no coprocessamento (geração de energia em fornos de cimento) em vez de apenas serem incinerados, reduzindo emissões de CO₂ e aproveitando o poder calorífico dos compostos.
+
+O que é a RDC 222/2018 da ANVISA e como se relaciona ao meio ambiente?
+A RDC 222/2018 regulamenta o gerenciamento de Resíduos de Serviços de Saúde (RSS). Ela classifica os resíduos farmacêuticos em grupos (A, B, C, D, E) e determina como cada um deve ser coletado, armazenado, transportado e tratado, protegendo trabalhadores, comunidades e o meio ambiente.
+
+=== DESCARTE E LEGISLAÇÃO ===
+
 O que diz o Decreto 10.388 de 2020 sobre o descarte de remédios?
 O Decreto regulamenta o sistema obrigatório de logística reversa de medicamentos no Brasil, exigindo que farmácias ofereçam pontos de coleta para receber remédios vencidos da população.
 

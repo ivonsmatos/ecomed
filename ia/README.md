@@ -6,11 +6,23 @@ Microserviço Python responsável pelo **EcoBot**: assistente educativo sobre de
 
 ## Visão Geral
 
-O EcoBot responde **exclusivamente** a perguntas sobre:
+O EcoBot responde a perguntas sobre **descarte de medicamentos e ciências ambientais aplicadas a fármacos**:
+
+**Descarte e logística reversa:**
+
 - Como e onde descartar medicamentos vencidos ou sem uso
 - Localização de pontos de coleta (farmácias, UBS, ecopontos)
-- Impacto ambiental do descarte incorreto
-- Legislação brasileira: PNRS (Lei 12.305/2010), Decreto 10.388/2020, RDC 222/2018
+- Legislação brasileira: PNRS (Lei 12.305/2010), Decreto 10.388/2020, RDC 222/2018 ANVISA
+
+**Ciências ambientais relacionadas a medicamentos:**
+
+- Contaminação de rios e lençóis freáticos por micropoluentes farmacêuticos
+- Resistência antimicrobiana ambiental gerada pelo descarte inadequado de antibióticos
+- Disruptores endócrinos (hormônios sintéticos) e impacto na fauna aquática
+- Limitações das ETEs (Estações de Tratamento de Esgoto) para fármacos
+- Bioacumulação, ecotoxicologia e biomagnificação de resíduos farmacêuticos
+- Sustentabilidade e economia circular na indústria farmacêutica
+- Abordagem "One Health": interconexão entre saúde humana, animal e ambiental
 
 Ele **nunca** indica, recomenda ou orienta o uso de medicamentos.
 
@@ -18,14 +30,14 @@ Ele **nunca** indica, recomenda ou orienta o uso de medicamentos.
 
 ## Stack
 
-| Componente | Tecnologia | Decisão |
-|---|---|---|
-| **API** | FastAPI + uvicorn | Assíncrono, tipado, mínimo overhead |
-| **LLM** | Groq — Llama 4 Scout 17B | <2s de latência, custo baixíssimo (~$0.11/M tokens), sem GPU própria |
-| **Embeddings** | FastEmbed — `paraphrase-multilingual-MiniLM-L12-v2` | Roda dentro do container, multilingual (PT/EN), 384 dimensões, ~45 MB |
-| **Vector Store** | PGVector via `langchain-postgres` | Reaproveita o PostgreSQL já existente, sem infra extra |
-| **Orquestração** | LangChain (langchain-community, langchain-core) | Chunking, indexação e pipeline RAG |
-| **Autenticação** | Bearer token (`IA_SERVICE_TOKEN`) | Garante que só o Next.js acesse o endpoint |
+| Componente       | Tecnologia                                          | Decisão                                                               |
+| ---------------- | --------------------------------------------------- | --------------------------------------------------------------------- |
+| **API**          | FastAPI + uvicorn                                   | Assíncrono, tipado, mínimo overhead                                   |
+| **LLM**          | Groq — Llama 4 Scout 17B                            | <2s de latência, custo baixíssimo (~$0.11/M tokens), sem GPU própria  |
+| **Embeddings**   | FastEmbed — `paraphrase-multilingual-MiniLM-L12-v2` | Roda dentro do container, multilingual (PT/EN), 384 dimensões, ~45 MB |
+| **Vector Store** | PGVector via `langchain-postgres`                   | Reaproveita o PostgreSQL já existente, sem infra extra                |
+| **Orquestração** | LangChain (langchain-community, langchain-core)     | Chunking, indexação e pipeline RAG                                    |
+| **Autenticação** | Bearer token (`IA_SERVICE_TOKEN`)                   | Garante que só o Next.js acesse o endpoint                            |
 
 ### Por que Groq em vez de Ollama/local?
 
@@ -197,6 +209,7 @@ docker build -t ia-api:latest .
 ```
 
 O Dockerfile:
+
 1. Parte de `python:3.12-slim`
 2. Instala dependências de sistema (`libpq5` para psycopg3)
 3. Instala pacotes Python via `requirements.txt`
