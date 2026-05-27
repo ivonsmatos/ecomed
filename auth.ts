@@ -43,51 +43,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
-      if (!user?.id) return true;
-
-      try {
-        // Na primeira autenticação, criar Wallet e creditar SIGNUP coins
-        const walletExists = await prisma.wallet.findUnique({
-          where: { userId: user.id },
-          select: { id: true },
-        });
-
-        if (!walletExists) {
-          await prisma.wallet.upsert({
-            where: { userId: user.id },
-            update: {},
-            create: { userId: user.id, balance: 0, totalEarned: 0 },
-          });
-          await creditCoins(user.id, "SIGNUP");
-
-          // Processar código de indicação salvo em cookie (fluxo Google OAuth)
-          try {
-            const cookieStore = await cookies();
-            const refCookie = cookieStore.get("ecomed_ref");
-            if (refCookie?.value) {
-              const referralCode = decodeURIComponent(refCookie.value);
-              const referrer = await prisma.user.findUnique({
-                where: { referralCode },
-                select: { id: true },
-              });
-              if (referrer && referrer.id !== user.id) {
-                await prisma.user.update({
-                  where: { id: user.id },
-                  data: { referredById: referrer.id },
-                });
-                await creditCoins(referrer.id, "REFERRAL", user.id);
-              }
-            }
-          } catch {
-            // Cookie pode não estar disponível em todos os contextos — falha silenciosa
-          }
-        }
-      } catch (err) {
-        // Nunca bloquear o login por falha no setup de wallet/coins
-        console.error("[auth:signIn] erro no setup pós-login:", err);
-      }
-
+    // signIn apenas libera o acesso — wallet/coins são criados no jwt callback,
+    // depois que o PrismaAdapter persistiu o User no banco.
+    async signIn() {
       return true;
     },
 
@@ -98,11 +56,57 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return baseUrl;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
+        // Primeiro login: user.id aqui é o CUID do banco (após o adapter criar o User)
         token.id = user.id;
         token.role = (user as { role?: string }).role ?? "CITIZEN";
+
+        // Criar Wallet e creditar SIGNUP coins na primeira autenticação
+        try {
+          const walletExists = await prisma.wallet.findUnique({
+            where: { userId: user.id },
+            select: { id: true },
+          });
+
+          if (!walletExists) {
+            await prisma.wallet.upsert({
+              where: { userId: user.id },
+              update: {},
+              create: { userId: user.id, balance: 0, totalEarned: 0 },
+            });
+            await creditCoins(user.id, "SIGNUP");
+
+            // Processar código de indicação via cookie (fluxo Google OAuth)
+            if (account?.provider === "google") {
+              try {
+                const cookieStore = await cookies();
+                const refCookie = cookieStore.get("ecomed_ref");
+                if (refCookie?.value) {
+                  const referralCode = decodeURIComponent(refCookie.value);
+                  const referrer = await prisma.user.findUnique({
+                    where: { referralCode },
+                    select: { id: true },
+                  });
+                  if (referrer && referrer.id !== user.id) {
+                    await prisma.user.update({
+                      where: { id: user.id },
+                      data: { referredById: referrer.id },
+                    });
+                    await creditCoins(referrer.id, "REFERRAL", user.id);
+                  }
+                }
+              } catch {
+                // Cookie pode não estar disponível em todos os contextos
+              }
+            }
+          }
+        } catch (err) {
+          // Nunca bloquear o login por falha no setup de wallet/coins
+          console.error("[auth:jwt] erro no setup de wallet:", err);
+        }
       }
+
       // Sempre busca o role atualizado do banco para refletir promoções sem re-login
       if (token.id) {
         const dbUser = await prisma.user.findUnique({
