@@ -46,39 +46,46 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user }) {
       if (!user?.id) return true;
 
-      // Na primeira autenticação, criar Wallet e creditar SIGNUP coins
-      const walletExists = await prisma.wallet.findUnique({
-        where: { userId: user.id },
-        select: { id: true },
-      });
-
-      if (!walletExists) {
-        await prisma.wallet.create({
-          data: { userId: user.id, balance: 0, totalEarned: 0 },
+      try {
+        // Na primeira autenticação, criar Wallet e creditar SIGNUP coins
+        const walletExists = await prisma.wallet.findUnique({
+          where: { userId: user.id },
+          select: { id: true },
         });
-        await creditCoins(user.id, "SIGNUP");
 
-        // Processar código de indicação salvo em cookie (fluxo Google OAuth)
-        try {
-          const cookieStore = await cookies();
-          const refCookie = cookieStore.get("ecomed_ref");
-          if (refCookie?.value) {
-            const referralCode = decodeURIComponent(refCookie.value);
-            const referrer = await prisma.user.findUnique({
-              where: { referralCode },
-              select: { id: true },
-            });
-            if (referrer && referrer.id !== user.id) {
-              await prisma.user.update({
-                where: { id: user.id },
-                data: { referredById: referrer.id },
+        if (!walletExists) {
+          await prisma.wallet.upsert({
+            where: { userId: user.id },
+            update: {},
+            create: { userId: user.id, balance: 0, totalEarned: 0 },
+          });
+          await creditCoins(user.id, "SIGNUP");
+
+          // Processar código de indicação salvo em cookie (fluxo Google OAuth)
+          try {
+            const cookieStore = await cookies();
+            const refCookie = cookieStore.get("ecomed_ref");
+            if (refCookie?.value) {
+              const referralCode = decodeURIComponent(refCookie.value);
+              const referrer = await prisma.user.findUnique({
+                where: { referralCode },
+                select: { id: true },
               });
-              await creditCoins(referrer.id, "REFERRAL", user.id);
+              if (referrer && referrer.id !== user.id) {
+                await prisma.user.update({
+                  where: { id: user.id },
+                  data: { referredById: referrer.id },
+                });
+                await creditCoins(referrer.id, "REFERRAL", user.id);
+              }
             }
+          } catch {
+            // Cookie pode não estar disponível em todos os contextos — falha silenciosa
           }
-        } catch {
-          // Cookie pode não estar disponível em todos os contextos — falha silenciosa
         }
+      } catch (err) {
+        // Nunca bloquear o login por falha no setup de wallet/coins
+        console.error("[auth:signIn] erro no setup pós-login:", err);
       }
 
       return true;
