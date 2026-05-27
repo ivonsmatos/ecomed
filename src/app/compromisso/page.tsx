@@ -78,9 +78,9 @@ const pilaresConfianca = [
     icon: Users,
     title: "Colaboração e aprendizado",
     points: [
-      "Construído por cerca de 70 estudantes de perfis multidisciplinares.",
-      "Integração entre farmácia, IA, frontend, design e negócios.",
-      "Formação profissional com impacto social mensurável.",
+      "Equipe multidisciplinar integrando farmácia, IA, design e negócios.",
+      "Desenvolvimento iterativo orientado pelo feedback dos usuários.",
+      "Impacto social mensurável como critério de sucesso.",
     ],
   },
 ];

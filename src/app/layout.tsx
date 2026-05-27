@@ -57,7 +57,6 @@ const organizationSchema = {
   foundingDate: "2025",
   areaServed: { "@type": "Country", name: "Brasil" },
   sameAs: [
-    "https://github.com/ivonsmatos/ecomed",
     "https://www.instagram.com/ecomed.eco/",
     "https://www.facebook.com/ecomed.eco.br",
     "https://www.linkedin.com/company/ecomed-eco-br",

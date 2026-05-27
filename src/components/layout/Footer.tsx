@@ -192,7 +192,6 @@ export function Footer() {
                 { label: "Política de Privacidade", href: "/privacidade" },
                 { label: "Termos de Uso", href: "/termos" },
                 { label: "Aviso Médico", href: "/aviso-medico" },
-                { label: "GitHub", href: "https://github.com/ivonsmatos/ecomed" },
               ].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href}
