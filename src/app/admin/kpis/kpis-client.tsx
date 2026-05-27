@@ -478,26 +478,6 @@ function TabTasks({ d }: { d: KpiData }) {
         </Card>
       </div>
 
-      <SectionHeader icon="🏗️" title="Por Turma" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-        {[
-          { turma: "3TA — Farmácia", done: 14, total: 52, color: colors.green },
-          { turma: "3TB — IA/Ética", done: 10, total: 68, color: colors.teal },
-          { turma: "3TC — Frontend", done: 10, total: 76, color: colors.tealDark },
-        ].map((t, i) => (
-          <Card key={i}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#1A1A1A", marginBottom: 8 }}>{t.turma}</div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 6 }}>
-              <span style={{ fontSize: 24, fontWeight: 800, color: t.color }}>{t.done}</span>
-              <span style={{ fontSize: 12, color: colors.gray }}>/ {t.total} tarefas</span>
-            </div>
-            <div style={{ height: 6, background: "#F3F4F6", borderRadius: 3, overflow: "hidden" }}>
-              <div style={{ width: `${pct(t.done, t.total)}%`, height: "100%", background: t.color, borderRadius: 3 }} />
-            </div>
-            <span style={{ fontSize: 10, color: colors.gray, marginTop: 4, display: "block" }}>{pct(t.done, t.total)}% concluído</span>
-          </Card>
-        ))}
-      </div>
     </>
   )
 }

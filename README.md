@@ -477,12 +477,6 @@ O EcoMed está alinhado com **6 Objetivos de Desenvolvimento Sustentável** da O
 
 ## 👥 Equipe e Contexto Acadêmico
 
-| Turma | Foco | Grupos |
-|---|---|---|
-| **3TA** | Negócios e Farmácia | Pesquisa, Conteúdo, Modelo de Negócio, Marketing |
-| **3TB** | IA e Ética | Guardrails, RAG, Prompts, Legislação |
-| **3TC** | Frontend e UX | Setup, Chat, Mapa, Telas, Design |
-
 **Coordenação:** Prof. Ivon Matos — Escola Técnica Estadual
 
 ---

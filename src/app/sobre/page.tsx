@@ -289,49 +289,12 @@ export default function SobrePage() {
               Equipe
             </span>
             <h2 className="text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">
-              70 alunos, 3 turmas, 1 missão
+              Nossa equipe
             </h2>
             <p className="text-base text-gray-600 leading-relaxed mb-8 max-w-xl">
               Projeto interdisciplinar coordenado pelo Prof. Ivon Matos,
               desenvolvido por alunos da Escola Técnica Estadual Ilda Vieira Vilela.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {[
-                {
-                  t: "3TA — Farmácia e Negócios",
-                  g: "Pesquisa, Conteúdo, Negócio, Marketing",
-                  f: "Concepção, validação, conteúdo e estratégia",
-                  cl: "#24A645",
-                },
-                {
-                  t: "3TB — IA e Ética",
-                  g: "Ollama, RAG, Guardrails, Prompts",
-                  f: "Motor de inteligência artificial e governança ética",
-                  cl: "#3E8C8C",
-                },
-                {
-                  t: "3TC — Frontend",
-                  g: "Setup, Chat, Mapa, Telas",
-                  f: "Interface, experiência do usuário e infraestrutura",
-                  cl: "#1A736A",
-                },
-              ].map((t, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-eco-teal hover:shadow-md transition-all"
-                >
-                  <div
-                    className="h-1 rounded-sm mb-4"
-                    style={{ background: t.cl }}
-                  />
-                  <h3 className="text-base font-bold text-gray-900 mb-2">
-                    {t.t}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3">{t.f}</p>
-                  <div className="text-xs text-gray-400">4 grupos: {t.g}</div>
-                </div>
-              ))}
-            </div>
             <div className="mt-8 bg-[#1A736A] rounded-2xl px-7 py-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <div className="text-lg font-bold text-white">
