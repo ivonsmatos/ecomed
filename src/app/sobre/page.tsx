@@ -187,8 +187,8 @@ export default function SobrePage() {
                     },
                     {
                       i: "🌱",
-                      n: "Aprendizado Aberto",
-                      d: "Somos 70 estudantes aprendendo em público. Erramos, corrigimos e melhoramos juntos.",
+                      n: "Melhoria Contínua",
+                      d: "Construímos em público, aprendemos com os usuários e melhoramos a cada versão.",
                     },
                   ].map((v, i) => (
                     <div key={i} className="flex gap-3 items-start">
@@ -381,35 +381,6 @@ export default function SobrePage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Open Source ───────────────────────────────────────────── */}
-        <section id="opensource" className="py-16 bg-white text-center">
-          <div className="container mx-auto px-4 max-w-2xl">
-            <span className="inline-block text-eco-teal text-xs font-bold uppercase tracking-widest mb-2">
-              Open Source
-            </span>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">
-              Código aberto, impacto coletivo
-            </h2>
-            <p className="text-base text-gray-600 leading-relaxed mb-8">
-              O EcoMed é 100% open source. Código no GitHub, aberto para
-              auditoria, contribuições e replicação.
-            </p>
-            <div className="flex gap-4 justify-center flex-wrap">
-              <a
-                href="https://github.com/ivonsmatos/ecomed"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gray-900 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-gray-800 transition-colors"
-              >
-                github.com/ivonsmatos/ecomed
-              </a>
-              <span className="bg-eco-green text-white px-6 py-3 rounded-lg text-sm font-semibold">
-                Licença MIT
-              </span>
             </div>
           </div>
         </section>
