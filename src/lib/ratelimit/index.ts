@@ -18,22 +18,24 @@ let _ratelimits: {
   auth: Ratelimit
   chat: Ratelimit
   map: Ratelimit
+  publicApi: Ratelimit
 } | null = null
 
 function getRatelimits() {
   if (!_ratelimits) {
     const redis = getRedis()
     _ratelimits = {
-      auth: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "1 m"),  prefix: "ecomed:auth" }),
-      chat: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "1 m"),  prefix: "ecomed:chat" }),
-      map:  new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(100, "1 m"), prefix: "ecomed:map" }),
+      auth:      new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "1 m"),  prefix: "ecomed:auth" }),
+      chat:      new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(20, "1 m"),  prefix: "ecomed:chat" }),
+      map:       new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(100, "1 m"), prefix: "ecomed:map" }),
+      publicApi: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(60, "1 m"),  prefix: "ecomed:public-api" }),
     }
   }
   return _ratelimits
 }
 
 export async function checkRateLimit(
-  limiter: "auth" | "chat" | "map",
+  limiter: "auth" | "chat" | "map" | "publicApi",
   identifier: string
 ) {
   return getRatelimits()[limiter].limit(identifier)

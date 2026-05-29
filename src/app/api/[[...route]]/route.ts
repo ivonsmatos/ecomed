@@ -18,6 +18,7 @@ import rewards from "./routes/rewards";
 import quiz from "./routes/quiz";
 import { lgpdRouter } from "./routes/lgpd";
 import { userRouter } from "./routes/user";
+import { publicApiRouter } from "./routes/public";
 
 export const maxDuration = 60;
 
@@ -45,6 +46,7 @@ app.route("/rewards", rewards);
 app.route("/quiz", quiz);
 app.route("/lgpd", lgpdRouter);
 app.route("/user", userRouter);
+app.route("/public", publicApiRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);
