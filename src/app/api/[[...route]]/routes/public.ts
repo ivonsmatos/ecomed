@@ -187,8 +187,9 @@ app.get("/v1/pontos/:id", async (c) => {
         schedules: {
           select: {
             dayOfWeek: true,
-            opensAt: true,
-            closesAt: true,
+            opens: true,
+            closes: true,
+            closed: true,
           },
         },
       },

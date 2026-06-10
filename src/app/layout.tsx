@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieBanner } from "@/components/shared/CookieBanner";
+import { VLibrasWidget } from "@/components/shared/VLibrasWidget";
 import Script from "next/script";
 import "./globals.css";
 
@@ -123,6 +124,7 @@ export default function RootLayout({
           {children}
           <CookieBanner />
           <Toaster richColors position="top-right" />
+          <VLibrasWidget />
         </ThemeProvider>
         {/* Analytics — carregados após hidratação para evitar erros de hidratação (React #418) */}
         {process.env.NODE_ENV === "production" && (
