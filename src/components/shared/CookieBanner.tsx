@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +22,11 @@ function getServerSnapshot() {
 }
 
 export function CookieBanner() {
+  const pathname = usePathname();
   const consent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  // Widget embeddable: sem banner dentro de iframes de terceiros
+  if (pathname?.startsWith("/embed")) return null;
 
   function handleAccept() {
     localStorage.setItem(STORAGE_KEY, "accepted");

@@ -49,11 +49,11 @@ const nextConfig: NextConfig = {
           { key: "Service-Worker-Allowed", value: "/" },
         ],
       },
-      // Headers de segurança para todas as rotas
+      // Headers de segurança para todas as rotas (exceto /embed — ver bloco abaixo)
       // OBS: Content-Security-Policy é aplicado pelo middleware.ts de forma condicional
       // (/studio recebe CSP permissiva; demais rotas recebem CSP restritiva)
       {
-        source: "/(.*)",
+        source: "/((?!embed).*)",
         headers: [
           { key: "X-DNS-Prefetch-Control", value: "on" },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
@@ -61,6 +61,17 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self)" },
+        ],
+      },
+      // /embed/* pode ser incorporado via iframe por qualquer site (widget público)
+      {
+        source: "/embed/:path*",
+        headers: [
+          { key: "X-DNS-Prefetch-Control", value: "on" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Content-Security-Policy", value: "frame-ancestors *" },
         ],
       },
     ];

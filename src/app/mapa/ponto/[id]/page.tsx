@@ -9,6 +9,8 @@ import {
   Clock,
   Flag,
   Navigation,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import { prisma } from "@/lib/db/prisma";
 import { buttonVariants } from "@/components/ui/button-variants";
@@ -47,6 +49,22 @@ export default async function PontoDetalhe({ params }: Props) {
 
   if (!point) notFound();
 
+  // Validação comunitária: idade do último check-in (calculada no banco para
+  // manter o render puro) e reportes em aberto
+  const [validacao] = await prisma.$queryRaw<
+    [{ dias: number | null; abertos: number }]
+  >`
+    SELECT
+      EXTRACT(DAY FROM now() - (
+        SELECT MAX("createdAt") FROM "Checkin" WHERE "pointId" = ${id}
+      ))::int AS dias,
+      (SELECT COUNT(*) FROM "Report" WHERE "pointId" = ${id} AND resolved = false)::int AS abertos
+  `;
+
+  const diasDesdeCheckin = validacao?.dias ?? null;
+  const reportesAbertos = validacao?.abertos ?? 0;
+  const verificadoPelaComunidade = diasDesdeCheckin !== null && diasDesdeCheckin <= 30;
+
   // Registrar visualização (fire-and-forget)
   prisma.pointView.create({ data: { pointId: id } }).catch(() => {});
 
@@ -67,6 +85,36 @@ export default async function PontoDetalhe({ params }: Props) {
       </div>
 
       <div className="mx-auto max-w-2xl space-y-6 px-4 py-6">
+        {/* Validação comunitária */}
+        {(verificadoPelaComunidade || reportesAbertos > 0) && (
+          <section className="space-y-2">
+            {verificadoPelaComunidade && (
+              <div className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-sm text-green-800 dark:border-green-900 dark:bg-green-950/30 dark:text-green-300">
+                <CheckCircle2 className="size-4 shrink-0" />
+                <span>
+                  Descarte confirmado pela comunidade{" "}
+                  {diasDesdeCheckin === 0
+                    ? "hoje"
+                    : diasDesdeCheckin === 1
+                      ? "ontem"
+                      : `há ${diasDesdeCheckin} dias`}
+                </span>
+              </div>
+            )}
+            {reportesAbertos > 0 && (
+              <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-300">
+                <AlertTriangle className="size-4 shrink-0" />
+                <span>
+                  {reportesAbertos === 1
+                    ? "Há 1 reporte de problema em análise para este ponto"
+                    : `Há ${reportesAbertos} reportes de problema em análise para este ponto`}
+                  . Considere ligar antes de ir.
+                </span>
+              </div>
+            )}
+          </section>
+        )}
+
         {/* Endereço e ações de mapa */}
         <section className="space-y-3">
           <div className="flex items-start gap-2 text-sm text-muted-foreground">

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db/prisma";
+import { getCidades, cidadeSlug } from "@/lib/geo/cidades";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB unavailable at build time — return static routes only
   }
 
+  // Páginas programáticas /descarte/[cidade]-[uf] — só cidades com 2+ pontos
+  // (evita thin content em municípios com 1 UBS isolada)
+  let cidadeRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const cidades = await getCidades();
+    cidadeRoutes = cidades
+      .filter((c) => c.pontos >= 2)
+      .map((c) => ({
+        url: `${base}/descarte/${cidadeSlug(c.city, c.state)}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }));
+  } catch {
+    // DB unavailable — skip
+  }
+
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: base, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
     { url: `${base}/mapa`, lastModified: new Date(), changeFrequency: "hourly", priority: 0.9 },
@@ -25,6 +43,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/parceiros`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/o-que-fazemos`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/compromisso`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/impacto`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
+    { url: `${base}/desenvolvedores`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/ranking`, lastModified: new Date(), changeFrequency: "daily", priority: 0.6 },
     { url: `${base}/entrar`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/cadastrar`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
@@ -37,5 +57,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...articleRoutes];
+  return [...staticRoutes, ...articleRoutes, ...cidadeRoutes];
 }

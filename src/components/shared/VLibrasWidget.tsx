@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 declare global {
   interface Window {
@@ -8,21 +9,25 @@ declare global {
       Widget: new (url: string) => unknown;
     };
   }
-  namespace React {
-    interface HTMLAttributes<T> {
-      vw?: string;
-      "vw-access-button"?: string;
-      "vw-plugin-wrapper"?: string;
-    }
-  }
 }
 
+// Atributos customizados exigidos pelo plugin VLibras (vw, vw-access-button,
+// vw-plugin-wrapper) não existem na tipagem JSX — aplicados via spread.
+const vwRoot = { vw: "true" } as Record<string, string>;
+const vwButton = { "vw-access-button": "true" } as Record<string, string>;
+const vwWrapper = { "vw-plugin-wrapper": "true" } as Record<string, string>;
+
 export function VLibrasWidget() {
+  const pathname = usePathname();
+
+  // Widget embeddable: sem VLibras dentro de iframes de terceiros
+  if (pathname?.startsWith("/embed")) return null;
+
   return (
     <>
-      <div vw="true" className="enabled">
-        <div vw-access-button="true" className="active" />
-        <div vw-plugin-wrapper="true">
+      <div {...vwRoot} className="enabled">
+        <div {...vwButton} className="active" />
+        <div {...vwWrapper}>
           <div className="vw-plugin-top-wrapper" />
         </div>
       </div>
