@@ -68,13 +68,14 @@ jobs:
             MIGRATION_URL="${DIRECT_URL:-$DATABASE_URL}"
 
             echo "🔨 Build estágio 'builder' (com cache; usado para migrar e gerar runner)..."
+            # Segredos via BuildKit secrets — não ficam gravados nas camadas da imagem
             docker build \
               --target builder \
-              --build-arg "DATABASE_URL=${DATABASE_URL}" \
-              --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
+              --secret "id=DATABASE_URL,env=DATABASE_URL" \
+              --secret "id=AUTH_SECRET,env=AUTH_SECRET" \
+              --secret "id=GOOGLE_CLIENT_SECRET,env=GOOGLE_CLIENT_SECRET" \
               --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
-              --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
               --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
               --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
@@ -91,6 +92,7 @@ jobs:
             mkdir -p /opt/ecomed/scripts/maintenance
             install -m 0755 ops/maintenance/healthcheck.sh   /opt/ecomed/scripts/maintenance/healthcheck.sh
             install -m 0755 ops/maintenance/cron-missoes.sh  /opt/ecomed/scripts/maintenance/cron-missoes.sh
+            install -m 0755 ops/maintenance/backup-db.sh     /opt/ecomed/scripts/maintenance/backup-db.sh
 
             # Garante crons (idempotentes)
             current_cron=$(crontab -l 2>/dev/null || true)
@@ -107,17 +109,21 @@ jobs:
               new_cron="$new_cron"$'\n'"15 3 * * * /opt/ecomed/scripts/maintenance/cron-missoes.sh ensure"
               echo "✅ Cron ensure-missoes adicionado"
             fi
+            if ! echo "$current_cron" | grep -q 'backup-db.sh'; then
+              new_cron="$new_cron"$'\n'"30 2 * * * /opt/ecomed/scripts/maintenance/backup-db.sh >> /var/log/ecomed-backup.log 2>&1"
+              echo "✅ Cron backup-db adicionado (02:30 diário)"
+            fi
             if [ "$new_cron" != "$current_cron" ]; then
               printf '%s\n' "$new_cron" | sed '/^$/d' | crontab -
             fi
 
             echo "🔨 Build runner final (reaproveita cache do builder)..."
             docker build \
-              --build-arg "DATABASE_URL=${DATABASE_URL}" \
-              --build-arg "AUTH_SECRET=${AUTH_SECRET}" \
+              --secret "id=DATABASE_URL,env=DATABASE_URL" \
+              --secret "id=AUTH_SECRET,env=AUTH_SECRET" \
+              --secret "id=GOOGLE_CLIENT_SECRET,env=GOOGLE_CLIENT_SECRET" \
               --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
-              --build-arg "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
               --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
               --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \

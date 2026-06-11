@@ -13,30 +13,34 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Variáveis necessárias apenas no build
-ARG DATABASE_URL
-ARG AUTH_SECRET
+# Variáveis públicas — NEXT_PUBLIC_* são embutidas no bundle do cliente,
+# AUTH_URL e GOOGLE_CLIENT_ID aparecem em URLs públicas de OAuth.
+# Segredos (DATABASE_URL, AUTH_SECRET, GOOGLE_CLIENT_SECRET) NÃO entram aqui:
+# são montados via BuildKit secrets apenas durante o RUN de build, sem ficar
+# gravados nas camadas da imagem (docker history não os expõe).
 ARG AUTH_URL
 ARG GOOGLE_CLIENT_ID
-ARG GOOGLE_CLIENT_SECRET
 ARG NEXT_PUBLIC_VAPID_PUBLIC_KEY
 ARG NEXT_PUBLIC_SANITY_PROJECT_ID
 ARG NEXT_PUBLIC_SANITY_DATASET=production
 
-ENV DATABASE_URL=${DATABASE_URL}
-ENV AUTH_SECRET=${AUTH_SECRET}
 ENV AUTH_URL=${AUTH_URL}
 ENV GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-ENV GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
 ENV NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}
 ENV NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID}
 ENV NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET}
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Gerar Prisma client e fazer build
-RUN pnpm prisma generate
-RUN pnpm exec next build --webpack
+# Gerar Prisma client e fazer build com segredos efêmeros (/run/secrets)
+RUN --mount=type=secret,id=DATABASE_URL \
+    --mount=type=secret,id=AUTH_SECRET \
+    --mount=type=secret,id=GOOGLE_CLIENT_SECRET \
+    export DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" && \
+    export AUTH_SECRET="$(cat /run/secrets/AUTH_SECRET)" && \
+    export GOOGLE_CLIENT_SECRET="$(cat /run/secrets/GOOGLE_CLIENT_SECRET)" && \
+    pnpm prisma generate && \
+    pnpm exec next build --webpack
 
 # ─── Runner ───────────────────────────────────────────────────────────────────
 FROM base AS runner
