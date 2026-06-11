@@ -142,6 +142,16 @@ class TestPerguntasPermitidas:
             "O que é o EcoMed?",
             "Como descartar agulhas de insulina usadas?",
             "Qual o impacto dos antibióticos nos rios?",
+            # Itens de saúde/higiene que não são medicamentos
+            "Como descartar uma camisinha?",
+            "Posso jogar camisinha no vaso sanitário?",
+            "Como descartar fraldas e absorventes?",
+            "Como descartar um termômetro digital quebrado?",
+            # "Para que serve X" é educativo (bula) — não é automedicação
+            "Para que serve a tadalafila?",
+            "Pra que serve o tadalafila?",
+            "Para que serve a sildenafila?",
+            "Tadalafila vencida: como descartar?",
         ],
     )
     def test_permite_perguntas_de_descarte(self, pergunta):

@@ -943,3 +943,41 @@ Quantidades minúsculas, na escala de 5 a 10 nanogramas por litro de água, já 
 Onde posso descartar cartelas de anticoncepcionais vencidas com segurança?
 Elas devem ser levadas aos pontos de logística reversa instalados em farmácias e Unidades Básicas de Saúde (UBS). Você pode utilizar o mapa interativo do portal EcoMed (ecomed.eco.br) para encontrar o coletor adequado mais próximo.
 
+
+
+=== OUTROS ITENS DE SAÚDE E HIGIENE (NÃO SÃO MEDICAMENTOS) ===
+
+Como descartar uma camisinha (preservativo)?
+Camisinhas usadas NÃO são medicamentos e não devem ir para o coletor da farmácia. Embrulhe em papel higiênico ou papel e descarte no lixo comum (banheiro). Nunca jogue no vaso sanitário: o látex não se decompõe na água, entope encanamentos e polui rios e praias.
+
+Posso jogar camisinha no vaso sanitário?
+Não. Preservativos são feitos de látex ou poliuretano, materiais que não se dissolvem na água. No esgoto, eles entopem tubulações, danificam bombas das estações de tratamento e acabam chegando a rios e praias, onde podem sufocar animais marinhos.
+
+A embalagem da camisinha é reciclável?
+A embalagem plástica/alumínio do preservativo vai para o lixo comum, pois é composta de materiais mistos de difícil reciclagem. A caixa de papelão externa pode ir para a reciclagem de papel.
+
+Como descartar absorventes e fraldas?
+Absorventes higiênicos e fraldas descartáveis vão para o lixo comum, enrolados ou em saco fechado. Não são recicláveis nem devem ir ao vaso sanitário ou ao coletor de medicamentos da farmácia.
+
+Como descartar máscaras de proteção (PFF2, cirúrgica)?
+Máscaras de uso doméstico vão para o lixo comum, preferencialmente com as alças cortadas (evita que animais fiquem presos). Não são recicláveis. Máscaras usadas em ambiente de saúde seguem regras específicas da RDC 222/2018.
+
+Como descartar termômetro digital quebrado?
+Termômetros digitais contêm placa eletrônica e bateria: leve a um ponto de coleta de lixo eletrônico (ecoponto ou lojas de eletrônicos). Nunca no lixo comum. Já termômetros de MERCÚRIO exigem cuidado especial: recolha o metal com papel rígido (nunca aspirador), guarde em pote fechado e leve a um ecoponto químico ou UBS.
+
+O coletor da farmácia aceita camisinha, fralda ou absorvente?
+Não. Os coletores de logística reversa das farmácias aceitam apenas medicamentos (comprimidos, cápsulas, líquidos, pomadas) e suas embalagens primárias. Itens de higiene pessoal vão para o lixo comum; perfurocortantes vão para a UBS.
+
+=== PARA QUE SERVEM MEDICAMENTOS COMUNS (EDUCATIVO — NUNCA RECOMENDAÇÃO) ===
+
+Para que serve a tadalafila?
+A tadalafila é um medicamento da classe dos inibidores da fosfodiesterase-5 (PDE5), indicado em bula para disfunção erétil e para hiperplasia prostática benigna (aumento da próstata). Em alguns casos, é prescrita para hipertensão pulmonar. IMPORTANTE: o uso exige prescrição e acompanhamento médico — o EcoBot não recomenda nem orienta o uso de nenhum medicamento. Sobras ou comprimidos vencidos devem ser levados a um ponto de coleta (encontre o mais próximo em ecomed.eco.br).
+
+Tadalafila vencida: como descartar?
+Leve a cartela (mesmo vazia ou com comprimidos) ao coletor de logística reversa de uma farmácia. Nunca descarte no lixo comum ou no vaso sanitário — o princípio ativo contamina a água. A caixa de papelão e a bula vão para a reciclagem comum.
+
+Para que serve a sildenafila?
+A sildenafila é um inibidor da fosfodiesterase-5 (PDE5) indicado em bula para disfunção erétil e, em formulação específica, para hipertensão arterial pulmonar. O uso exige prescrição médica — o EcoBot fornece apenas informação educativa e não recomenda medicamentos. Para descartar sobras, use o coletor de uma farmácia parceira (mapa em ecomed.eco.br).
+
+O EcoBot pode me dizer para que serve um medicamento?
+Sim, em caráter educativo: o EcoBot pode explicar a finalidade descrita em bula de um medicamento, sem nunca recomendar uso, indicar dose ou substituir orientação profissional. Para decidir se você deve usar qualquer medicamento, consulte sempre um médico ou farmacêutico.
