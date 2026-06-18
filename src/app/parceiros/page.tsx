@@ -42,7 +42,7 @@ export default function ParceirosPage() {
             </p>
             <div className="flex gap-8 flex-wrap">
               {[
-                { v: "7.500+", l: "pontos de coleta" },
+                { v: "58 mil+", l: "pontos de coleta" },
                 { v: "6", l: "ODS da ONU" },
                 { v: "R$ 0", l: "custo para começar" },
               ].map((s, i) => (
@@ -112,6 +112,74 @@ export default function ParceirosPage() {
                   </p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Visibilidade que vira cliente (publicidade) ───────────── */}
+        <section id="anuncie" className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <span className="inline-block text-eco-teal text-xs font-bold uppercase tracking-widest mb-2">
+              Novo · Publicidade
+            </span>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
+              Visibilidade que vira cliente
+            </h2>
+            <p className="text-gray-600 leading-relaxed mb-8 max-w-xl">
+              Além de aparecer no mapa, sua farmácia pode anunciar para quem já está
+              procurando onde descartar — e medir cada resultado.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {[
+                {
+                  i: "🏪",
+                  t: "Banner hiperlocal",
+                  d: "Apareça para quem busca farmácia na sua cidade — ou só a quem está a poucos km da sua loja. Sempre com selo de transparência.",
+                },
+                {
+                  i: "🎯",
+                  t: "Missão patrocinada",
+                  d: "Vire uma missão no app: “descarte na sua farmácia e ganhe EcoCoins”. Leva o cliente até a loja física — você paga por resultado.",
+                },
+                {
+                  i: "📲",
+                  t: "Check-in + Relatório ESG",
+                  d: "Um QR no balcão registra o descarte e gera seu relatório ESG por loja — pronto para usar no seu próprio marketing.",
+                },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl p-6 border border-gray-200 hover:border-eco-teal hover:shadow-md transition-all"
+                >
+                  <div className="text-3xl mb-3">{item.i}</div>
+                  <h3 className="text-base font-bold text-gray-900 mb-2">{item.t}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.d}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Faixa: transparência + conformidade */}
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3 rounded-xl bg-white border border-gray-200 p-5">
+                <span className="text-2xl" aria-hidden="true">📈</span>
+                <div>
+                  <h3 className="text-base font-bold text-gray-900 mb-1">Você vê o que recebeu</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Painel do parceiro com impressões, cliques e CTR de cada campanha,
+                    atualizado diariamente. Nada de “confie em nós”.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 rounded-xl bg-white border border-gray-200 p-5">
+                <span className="text-2xl" aria-hidden="true">🛡️</span>
+                <div>
+                  <h3 className="text-base font-bold text-gray-900 mb-1">Dentro das regras da ANVISA</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Anunciamos sua marca, loja e serviços — nunca medicamento de prescrição.
+                    Toda peça é revisada antes de ir ao ar.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
