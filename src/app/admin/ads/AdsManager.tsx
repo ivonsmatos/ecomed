@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ const UF_LIST = ["", "AC","AL","AM","AP","BA","CE","DF","ES","GO","MA","MG","MS"
 
 const EMPTY = {
   advertiser: "",
+  partnerId: "",
   title: "",
   imageUrl: "",
   targetUrl: "",
@@ -63,12 +64,29 @@ const EMPTY = {
   weight: "1",
 };
 
+interface PartnerOption {
+  id: string;
+  companyName: string;
+  tradeName: string | null;
+}
+
 export function AdsManager({ initial }: { initial: Campaign[] }) {
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ ...EMPTY });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [partners, setPartners] = useState<PartnerOption[]>([]);
+
+  // Carrega os parceiros para o seletor quando o formulário abre (1x)
+  useEffect(() => {
+    if (showForm && partners.length === 0) {
+      fetch("/api/admin/ads/partners")
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data: PartnerOption[]) => setPartners(data))
+        .catch(() => null);
+    }
+  }, [showForm, partners.length]);
 
   function set(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -101,6 +119,7 @@ export function AdsManager({ initial }: { initial: Campaign[] }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         advertiser: form.advertiser,
+        partnerId: form.partnerId || null,
         title: form.title,
         imageUrl: form.imageUrl,
         targetUrl: form.targetUrl,
@@ -174,6 +193,28 @@ export function AdsManager({ initial }: { initial: Campaign[] }) {
                   <Label htmlFor="title">Título interno *</Label>
                   <Input id="title" value={form.title} onChange={(e) => set("title", e.target.value)} required placeholder="SR — campanha junho SC" />
                 </div>
+              </div>
+
+              {/* Vínculo com parceiro — habilita o painel de métricas do parceiro */}
+              <div className="space-y-1.5">
+                <Label htmlFor="partnerId">Parceiro vinculado (opcional)</Label>
+                <select
+                  id="partnerId"
+                  aria-label="Parceiro vinculado"
+                  className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                  value={form.partnerId}
+                  onChange={(e) => set("partnerId", e.target.value)}
+                >
+                  <option value="">Sem vínculo (anunciante externo)</option>
+                  {partners.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.tradeName ?? p.companyName}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-muted-foreground">
+                  Ao vincular, o parceiro vê as métricas desta campanha no painel dele.
+                </p>
               </div>
 
               {/* Upload */}

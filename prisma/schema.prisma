@@ -166,6 +166,7 @@ model Partner {
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   points      Point[]
+  campaigns   AdCampaign[]
 }
 
 model Point {
@@ -520,6 +521,7 @@ model AiPromptLog {
 model AdCampaign {
   id          String         @id @default(cuid())
   advertiser  String // nome do anunciante exibido no selo (ex.: "Farmácia São Rafael")
+  partnerId   String? // vínculo com parceiro cadastrado (habilita painel do parceiro)
   title       String // rótulo interno de gestão
   imageUrl    String // criativo (webp no R2)
   targetUrl   String // destino do clique (site/loja do parceiro)
@@ -539,8 +541,10 @@ model AdCampaign {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   events      AdEventDaily[]
+  partner     Partner?       @relation(fields: [partnerId], references: [id], onDelete: SetNull)
 
   @@index([placement, active])
+  @@index([partnerId])
 }
 
 // Agregação diária de impressões e cliques (mesmo padrão do PointViewDaily)

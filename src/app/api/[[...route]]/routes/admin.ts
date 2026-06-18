@@ -426,6 +426,7 @@ app.patch(
 
 const adSchema = z.object({
   advertiser: z.string().min(2).max(120),
+  partnerId: z.string().cuid().optional().nullable(),
   title: z.string().min(2).max(120),
   imageUrl: z.string().url(),
   targetUrl: z.string().url(),
@@ -440,6 +441,18 @@ const adSchema = z.object({
   startsAt: z.string().datetime().optional(),
   endsAt: z.string().datetime().optional().nullable(),
   weight: z.coerce.number().int().min(1).max(100).default(1),
+});
+
+// GET /api/admin/ads/partners — todos os parceiros (para vincular campanha)
+app.get("/ads/partners", async (c) => {
+  const r = await requireAdminSession(c);
+  if (r && typeof r === "object" && "json" in r) return r;
+
+  const partners = await prisma.partner.findMany({
+    select: { id: true, companyName: true, tradeName: true },
+    orderBy: { companyName: "asc" },
+  });
+  return c.json(partners);
 });
 
 // GET /api/admin/ads — lista campanhas com totais de impressões/cliques
@@ -491,6 +504,7 @@ app.post("/ads", zValidator("json", adSchema), async (c) => {
   const campanha = await prisma.adCampaign.create({
     data: {
       advertiser: d.advertiser,
+      partnerId: d.partnerId ?? null,
       title: d.title,
       imageUrl: d.imageUrl,
       targetUrl: d.targetUrl,

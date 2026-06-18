@@ -1,7 +1,7 @@
 import { requirePartner } from "@/lib/auth/session";
 import { Header } from "@/components/layout/Header";
 import Link from "next/link";
-import { LayoutDashboard, MapPin, BarChart2, QrCode, Leaf } from "lucide-react";
+import { LayoutDashboard, MapPin, BarChart2, QrCode, Leaf, Megaphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { href: "/parceiro/pontos", label: "Meus pontos", icon: MapPin },
   { href: "/parceiro/qrcode", label: "QR Code da loja", icon: QrCode },
   { href: "/parceiro/impacto", label: "Impacto ESG", icon: Leaf },
+  { href: "/parceiro/publicidade", label: "Publicidade", icon: Megaphone },
   { href: "/parceiro/estatisticas", label: "Estatísticas", icon: BarChart2 },
   { href: "/parceiro/scanner", label: "Scanner", icon: QrCode },
 ];
