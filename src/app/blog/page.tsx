@@ -4,10 +4,16 @@ import { Footer } from "@/components/layout/Footer";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
-import { getArticlesPaginated, getArticleCount } from "@/lib/sanity/queries";
+import {
+  getArticlesPaginated,
+  getArticleCount,
+  searchArticles,
+  countSearchArticles,
+} from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
+import { BlogSearch } from "./BlogSearch";
 
 // Header usa auth() (lê cookies) → página deve ser dinâmica
 export const dynamic = "force-dynamic";
@@ -21,16 +27,20 @@ export const metadata: Metadata = {
 const PER_PAGE = 12;
 
 interface BlogPageProps {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const currentPage = Math.max(1, parseInt(params.page ?? "1", 10) || 1);
+  const query = (params.q ?? "").trim();
+  const isSearch = query.length > 0;
 
   const [articles, total] = await Promise.all([
-    getArticlesPaginated(currentPage, PER_PAGE),
-    getArticleCount(),
+    isSearch
+      ? searchArticles(query, currentPage, PER_PAGE)
+      : getArticlesPaginated(currentPage, PER_PAGE),
+    isSearch ? countSearchArticles(query) : getArticleCount(),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
@@ -38,6 +48,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   const hasPrev = safePage > 1;
   const hasNext = safePage < totalPages;
+
+  // Mantém o termo de busca ao paginar
+  const pageHref = (p: number) =>
+    isSearch ? `/blog?q=${encodeURIComponent(query)}&page=${p}` : `/blog?page=${p}`;
 
   return (
     <>
@@ -51,15 +65,39 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           <p className="text-muted-foreground max-w-lg mx-auto">
             Conteúdo sobre descarte correto de medicamentos, legislação e saúde ambiental.
           </p>
-          {total > 0 && (
+
+          {/* Busca */}
+          <div className="pt-2">
+            <BlogSearch initialQuery={query} />
+          </div>
+
+          {isSearch ? (
             <p className="text-sm text-muted-foreground">
-              {total} artigo{total !== 1 ? "s" : ""} publicado{total !== 1 ? "s" : ""}
+              {total} resultado{total !== 1 ? "s" : ""} para{" "}
+              <span className="font-medium text-foreground">“{query}”</span>
             </p>
+          ) : (
+            total > 0 && (
+              <p className="text-sm text-muted-foreground">
+                {total} artigo{total !== 1 ? "s" : ""} publicado{total !== 1 ? "s" : ""}
+              </p>
+            )
           )}
         </div>
 
         {articles.length === 0 ? (
-          <p className="text-center text-muted-foreground py-16">Nenhum artigo publicado ainda.</p>
+          <div className="py-16 text-center space-y-2">
+            <p className="text-muted-foreground">
+              {isSearch
+                ? `Nenhum artigo encontrado para “${query}”.`
+                : "Nenhum artigo publicado ainda."}
+            </p>
+            {isSearch && (
+              <Link href="/blog" className="text-sm font-medium text-eco-teal-dark hover:underline">
+                Ver todos os artigos
+              </Link>
+            )}
+          </div>
         ) : (
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -117,7 +155,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               >
                 {/* Anterior */}
                 <Link
-                  href={`/blog?page=${safePage - 1}`}
+                  href={pageHref(safePage - 1)}
                   aria-disabled={!hasPrev}
                   tabIndex={hasPrev ? undefined : -1}
                   className={cn(
@@ -137,7 +175,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     return (
                       <Link
                         key={p}
-                        href={`/blog?page=${p}`}
+                        href={pageHref(p)}
                         className={cn(
                           buttonVariants({ variant: isActive ? "default" : "outline", size: "sm" }),
                           "min-w-9",
@@ -153,7 +191,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
                 {/* Próxima */}
                 <Link
-                  href={`/blog?page=${safePage + 1}`}
+                  href={pageHref(safePage + 1)}
                   aria-disabled={!hasNext}
                   tabIndex={hasNext ? undefined : -1}
                   className={cn(

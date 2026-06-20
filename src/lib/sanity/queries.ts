@@ -89,6 +89,58 @@ export async function getArticleCount(): Promise<number> {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Busca de artigos (título, resumo, categoria, corpo)
+// ---------------------------------------------------------------------------
+
+/** Monta o termo GROQ: cada palavra vira prefixo (palavra*) para match tokenizado. */
+function buildSearchTerm(q: string): string {
+  return q
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((w) => `${w}*`)
+    .join(" ");
+}
+
+const articleSearchFilter = groq`_type == "article" && defined(publishedAt) && (
+  title match $term ||
+  excerpt match $term ||
+  aiSummary match $term ||
+  category->title match $term ||
+  pt::text(body) match $term
+)`;
+
+export async function searchArticles(
+  q: string,
+  page: number,
+  perPage: number,
+): Promise<ArticleListItem[]> {
+  if (!sanityClient) return [];
+  const term = buildSearchTerm(q);
+  if (!term) return [];
+  const start = (page - 1) * perPage;
+  const end = start + perPage;
+  return sanityClient.fetch(
+    groq`*[${articleSearchFilter}] | order(publishedAt desc) [$start...$end] {
+      ${articleListFields}
+    }`,
+    { term, start, end },
+    { next: { revalidate: 60 } },
+  );
+}
+
+export async function countSearchArticles(q: string): Promise<number> {
+  if (!sanityClient) return 0;
+  const term = buildSearchTerm(q);
+  if (!term) return 0;
+  return sanityClient.fetch(
+    groq`count(*[${articleSearchFilter}])`,
+    { term },
+    { next: { revalidate: 60 } },
+  );
+}
+
 export async function getLatestArticles(limit = 3): Promise<ArticleListItem[]> {
   if (!sanityClient) return [];
   return sanityClient.fetch(
