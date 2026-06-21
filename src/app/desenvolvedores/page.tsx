@@ -165,7 +165,7 @@ export default function DesenvolvedoresPage() {
         <section className="bg-white py-14">
           <div className="container mx-auto max-w-3xl px-4">
             <h2 className="mb-4 font-sans text-2xl font-bold text-gray-900">
-              🗺️ Widget de mapa (iframe) — sem chave
+              🗺️ Widget de mapa (iframe) sem chave
             </h2>
             <p className="mb-4 text-gray-600">
               Para sites que só precisam exibir o mapa, oferecemos um widget pronto que
