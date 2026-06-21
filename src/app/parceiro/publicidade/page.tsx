@@ -78,7 +78,7 @@ export default async function ParceiroPublicidadePage() {
       <div>
         <h1 className="text-2xl font-bold">Publicidade</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Desempenho dos seus banners no EcoMed — atualizado diariamente.
+          Desempenho dos seus banners no EcoMed atualizado diariamente.
         </p>
       </div>
 
