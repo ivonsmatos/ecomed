@@ -127,24 +127,24 @@ export default function ParceirosPage() {
             </h2>
             <p className="text-gray-600 leading-relaxed mb-8 max-w-xl">
               Além de aparecer no mapa, sua farmácia pode anunciar para quem já está
-              procurando onde descartar — e medir cada resultado.
+              procurando onde descartar e medir cada resultado.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {[
                 {
                   i: "🏪",
                   t: "Banner hiperlocal",
-                  d: "Apareça para quem busca farmácia na sua cidade — ou só a quem está a poucos km da sua loja. Sempre com selo de transparência.",
+                  d: "Apareça para quem busca farmácia na sua cidade ou só a quem está a poucos km da sua loja. Sempre com selo de transparência.",
                 },
                 {
                   i: "🎯",
                   t: "Missão patrocinada",
-                  d: "Vire uma missão no app: “descarte na sua farmácia e ganhe EcoCoins”. Leva o cliente até a loja física — você paga por resultado.",
+                  d: "Vire uma missão no app: “descarte na sua farmácia e ganhe EcoCoins”. Leva o cliente até a loja física você paga por resultado.",
                 },
                 {
                   i: "📲",
                   t: "Check-in + Relatório ESG",
-                  d: "Um QR no balcão registra o descarte e gera seu relatório ESG por loja — pronto para usar no seu próprio marketing.",
+                  d: "Um QR no balcão registra o descarte e gera seu relatório ESG por loja pronto para usar no seu próprio marketing.",
                 },
               ].map((item, i) => (
                 <div
@@ -175,7 +175,7 @@ export default function ParceirosPage() {
                 <div>
                   <h3 className="text-base font-bold text-gray-900 mb-1">Dentro das regras da ANVISA</h3>
                   <p className="text-sm text-gray-600 leading-relaxed">
-                    Anunciamos sua marca, loja e serviços — nunca medicamento de prescrição.
+                    Anunciamos sua marca, loja e serviços nunca medicamento de prescrição.
                     Toda peça é revisada antes de ir ao ar.
                   </p>
                 </div>
