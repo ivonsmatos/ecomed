@@ -30,7 +30,7 @@ const faqItems = [
   {
     question: "Onde posso descartar medicamentos vencidos?",
     answer:
-      "Existem mais de 7.500 pontos de coleta no Brasil pelo sistema LogMed (Decreto 10.388/2020): farmácias e drogarias parceiras, Unidades Básicas de Saúde (UBS), hospitais e ecopontos municipais. O EcoMed mapeia todos esses pontos — use o mapa para encontrar o mais próximo de você.",
+      "Existem mais de 58 mil pontos de coleta no Brasil (farmácias LogMed e UBS do DATASUS), regulamentados pelo Decreto 10.388/2020: farmácias e drogarias parceiras, Unidades Básicas de Saúde (UBS), hospitais e ecopontos municipais. O EcoMed mapeia todos esses pontos — use o mapa para encontrar o mais próximo de você.",
   },
   {
     question: "Quais medicamentos posso entregar nos pontos de coleta?",
@@ -106,7 +106,7 @@ const services = [
 
 const counters = [
   { icon: "/echofy/counter-icon.png",  value: "91%",     label: "Descartam incorretamente" },
-  { icon: "/echofy/counter-icon2.png", value: "7.500+",  label: "Pontos de coleta no Brasil" },
+  { icon: "/echofy/counter-icon2.png", value: "58 mil+", label: "Pontos de coleta no Brasil" },
   { icon: "/echofy/counter-icon3.png", value: "30mil",   label: "Toneladas descartadas/ano" },
   { icon: "/echofy/counter-icon4.png", value: "450mil",  label: "Litros de água protegidos" },
 ];

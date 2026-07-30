@@ -16,7 +16,7 @@ const frentes = [
     icon: MapPin,
     title: "Encontre pontos de coleta",
     description:
-      "Mapa inteligente com mais de 7.500 pontos LogMed para localizar farmácias, UBS e hospitais próximos de você.",
+      "Mapa inteligente com mais de 58 mil pontos LogMed e DATASUS para localizar farmácias, UBS e hospitais próximos de você.",
   },
   {
     icon: Bot,

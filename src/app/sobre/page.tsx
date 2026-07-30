@@ -55,14 +55,14 @@ export default function SobrePage() {
               Mais de 30 mil toneladas de medicamentos são descartadas
               incorretamente no Brasil todos os anos no lixo comum, na pia,
               no vaso sanitário. Essa contaminação chega aos rios, ao solo e à
-              água que bebemos. Existem mais de 7.500 pontos de coleta em
-              farmácias, mas quase ninguém sabe que eles existem.
+              água que bebemos. Existem mais de 58 mil pontos de coleta em
+              farmácias e UBS, e o EcoMed mapeia todos eles.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
                 { i: "💊", v: "30 mil ton", l: "descartadas errado/ano" },
                 { i: "💧", v: "450 mil L", l: "contaminados por 1 comprimido" },
-                { i: "🏥", v: "7.500+", l: "pontos de coleta LogMed" },
+                { i: "🏥", v: "58 mil+", l: "pontos de coleta mapeados" },
                 { i: "😟", v: "91%", l: "descartam incorretamente" },
               ].map((s, i) => (
                 <div key={i}>
@@ -168,7 +168,7 @@ export default function SobrePage() {
                     {
                       i: "🔓",
                       n: "Transparência",
-                      d: "O código está no GitHub, aberto pra quem quiser auditar. Sem caixa preta.",
+                      d: "Fontes citadas em todo conteúdo, IA que admite quando não sabe, publicidade sempre identificada. Sem caixa preta.",
                     },
                     {
                       i: "🤝",
@@ -183,7 +183,7 @@ export default function SobrePage() {
                     {
                       i: "🛡️",
                       n: "Privacidade",
-                      d: "Nossa IA roda no nosso servidor. Suas perguntas não viram dados de terceiros.",
+                      d: "LGPD compliant. O EcoBot nunca processa dados pessoais e nunca vende dados de usuários.",
                     },
                     {
                       i: "🌱",
@@ -214,21 +214,21 @@ export default function SobrePage() {
               Tecnologia
             </span>
             <h2 className="text-3xl font-extrabold text-white mb-4 tracking-tight">
-              Stack 100% open source, custo quase zero
+              Stack moderna, custo operacional enxuto
             </h2>
             <p className="text-[#D9D6D0] leading-relaxed mb-8 max-w-lg">
-              O EcoMed roda com menos de R$&nbsp;5/mês usando plataformas
-              gratuitas. A inteligência artificial funciona localmente,
-              protegendo seus dados.
+              O EcoMed roda em um único VPS por cerca de R$&nbsp;40–80/mês.
+              A inteligência artificial usa embeddings locais e LLM via
+              Groq, com guardrails que protegem a privacidade dos dados.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[
-                { n: "Next.js 15", r: "Frontend PWA", d: "App Router, SSR, offline" },
-                { n: "Ollama + Llama 3", r: "IA Local", d: "Sem custo de API, privacidade" },
-                { n: "Supabase", r: "Banco + Auth", d: "PostgreSQL + Realtime + pgvector" },
+                { n: "Next.js 16", r: "Frontend + API PWA", d: "App Router, SSR, offline-first" },
+                { n: "FastEmbed + Groq", r: "IA do EcoBot", d: "Embeddings locais, guardrails de 5 camadas" },
+                { n: "Prisma + PostgreSQL", r: "Banco de dados", d: "PostgreSQL gerenciado (AWS Lightsail)" },
                 { n: "Cloudflare", r: "CDN + Segurança", d: "DNS, SSL, cache, WAF" },
-                { n: "OpenStreetMap", r: "Mapa", d: "Gratuito, open source" },
-                { n: "Tailwind + shadcn", r: "Design System", d: "Componentes acessíveis" },
+                { n: "OpenStreetMap", r: "Mapa", d: "Gratuito, sem custo por requisição" },
+                { n: "Tailwind + shadcn/ui", r: "Design System", d: "Componentes acessíveis" },
               ].map((t, i) => (
                 <div
                   key={i}
@@ -305,7 +305,7 @@ export default function SobrePage() {
                 </div>
               </div>
               <div className="text-sm text-eco-lime font-medium sm:text-right">
-                Open Source · LGPD Compliant · IA Local
+                LGPD Compliant · Cobertura Nacional · Gratuito
               </div>
             </div>
           </div>
@@ -318,35 +318,42 @@ export default function SobrePage() {
               Roadmap
             </span>
             <h2 className="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">
-              Do MVP ao impacto nacional
+              Do MVP à plataforma em produção
             </h2>
             <div className="max-w-lg flex flex-col">
               {[
                 {
                   year: "2026 Q2",
                   title: "MVP",
-                  desc: "Auth, Mapa, Chat IA, EcoCoins, PWA, Documentação. Meta: 100 usuários.",
+                  desc: "Auth, mapa, chat com IA, EcoCoins, PWA — lançamento com base inicial de pontos.",
                   color: "#24A645",
                   isLast: false,
                 },
                 {
-                  year: "2026 Q3",
-                  title: "V1.0",
-                  desc: "Missões semanais, Eventos, Parcerias B2B, Badges. Meta: 1.000 usuários.",
+                  year: "2026 Q2–Q3",
+                  title: "Escala do mapa",
+                  desc: "Importação de 58 mil+ pontos reais (LogMed + DATASUS/CNES), geocodificação por CEP.",
                   color: "#3E8C8C",
                   isLast: false,
                 },
                 {
-                  year: "2026 Q4",
-                  title: "V1.1",
-                  desc: "PIX cashback, Cupons, Nível Lenda, Feed social. Meta: 5.000 usuários.",
+                  year: "2026 Q3",
+                  title: "Gamificação e conteúdo",
+                  desc: "Blog com busca, quizzes, ranking semanal, indicações, certificado Eco-Cidadão.",
                   color: "#1A736A",
                   isLast: false,
                 },
                 {
-                  year: "2027",
-                  title: "V2.0",
-                  desc: "Marketplace, QR Code check-in, Desafios comunitários. Meta: 20.000 usuários.",
+                  year: "2026 Q3",
+                  title: "Parcerias e monetização",
+                  desc: "Check-in por QR Code, relatório de impacto ESG por loja, publicidade hiperlocal de parceiros.",
+                  color: "#4E6B16",
+                  isLast: false,
+                },
+                {
+                  year: "2026 Q4+",
+                  title: "Próximos passos",
+                  desc: "Missões patrocinadas, API pública para desenvolvedores, widget embeddable, SEO por cidade.",
                   color: "#D4A017",
                   isLast: true,
                 },

@@ -29,7 +29,7 @@ const PARTNER_TYPES = [
     color: "#3E8C8C",
     offer:
       "Quizzes educativos prontos para uso, missões ambientais com ranking, dados para pesquisa acadêmica.",
-    ask: "Estudantes como usuários, validação acadêmica, contribuições open source.",
+    ask: "Estudantes como usuários, validação acadêmica, divulgação institucional.",
     revenue: "Gratuito (troca de valor educacional).",
     cta: "Leve o EcoMed para sua escola",
   },
@@ -78,7 +78,7 @@ const FAQS = [
   },
   {
     q: "O EcoMed é confiável?",
-    a: "Sim. Somos open source (código auditável no GitHub), LGPD compliant e com IA local (dados não saem do servidor).",
+    a: "Sim. Somos LGPD compliant, o EcoBot nunca processa dados pessoais e toda publicidade segue as regras da ANVISA.",
   },
 ];
 

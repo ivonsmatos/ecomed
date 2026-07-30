@@ -26,7 +26,7 @@ const compromissos = [
     icon: MapPin,
     title: "Facilitar o descarte correto",
     description:
-      "Transformar informação dispersa em ação simples, com mapa inteligente e mais de 7.500 pontos de coleta visíveis para qualquer pessoa.",
+      "Transformar informação dispersa em ação simples, com mapa inteligente e mais de 58 mil pontos de coleta visíveis para qualquer pessoa.",
   },
   {
     icon: BookOpen,
@@ -60,7 +60,7 @@ const pilaresConfianca = [
     icon: ShieldCheck,
     title: "Transparência e confiança",
     points: [
-      "Projeto open source com código público.",
+      "Fontes citadas em todo conteúdo educativo, sem caixa preta.",
       "Políticas de privacidade claras e alinhadas à LGPD.",
       "Não comercialização de dados pessoais dos usuários.",
     ],
@@ -227,8 +227,8 @@ export default function CompromissoPage() {
           <div className="container mx-auto max-w-4xl px-4 text-center">
             <h2 className="mb-4 font-sans text-3xl font-bold text-gray-900">Compromisso que vira ação</h2>
             <p className="mx-auto mb-8 max-w-2xl text-gray-600">
-              O EcoMed é uma iniciativa open source focada em gerar impacto ambiental real
-              com uma plataforma gratuita, aberta e útil para toda a população brasileira.
+              O EcoMed é uma iniciativa focada em gerar impacto ambiental real
+              com uma plataforma gratuita e útil para toda a população brasileira.
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link

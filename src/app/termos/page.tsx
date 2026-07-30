@@ -151,8 +151,7 @@ export default function TermosPage() {
             <h2>4. Propriedade intelectual</h2>
             <p>
               Todo o conteúdo da plataforma (textos, artigos, ícones, logotipos, código-fonte e
-              design) é protegido pela legislação de propriedade intelectual. O código-fonte do
-              projeto é disponibilizado sob licença open source.
+              design) é protegido pela legislação de propriedade intelectual e pertence ao EcoMed.
             </p>
           </section>
 
