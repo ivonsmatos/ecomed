@@ -35,7 +35,7 @@ const faqItems = [
   {
     question: "Quais medicamentos posso entregar nos pontos de coleta?",
     answer:
-      "São aceitos medicamentos vencidos, sobras de tratamento, comprimidos, cápsulas, xaropes, pomadas, ampolas e injetáveis de uso domiciliar — com ou sem embalagem. Não é necessário abrir embalagens nem retirar bulas. Leve tudo como está.",
+      "São aceitos medicamentos vencidos, sobras de tratamento, comprimidos, cápsulas, xaropes, pomadas, ampolas e injetáveis de uso domiciliar com ou sem embalagem. Não é necessário abrir embalagens nem retirar bulas. Leve tudo como está.",
   },
   {
     question: "Farmácias são obrigadas a aceitar medicamentos para descarte?",
@@ -82,7 +82,7 @@ const services = [
     img: "/echofy/service-thumb.webp",
     icon: "/echofy/service-icon1.png",
     shape: "/echofy/service-shape.png",
-    title: "📍 Encontre — Mapa Interativo",
+    title: "📍 Encontre Mapa Interativo",
     desc: "Veja os pontos de coleta mais próximos de você: farmácias LogMed, UBS e hospitais. Filtros por tipo, horário de funcionamento e rota direta no Google Maps ou Waze.",
     href: "/mapa",
   },
@@ -90,7 +90,7 @@ const services = [
     img: "/echofy/service-thumb2.webp",
     icon: "/echofy/service-icon2.png",
     shape: "/echofy/service-shape.png",
-    title: "💬 Pergunte — EcoBot com IA",
+    title: "💬 Pergunte EcoBot com IA",
     desc: "Tire dúvidas com o EcoBot, nosso assistente de inteligência artificial. Responde em linguagem simples sobre descarte, legislação e impacto ambiental — disponível 24 horas.",
     href: "/app/chat",
   },
@@ -98,7 +98,7 @@ const services = [
     img: "/echofy/service-thumb3.webp",
     icon: "/echofy/service-icon3.png",
     shape: "/echofy/service-shape.png",
-    title: "🪙 Ganhe — EcoMed Coins",
+    title: "🪙 Ganhe EcoMed Coins",
     desc: "Cada descarte correto, artigo lido ou quiz respondido gera EcoMed Coins. Suba de nível, complete missões e receba recompensas — porque cuidar do planeta merece reconhecimento.",
     href: "/app",
   },
@@ -169,7 +169,7 @@ export default async function HomePage() {
                   <span className="text-eco-lime">Descarte Certo.</span>
                 </h1>
                 <p className="font-sans text-lg text-white/90 mb-10 max-w-xl">
-                  91% dos brasileiros descartam medicamentos errado — não por má vontade,
+                  91% dos brasileiros descartam medicamentos errado não por má vontade,
                   mas porque ninguém ensinou como fazer certo. O EcoMed muda isso.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-5">
