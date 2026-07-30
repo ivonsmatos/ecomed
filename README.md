@@ -596,6 +596,6 @@ Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações
 
 **Feito com 🌿 por pessoas que acreditam que tecnologia pode salvar o planeta.**
 
-Desenvolvido por [Scaledata](https://scaledata.com.br)
+Desenvolvido por [3TC - 3TB - 3TA]
 
 </div>
