@@ -19,7 +19,7 @@ PWA educativo com mapa inteligente, IA e gamificação para o descarte correto d
 
 ## 📋 Sobre o Projeto
 
-**91% dos brasileiros** descartam medicamentos de forma incorreta. **30 mil toneladas/ano** vão para o lixo comum ou esgoto. **1 comprimido** pode contaminar até **450 mil litros de água**. Existem **7.500+ pontos de coleta** em farmácias credenciadas no sistema de logística reversa, mas quase ninguém sabe que eles existem.
+**91% dos brasileiros** descartam medicamentos de forma incorreta. **30 mil toneladas/ano** vão para o lixo comum ou esgoto. **1 comprimido** pode contaminar até **450 mil litros de água**. Existem **58 mil+ pontos de coleta** em farmácias credenciadas no sistema de logística reversa, mas quase ninguém sabe que eles existem.
 
 O EcoMed resolve isso com três pilares:
 
@@ -43,7 +43,7 @@ O EcoMed resolve isso com três pilares:
 - ✅ **Selo de validação comunitária** — "descarte confirmado há X dias" + alerta de reportes em aberto
 - ✅ **Chat com IA educativa** — Groq (Llama 4 Scout) + RAG local, guardrails de 5 camadas
 - ✅ **Sistema de EcoCoins** — ledger imutável, 5 níveis (🌱→⭐), missões diárias, streaks, anti-fraude
-- ✅ **Blog educativo** — CMS Sanity, paginação, posts relacionados, prev/next com preview de imagem
+- ✅ **Blog educativo** — CMS Sanity, busca de conteúdo, paginação, posts relacionados, prev/next com preview de imagem
 - ✅ **Quizzes educativos** — perguntas com score server-side e EcoCoins
 - ✅ **Indicações** — código pessoal ECOMED-XXXXX, +20 EcoCoins por amigo
 - ✅ **Ranking semanal** — top usuários por EcoCoins ganhos na semana
@@ -53,6 +53,9 @@ O EcoMed resolve isso com três pilares:
 - ✅ **API pública para parceiros** (`/api/public/v1`) — pontos de coleta via REST com X-API-Key ([docs](https://ecomed.eco.br/desenvolvedores))
 - ✅ **Widget embeddable** (`/embed/mapa`) — mapa via iframe para sites de terceiros, sem chave
 - ✅ **SEO programático** — páginas `/descarte/[cidade]-[uf]` para municípios com pontos de coleta
+- ✅ **Check-in por QR Code da loja** (`/checkin?p=`) — cidadão escaneia o QR no balcão, confirma com GPS e ganha EcoCoins na hora
+- ✅ **Relatório de Impacto ESG por parceiro** (`/parceiro/impacto`) — descartes, litros protegidos e CO₂ evitado por loja, com QR gerado no painel (`/parceiro/qrcode`)
+- ✅ **Publicidade de parceiros** (`/admin/ads`, `/parceiro/publicidade`) — banners segmentados por cidade, UF ou raio hiperlocal ao redor da loja, com selo de transparência e métricas de impressões/cliques/CTR
 - ✅ **Notificações push (Web Push)** — engajamento e reativação
 - ✅ **Acessibilidade** — VLibras (tradução para Libras), skip-links, componentes acessíveis
 - ✅ **GEO / AI Discoverability** — schema.org completo, ai.txt, llms.txt, sitemap LLM
@@ -177,7 +180,12 @@ ecomed/
 │       │   ├── sobre/, parceiros/  # Páginas institucionais
 │       │   └── ...
 │       ├── admin/                  # Painel administrativo
+│       │   └── ads/                # Gestão de campanhas de publicidade
 │       ├── parceiro/               # Dashboard de parceiros
+│       │   ├── qrcode/             # Gerador de QR Code por loja
+│       │   ├── impacto/            # Relatório ESG (descartes, litros, CO₂)
+│       │   └── publicidade/        # Métricas das campanhas do parceiro
+│       ├── checkin/                # Check-in do cidadão via QR da loja
 │       ├── impacto/                # Página pública de impacto + cobertura
 │       ├── desenvolvedores/        # Docs da API pública + widget
 │       ├── descarte/[slug]/        # SEO programático por cidade
@@ -188,6 +196,8 @@ ecomed/
 │       │       ├── pontos.ts       # Pontos de coleta (+ filtro ?tipo=)
 │       │       ├── geo.ts          # Busca por cidade (autocomplete) e CEP
 │       │       ├── public.ts       # API pública v1 (X-API-Key + CORS por origin)
+│       │       ├── checkin.ts      # Check-in por QR (parceiro e cidadão)
+│       │       ├── ads.ts          # Serving/impressão/clique de publicidade
 │       │       ├── coins.ts        # Crédito de EcoCoins
 │       │       ├── quiz.ts         # Score de quizzes
 │       │       ├── user.ts         # Perfil e dados do usuário
@@ -203,12 +213,15 @@ ecomed/
 │
 ├── src/components/                 # Componentes React
 │   ├── layout/                     # Header, Footer
-│   ├── blog/                       # ArticleCard, FaqAccordion, ArticleReadTracker
+│   ├── blog/                       # ArticleCard, FaqAccordion, ArticleReadTracker, BlogSearch
+│   ├── ads/                        # AdSlot — banner com selo de transparência
 │   ├── shared/                     # CookieBanner, etc.
 │   └── ui/                         # shadcn/ui components
 │
 ├── src/lib/                        # Lógica de negócio
 │   ├── coins/                      # creditCoins, missions, limits, streak
+│   ├── ads/                        # Serving de campanhas (segmentação geo/raio)
+│   ├── geo/                        # haversine, autocomplete de cidades
 │   ├── sanity/                     # Client, queries GROQ, urlFor
 │   ├── db/                         # Prisma client
 │   ├── ratelimit.ts                # Upstash Redis rate limiting
@@ -232,7 +245,7 @@ ecomed/
 │   └── .env.example                # Variáveis necessárias (sem valores)
 │
 ├── prisma/
-│   ├── schema.prisma               # Modelos: User, PontoColeta, EcoCoin, Quiz...
+│   ├── schema.prisma               # Modelos: User, Point, Partner, CoinTransaction, Quiz, AdCampaign...
 │   ├── migrations/                 # Histórico de migrações SQL
 │   └── seed.ts                     # Seed: pontos de coleta + quizzes
 │
@@ -272,7 +285,7 @@ ecomed/
 - [Docker](https://docker.com) (para o microserviço de IA)
 - Uma conta [Groq](https://console.groq.com) (gratuita, para o LLM)
 - Uma conta [Sanity](https://sanity.io) (gratuita, para o blog)
-- Um banco PostgreSQL com extensão `pgvector` (ex: Supabase)
+- Um banco PostgreSQL (para o RAG, uma instância com extensão `pgvector` — pode ser um container local)
 
 ### 1. Clone e instale
 
@@ -443,6 +456,20 @@ docker run -d --name ecomed-ia --restart unless-stopped \
 
 ---
 
+## 🏪 Check-in por QR Code e Publicidade de Parceiros
+
+Cada loja parceira recebe um **QR Code fixo** (`/parceiro/qrcode`) para o balcão. O cidadão escaneia,
+confirma o descarte com GPS (`/checkin?p=`) e ganha EcoCoins na hora — o registro fica vinculado à loja
+e alimenta o **relatório de impacto ESG** do parceiro (`/parceiro/impacto`): descartes, litros de água
+protegidos e CO₂ evitado por período.
+
+Parceiros também podem anunciar dentro da plataforma: banners segmentados por **cidade, UF ou raio
+hiperlocal** ao redor da loja, geridos em `/admin/ads` e com métricas próprias em `/parceiro/publicidade`
+(impressões, cliques, CTR). Toda campanha exibe selo "Publicidade" e segue a RDC 96/2008 da ANVISA —
+apenas marca, loja e serviços, nunca medicamento de prescrição.
+
+---
+
 ## ✍️ Blog — Arquitetura de Conteúdo
 
 O blog é alimentado pelo **Sanity CMS** e renderizado em Next.js com `force-dynamic` (dados cacheados 1h via `revalidate`).
@@ -495,7 +522,7 @@ pnpm lint
 pnpm build  # o build do Next.js faz type check automaticamente
 ```
 
-Cobertura atual: **71 testes vitest** (quiz + gamificação) e **43 testes pytest**
+Cobertura atual: **71 testes vitest** (quiz + gamificação) e **51 testes pytest**
 (guardrails: emergência, injection, automedicação, falsos positivos e filtro de saída).
 O CI bloqueia o deploy se os testes vitest falharem.
 
@@ -568,5 +595,7 @@ Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações
 <div align="center">
 
 **Feito com 🌿 por pessoas que acreditam que tecnologia pode salvar o planeta.**
+
+Desenvolvido por [Scaledata](https://scaledata.com.br)
 
 </div>
