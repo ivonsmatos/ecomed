@@ -58,7 +58,11 @@ export default function TermosPage() {
             <p>É <strong>proibido</strong>:</p>
             <ul>
               <li>Utilizar bots ou meios automatizados para acumular EcoMed Coins de forma fraudulenta.</li>
-              <li>Tentar acessar áreas restritas ou realizar engenharia reversa do código.</li>
+              <li>
+                Tentar acessar áreas restritas ou contornar controles dos serviços. O código
+                distribuído sob licença MIT permanece sujeito aos direitos concedidos por essa
+                licença; marca, dados e conteúdo editorial têm regras próprias.
+              </li>
               <li>Publicar conteúdo ofensivo, difamatório, discriminatório ou ilegal.</li>
               <li>
                 Utilizar o assistente virtual para obter orientações médicas, diagnósticos ou

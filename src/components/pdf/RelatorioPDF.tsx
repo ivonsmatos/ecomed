@@ -81,7 +81,12 @@ const styles = StyleSheet.create({
 interface Props {
   nome: string
   checkins: number
-  impacto: { litrosAguaProtegidos: number; kgResiduoDescartado: number; co2EvitadoKg: number }
+  impacto: {
+    litrosAguaProtegidos: number
+    kgResiduoDescartado: null
+    co2EvitadoKg: null
+    methodologyVersion: string
+  }
   nivel: string
 }
 
@@ -128,17 +133,17 @@ export function RelatorioPDF({ nome, checkins, impacto, nivel }: Props) {
               <Text style={[styles.cardValor, { color: "#1D4ED8" }]}>
                 {impacto.litrosAguaProtegidos.toLocaleString("pt-BR")} L
               </Text>
-              <Text style={styles.cardLabel}>Litros de água protegidos</Text>
+              <Text style={styles.cardLabel}>Proteção hídrica potencial</Text>
             </View>
 
             <View style={[styles.card, { borderTopWidth: 3, borderTopColor: "#2D7D46" }]}>
-              <Text style={styles.cardValor}>{impacto.kgResiduoDescartado} kg</Text>
-              <Text style={styles.cardLabel}>Resíduos descartados corretamente</Text>
+              <Text style={styles.cardValor}>Não estimado</Text>
+              <Text style={styles.cardLabel}>Massa — aguardando medição</Text>
             </View>
 
             <View style={[styles.card, { borderTopWidth: 3, borderTopColor: "#D97706" }]}>
-              <Text style={[styles.cardValor, { color: "#B45309" }]}>{impacto.co2EvitadoKg} kg</Text>
-              <Text style={styles.cardLabel}>CO₂ evitado no meio ambiente</Text>
+              <Text style={[styles.cardValor, { color: "#B45309" }]}>Não estimado</Text>
+              <Text style={styles.cardLabel}>CO₂ — metodologia em validação</Text>
             </View>
           </View>
         </View>
@@ -147,10 +152,10 @@ export function RelatorioPDF({ nome, checkins, impacto, nivel }: Props) {
         <View style={styles.secao}>
           <Text style={styles.secaoTitulo}>Base dos Cálculos</Text>
           <Text style={{ fontSize: 10, color: "#6B7280", lineHeight: 1.6 }}>
-            • 1 descarte correto evita a contaminação de ~450 litros de água{"\n"}
-            • Referência: ANVISA e Programa Nacional de Resíduos Sólidos (PNRS 2020){"\n"}
-            • Cada caixa representa ~15g de princípio ativo potencialmente contaminante{"\n"}
-            • CO₂ evitado calculado com base na destinação ambientalmente adequada
+            • Proteção hídrica é estimativa de potencial, não medição direta.{"\n"}
+            • CO₂ e massa não são estimados sem metodologia validada.{"\n"}
+            • Metodologia: ecomed.eco.br/metodologia-impacto{"\n"}
+            • Versão: {impacto.methodologyVersion}
           </Text>
         </View>
 

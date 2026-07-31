@@ -100,7 +100,7 @@ const linksUteis = [
     href: "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm",
   },
   {
-    label: "RDC ANVISA nº 306/2004 — Resíduos de Serviços de Saúde",
+    label: "RDC ANVISA nº 222/2018 — Resíduos de Serviços de Saúde",
     href: "https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2004/res0306_07_12_2004.html",
   },
   {

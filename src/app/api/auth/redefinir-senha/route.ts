@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db/prisma";
+import { createHash } from "crypto";
+import { checkRateLimit } from "@/lib/ratelimit";
 
 const schema = z.object({
   token: z.string().min(32).max(128),
@@ -9,6 +11,11 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for") ?? "unknown";
+  const rateLimit = await checkRateLimit("auth", `password-reset-confirm:${ip}`);
+  if (!rateLimit.success) {
+    return NextResponse.json({ error: "Muitas tentativas. Aguarde antes de tentar novamente." }, { status: 429 });
+  }
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
@@ -16,7 +23,8 @@ export async function POST(req: NextRequest) {
   }
   const { token, password } = parsed.data;
 
-  const resetToken = await prisma.passwordResetToken.findUnique({ where: { token } });
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const resetToken = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
 
   if (!resetToken || resetToken.used || resetToken.expiresAt < new Date()) {
     return NextResponse.json({ error: "Link inválido ou expirado" }, { status: 400 });
@@ -29,10 +37,7 @@ export async function POST(req: NextRequest) {
       where: { id: resetToken.userId },
       data: { passwordHash },
     }),
-    prisma.passwordResetToken.update({
-      where: { id: resetToken.id },
-      data: { used: true },
-    }),
+    prisma.passwordResetToken.deleteMany({ where: { userId: resetToken.userId } }),
   ]);
 
   return NextResponse.json({ ok: true });

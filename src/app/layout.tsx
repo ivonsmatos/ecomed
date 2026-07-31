@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieBanner } from "@/components/shared/CookieBanner";
 import { VLibrasWidget } from "@/components/shared/VLibrasWidget";
-import Script from "next/script";
+import { AnalyticsScripts } from "@/components/consent/AnalyticsScripts";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -102,17 +102,6 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased" suppressHydrationWarning>
-        {/* Google Tag Manager (noscript) */}
-        {process.env.NODE_ENV === "production" && (
-          <noscript>
-            <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-NQS3PK8S"
-              height="0"
-              width="0"
-              className="hidden invisible"
-            />
-          </noscript>
-        )}
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {/* Skip-link de acessibilidade: permite usuários de teclado/leitores de tela pular nav */}
           <a
@@ -126,22 +115,7 @@ export default function RootLayout({
           <Toaster richColors position="top-right" />
           <VLibrasWidget />
         </ThemeProvider>
-        {/* Analytics — carregados após hidratação para evitar erros de hidratação (React #418) */}
-        {process.env.NODE_ENV === "production" && (
-          <>
-            {/* Google Tag Manager */}
-            <Script id="gtm" strategy="afterInteractive">
-              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NQS3PK8S');`}
-            </Script>
-            {/* Google Analytics */}
-            <Script src="https://www.googletagmanager.com/gtag/js?id=G-WY07TY58R1" strategy="afterInteractive" />
-            <Script id="ga" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-WY07TY58R1');`}
-            </Script>
-            {/* Plausible Analytics */}
-            <Script defer data-domain="ecomed.eco.br" src="https://plausible.io/js/script.js" strategy="afterInteractive" />
-          </>
-        )}
+        <AnalyticsScripts />
       </body>
     </html>
   );

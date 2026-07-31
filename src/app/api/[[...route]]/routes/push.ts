@@ -4,6 +4,7 @@ import { z } from "zod";
 import { auth } from "@/../auth";
 import { prisma } from "@/lib/db/prisma";
 import { sendPushToUser } from "@/lib/push";
+import { APP_ROUTES } from "@/lib/routes";
 
 export const pushRouter = new Hono();
 
@@ -56,7 +57,7 @@ pushRouter.post("/test", async (c) => {
   const result = await sendPushToUser(session.user.id, {
     title: "EcoMed · Push funcionando 🌿",
     body: "Você receberá notificações de missões, conquistas e novidades.",
-    url: "/recompensas",
+    url: APP_ROUTES.rewards,
     tag: "test",
   });
 

@@ -9,6 +9,9 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, "Deve ter ao menos uma letra maiúscula")
     .regex(/[0-9]/, "Deve ter ao menos um número"),
   referralCode: z.string().optional(),
+  adultConfirmed: z.boolean().refine((value) => value, {
+    message: "Confirme que você tem 18 anos ou mais",
+  }),
 })
 
 export const loginSchema = z.object({

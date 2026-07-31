@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db/prisma"
 import { creditCoins } from "@/lib/coins"
 import { sendPushToUser } from "@/lib/push"
+import { APP_ROUTES } from "@/lib/routes"
 
 type MissionPoolItem = {
   slug: string
@@ -325,7 +326,7 @@ export async function aplicarProgressoMissoes(userId: string, event: string) {
       sendPushToUser(userId, {
         title: "Missão concluída! 🎉",
         body: `${userMission.mission.title} · +${userMission.mission.coinReward} EcoCoins`,
-        url: "/recompensas",
+        url: APP_ROUTES.rewards,
         tag: `mission-${userMission.id}`,
       }).catch((err) => console.error("[push:mission] falhou:", err))
     }

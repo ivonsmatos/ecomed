@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
       email,
       passwordHash,
       referredById: referrer?.id ?? null,
+      adultConfirmedAt: new Date(),
     },
     select: { id: true, email: true },
   });

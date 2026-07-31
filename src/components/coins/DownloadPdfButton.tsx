@@ -12,7 +12,10 @@ export function DownloadPdfButton({ balance }: { balance: number }) {
     setLoading(true)
     setErro(null)
     try {
-      const res = await fetch("/api/usuario/relatorio-pdf")
+      const idempotencyKey = crypto.randomUUID()
+      const res = await fetch("/api/usuario/relatorio-pdf", {
+        headers: { "X-Idempotency-Key": idempotencyKey },
+      })
       if (!res.ok) {
         const data = await res.json()
         setErro(data.error ?? "Erro ao gerar o relatório.")

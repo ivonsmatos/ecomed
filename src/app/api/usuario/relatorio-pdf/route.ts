@@ -6,6 +6,8 @@ import { RelatorioPDF } from "@/components/pdf/RelatorioPDF"
 import { createElement } from "react"
 import type { ReactElement } from "react"
 import type { DocumentProps } from "@react-pdf/renderer"
+import { headers } from "next/headers"
+import { debitCoins } from "@/lib/coins"
 
 const CUSTO_RELATORIO = 200
 
@@ -15,6 +17,10 @@ export async function GET() {
     return Response.json({ error: "Não autenticado." }, { status: 401 })
   }
   const userId = session.user.id
+  const idempotencyKey = (await headers()).get("x-idempotency-key")
+  if (!idempotencyKey || !/^[a-zA-Z0-9_-]{16,128}$/.test(idempotencyKey)) {
+    return Response.json({ error: "Chave de idempotência ausente ou inválida." }, { status: 400 })
+  }
 
   const [checkins, wallet, usuario] = await Promise.all([
     prisma.checkin.count({ where: { userId } }),
@@ -29,21 +35,15 @@ export async function GET() {
     )
   }
 
-  // Debitar eccoins atomicamente
-  await prisma.$transaction([
-    prisma.wallet.update({
-      where: { userId },
-      data: { balance: { decrement: CUSTO_RELATORIO } },
-    }),
-    prisma.coinTransaction.create({
-      data: {
-        walletId: wallet.id,
-        amount: -CUSTO_RELATORIO,
-        event: "REDEMPTION",
-        note: "Relatório de impacto em PDF",
-      },
-    }),
-  ])
+  const debit = await debitCoins(
+    userId,
+    CUSTO_RELATORIO,
+    "Relatório de impacto em PDF",
+    `REPORT:${userId}:${idempotencyKey}`,
+  )
+  if (!debit.ok) {
+    return Response.json({ error: "Saldo insuficiente." }, { status: 400 })
+  }
 
   const impacto = calcularImpacto(checkins)
   const buffer = await renderToBuffer(

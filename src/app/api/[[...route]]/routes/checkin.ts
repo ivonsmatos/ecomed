@@ -3,7 +3,7 @@ import { zValidator } from "@hono/zod-validator"
 import { z } from "zod"
 import { auth } from "@/../auth"
 import { prisma } from "@/lib/db/prisma"
-import { validarTokenQR } from "@/lib/qr/token"
+import { validarTokenPonto, validarTokenQR } from "@/lib/qr/token"
 import { creditCoins } from "@/lib/coins"
 import { checkRateLimit } from "@/lib/ratelimit"
 import { verificarMilestonesDescarte } from "@/lib/goals/milestones"
@@ -47,7 +47,7 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
       400,
     )
   }
-  const { userId } = parsed
+  const { userId, nonce } = parsed
 
   // 4. Verificar ownership do ponto (parceiro só acessa seus próprios pontos)
   let point = await prisma.point.findFirst({
@@ -69,7 +69,7 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
 
   // 5. Anti-abuso: 1 check-in por usuário por ponto por dia
   const hoje = new Date()
-  hoje.setHours(0, 0, 0, 0)
+  hoje.setUTCHours(0, 0, 0, 0)
   const amanha = new Date(hoje)
   amanha.setDate(amanha.getDate() + 1)
 
@@ -103,21 +103,55 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
   })
 
   // 7. Registrar check-in e creditar coins base
-  const [, coinResult] = await Promise.all([
-    prisma.checkin.create({ data: { userId, pointId, coinsEarned: coinsBase, hasGps } }),
-    creditCoins(userId, "CHECKIN", pointId, coinsBase),
-  ])
+  const createdCheckin = await prisma.checkin.create({
+      data: { userId, pointId, coinsEarned: coinsBase, hasGps, qrNonce: nonce, checkinDay: hoje },
+    })
+  let coinResult
+  try {
+    coinResult = await creditCoins(
+      userId,
+      "CHECKIN",
+      pointId,
+      coinsBase,
+      undefined,
+      `CHECKIN:${userId}:${pointId}:${hoje.toISOString()}`,
+    )
+  } catch (error) {
+    // Compensação: não deixa check-in sem o respectivo lançamento financeiro.
+    await prisma.checkin.delete({ where: { id: createdCheckin.id } }).catch(() => null)
+    throw error
+  }
+  if (!coinResult.ok) {
+    await prisma.checkin.update({
+      where: { id: createdCheckin.id },
+      data: { coinsEarned: 0 },
+    })
+  }
 
   await aplicarProgressoMissoes(userId, "CHECKIN").catch(() => null)
 
   // 8. Bônus por novo ponto
   if (!primeiraVisita) {
-    await creditCoins(userId, "CHECKIN_NEW_POINT", pointId)
+    await creditCoins(
+      userId,
+      "CHECKIN_NEW_POINT",
+      pointId,
+      undefined,
+      undefined,
+      `CHECKIN_NEW_POINT:${userId}:${pointId}`,
+    )
   }
 
   // 9. Bônus por retorno ao descarte (primeiro em 30 dias)
   if (!checkinRecente) {
-    await creditCoins(userId, "CHECKIN_FIRST_MONTH", pointId)
+    await creditCoins(
+      userId,
+      "CHECKIN_FIRST_MONTH",
+      pointId,
+      undefined,
+      undefined,
+      `CHECKIN_FIRST_MONTH:${userId}:${hoje.toISOString().slice(0, 7)}`,
+    )
   }
 
   const [usuario, walletAtual] = await Promise.all([
@@ -130,7 +164,7 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
 
   return c.json({
     ok: true,
-    coinsEarned: coinsBase,
+    coinsEarned: coinResult.ok ? coinsBase : 0,
     hasGps,
     newBalance: walletAtual?.balance ?? coinResult.newBalance,
     levelUp: coinResult.levelUp ?? null,
@@ -146,7 +180,7 @@ checkin.post("/", zValidator("json", checkinSchema), async (c) => {
 
 // ── POST /api/checkin/store — cidadão escaneia QR da loja ─────────────────────
 const storeSchema = z.object({
-  pointId: z.string().min(1),
+  token: z.string().min(40),
   lat: z.number().optional(),
   lng: z.number().optional(),
 })
@@ -160,7 +194,12 @@ checkin.post("/store", zValidator("json", storeSchema), async (c) => {
   if (!session?.user?.id) return c.json({ error: "Não autenticado." }, 401)
   const userId = session.user.id
 
-  const { pointId, lat, lng } = c.req.valid("json")
+  const { token, lat, lng } = c.req.valid("json")
+  const qrPayload = validarTokenPonto(token)
+  if (!qrPayload) {
+    return c.json({ error: "QR Code inválido, alterado ou expirado." }, 400)
+  }
+  const { pointId } = qrPayload
 
   // 1. Ponto existe e está aprovado?
   const point = await prisma.point.findFirst({
@@ -171,7 +210,7 @@ checkin.post("/store", zValidator("json", storeSchema), async (c) => {
 
   // 2. Já registrou nesta loja hoje?
   const hoje = new Date()
-  hoje.setHours(0, 0, 0, 0)
+  hoje.setUTCHours(0, 0, 0, 0)
   const amanha = new Date(hoje)
   amanha.setDate(amanha.getDate() + 1)
 
@@ -199,15 +238,59 @@ checkin.post("/store", zValidator("json", storeSchema), async (c) => {
   })
 
   // 5. Gravar check-in + creditar
-  const [, coinResult] = await Promise.all([
-    prisma.checkin.create({ data: { userId, pointId, coinsEarned: coinsBase, hasGps } }),
-    creditCoins(userId, "CHECKIN", pointId, coinsBase),
-  ])
+  const createdCheckin = await prisma.checkin.create({
+      data: {
+        userId,
+        pointId,
+        coinsEarned: coinsBase,
+        hasGps,
+        qrNonce: qrPayload.nonce,
+        checkinDay: hoje,
+      },
+    })
+  let coinResult
+  try {
+    coinResult = await creditCoins(
+      userId,
+      "CHECKIN",
+      pointId,
+      coinsBase,
+      undefined,
+      `CHECKIN:${userId}:${pointId}:${hoje.toISOString()}`,
+    )
+  } catch (error) {
+    await prisma.checkin.delete({ where: { id: createdCheckin.id } }).catch(() => null)
+    throw error
+  }
+  if (!coinResult.ok) {
+    await prisma.checkin.update({
+      where: { id: createdCheckin.id },
+      data: { coinsEarned: 0 },
+    })
+  }
 
   await aplicarProgressoMissoes(userId, "CHECKIN").catch(() => null)
 
-  if (!primeiraVisita) await creditCoins(userId, "CHECKIN_NEW_POINT", pointId)
-  if (!checkinRecente) await creditCoins(userId, "CHECKIN_FIRST_MONTH", pointId)
+  if (!primeiraVisita) {
+    await creditCoins(
+      userId,
+      "CHECKIN_NEW_POINT",
+      pointId,
+      undefined,
+      undefined,
+      `CHECKIN_NEW_POINT:${userId}:${pointId}`,
+    )
+  }
+  if (!checkinRecente) {
+    await creditCoins(
+      userId,
+      "CHECKIN_FIRST_MONTH",
+      pointId,
+      undefined,
+      undefined,
+      `CHECKIN_FIRST_MONTH:${userId}:${hoje.toISOString().slice(0, 7)}`,
+    )
+  }
 
   const [walletAtual, novosSelosDescarte] = await Promise.all([
     prisma.wallet.findUnique({ where: { userId }, select: { balance: true } }),
@@ -216,7 +299,7 @@ checkin.post("/store", zValidator("json", storeSchema), async (c) => {
 
   return c.json({
     ok: true,
-    coinsEarned: coinsBase,
+    coinsEarned: coinResult.ok ? coinsBase : 0,
     hasGps,
     newBalance: walletAtual?.balance ?? coinResult.newBalance,
     levelUp: coinResult.levelUp ?? null,

@@ -5,44 +5,65 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const STORAGE_KEY = "ecomed_cookie_consent";
+import {
+  CONSENT_EVENT,
+  CONSENT_STORAGE_KEY,
+  clearAnalyticsCookies,
+  createConsent,
+  parseConsent,
+} from "@/lib/consent";
 
 function subscribe(cb: () => void) {
   window.addEventListener("storage", cb);
-  return () => window.removeEventListener("storage", cb);
+  window.addEventListener(CONSENT_EVENT, cb);
+  return () => {
+    window.removeEventListener("storage", cb);
+    window.removeEventListener(CONSENT_EVENT, cb);
+  };
 }
 
 function getSnapshot() {
-  return localStorage.getItem(STORAGE_KEY);
+  return localStorage.getItem(CONSENT_STORAGE_KEY);
 }
 
-function getServerSnapshot() {
-  return "accepted"; // SSR: assume respondido → sem banner no servidor
-}
+function getServerSnapshot() { return null; }
 
 export function CookieBanner() {
   const pathname = usePathname();
-  const consent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const rawConsent = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const consent = parseConsent(rawConsent);
 
   // Widget embeddable: sem banner dentro de iframes de terceiros
   if (pathname?.startsWith("/embed")) return null;
 
   function handleAccept() {
-    localStorage.setItem(STORAGE_KEY, "accepted");
-    // dispara o subscriber manualmente (mesma aba)
-    window.dispatchEvent(new Event("storage"));
+    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(createConsent(true)));
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   }
 
   function handleReject() {
-    localStorage.setItem(STORAGE_KEY, "rejected");
-    window.dispatchEvent(new Event("storage"));
-    document.cookie = "_ga=; Max-Age=0; path=/";
-    document.cookie = "_ga_WY07TY58R1=; Max-Age=0; path=/";
+    localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(createConsent(false)));
+    clearAnalyticsCookies();
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   }
 
-  // Qualquer valor salvo → ocultar banner
-  if (consent !== null) return null;
+  function handleRevoke() {
+    localStorage.removeItem(CONSENT_STORAGE_KEY);
+    clearAnalyticsCookies();
+    window.dispatchEvent(new Event(CONSENT_EVENT));
+  }
+
+  if (consent !== null) {
+    return (
+      <button
+        type="button"
+        onClick={handleRevoke}
+        className="fixed bottom-2 left-2 z-40 rounded-md border bg-background/90 px-2 py-1 text-xs text-muted-foreground shadow-sm"
+      >
+        Preferências de cookies
+      </button>
+    );
+  }
 
   return (
     <div

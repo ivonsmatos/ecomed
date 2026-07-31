@@ -45,7 +45,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     // signIn apenas libera o acesso — wallet/coins são criados no jwt callback,
     // depois que o PrismaAdapter persistiu o User no banco.
-    async signIn() {
+    async signIn({ account }) {
+      if (account?.provider === "google") {
+        const cookieStore = await cookies();
+        if (cookieStore.get("ecomed_adult_confirmed")?.value !== "1") return false;
+      }
       return true;
     },
 
@@ -65,6 +69,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Criar Wallet e creditar SIGNUP coins na primeira autenticação
         const uid = user.id; // string garantido (sem undefined)
         try {
+          if (account?.provider === "google") {
+            await prisma.user.update({
+              where: { id: uid },
+              data: { adultConfirmedAt: new Date() },
+            });
+          }
           const walletExists = await prisma.wallet.findUnique({
             where: { userId: uid },
             select: { id: true },

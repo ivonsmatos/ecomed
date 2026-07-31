@@ -30,7 +30,7 @@ export default async function ImpactoPage() {
           <p className="text-4xl font-bold text-blue-700">
             {impacto.litrosAguaProtegidos.toLocaleString("pt-BR")}
           </p>
-          <p className="text-blue-600 text-sm mt-1">litros de água protegidos</p>
+          <p className="text-blue-600 text-sm mt-1">litros de proteção hídrica potencial</p>
           <p className="text-blue-500 text-xs mt-2">
             Medicamentos descartados incorretamente contaminam rios e lençóis freáticos
           </p>
@@ -38,12 +38,12 @@ export default async function ImpactoPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-eco-teal/10 border border-eco-teal/20 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-eco-teal-dark">{impacto.kgResiduoDescartado} kg</p>
-            <p className="text-eco-green text-xs mt-1">resíduos corretamente destinados</p>
+            <p className="text-2xl font-bold text-eco-teal-dark">Não estimado</p>
+            <p className="text-eco-green text-xs mt-1">massa — aguardando medição</p>
           </div>
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-amber-700">{impacto.co2EvitadoKg} kg</p>
-            <p className="text-amber-600 text-xs mt-1">CO₂ evitado na natureza</p>
+            <p className="text-2xl font-bold text-amber-700">Não estimado</p>
+            <p className="text-amber-600 text-xs mt-1">CO₂ — metodologia em validação</p>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default async function ImpactoPage() {
       )}
 
       <p className="text-xs text-muted-foreground text-center">
-        Cálculos baseados em dados ANVISA e estudos de logística reversa (PNRS 2020)
+        Estimativas — consulte /metodologia-impacto. Versão {impacto.methodologyVersion}.
       </p>
 
       {wallet && wallet.balance >= 200 && (

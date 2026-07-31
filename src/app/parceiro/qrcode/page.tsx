@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { requirePartner } from "@/lib/auth/session"
 import { prisma } from "@/lib/db/prisma"
 import { QrCodeCards } from "./QrCodeCards"
+import { gerarTokenPonto } from "@/lib/qr/token"
 
 export const metadata: Metadata = { title: "QR Code por Loja | EcoMed Parceiro" }
 
@@ -46,7 +47,12 @@ export default async function ParceiroQrCodePage() {
           Imprima e afixe no balcão. Cada código é único por ponto.
         </p>
       </div>
-      <QrCodeCards points={partner.points} />
+      <QrCodeCards
+        points={partner.points.map((point) => ({
+          ...point,
+          token: gerarTokenPonto(point.id),
+        }))}
+      />
     </div>
   )
 }
