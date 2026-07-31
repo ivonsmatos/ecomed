@@ -101,7 +101,7 @@
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5",
-    "vitest": "^4.1.2",
+    "vitest": "^4.1.10",
     "wrangler": "^4.80.0"
   }
 }
