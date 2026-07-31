@@ -31,7 +31,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@portabletext/react": "^6.0.3",
     "@prisma/adapter-pg": "^7.6.0",
-    "@prisma/client": "^7.6.0",
+    "@prisma/client": "^7.9.1",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-pdf/renderer": "^4.4.1",
