@@ -1,5 +1,5 @@
-FROM node:20-alpine AS base
-RUN npm install -g pnpm
+FROM node:22-alpine AS base
+RUN corepack enable && corepack prepare pnpm@10.15.0 --activate
 
 # ─── Dependências ────────────────────────────────────────────────────────────
 FROM base AS deps
@@ -15,7 +15,7 @@ COPY . .
 
 # Variáveis públicas — NEXT_PUBLIC_* são embutidas no bundle do cliente,
 # AUTH_URL e GOOGLE_CLIENT_ID aparecem em URLs públicas de OAuth.
-# Segredos (DATABASE_URL, AUTH_SECRET, GOOGLE_CLIENT_SECRET) NÃO entram aqui:
+# Segredos (DATABASE_URL, AUTH_SECRET, QR_HMAC_SECRET, GOOGLE_CLIENT_SECRET) NÃO entram aqui:
 # são montados via BuildKit secrets apenas durante o RUN de build, sem ficar
 # gravados nas camadas da imagem (docker history não os expõe).
 ARG AUTH_URL
@@ -35,9 +35,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Gerar Prisma client e fazer build com segredos efêmeros (/run/secrets)
 RUN --mount=type=secret,id=DATABASE_URL \
     --mount=type=secret,id=AUTH_SECRET \
+    --mount=type=secret,id=QR_HMAC_SECRET \
     --mount=type=secret,id=GOOGLE_CLIENT_SECRET \
     export DATABASE_URL="$(cat /run/secrets/DATABASE_URL)" && \
     export AUTH_SECRET="$(cat /run/secrets/AUTH_SECRET)" && \
+    export QR_HMAC_SECRET="$(cat /run/secrets/QR_HMAC_SECRET)" && \
     export GOOGLE_CLIENT_SECRET="$(cat /run/secrets/GOOGLE_CLIENT_SECRET)" && \
     pnpm prisma generate && \
     pnpm exec next build --webpack

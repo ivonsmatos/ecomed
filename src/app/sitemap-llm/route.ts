@@ -1,19 +1,24 @@
-import { prisma } from "@/lib/db/prisma";
+import { getSitemapArticles } from "@/lib/sanity/queries";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
+
+function escapeXml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
 
 export async function GET() {
   const base = "https://ecomed.eco.br";
   const now = new Date().toISOString();
 
-  let articles: { slug: string; updatedAt: Date; title?: string }[] = [];
+  let articles: Awaited<ReturnType<typeof getSitemapArticles>> = [];
   try {
-    articles = await prisma.article.findMany({
-      where: { published: true },
-      select: { slug: true, updatedAt: true },
-      orderBy: { publishedAt: "desc" },
-    });
+    articles = await getSitemapArticles();
   } catch {
     // DB unavailable — return static only
   }
@@ -67,14 +72,29 @@ export async function GET() {
       title: "Ranking de descarte responsável",
       description: "Top usuários com mais descartes corretos realizados pelo EcoMed.",
     },
+    ...[
+      ["contato", "Contato EcoMed", "Canais públicos de contato do EcoMed."],
+      ["privacidade", "Política de Privacidade", "Tratamento de dados pessoais e direitos dos titulares."],
+      ["termos", "Termos de Uso", "Condições de uso da plataforma EcoMed."],
+      ["cookies", "Política de Cookies", "Categorias de cookies e gestão do consentimento."],
+      ["aviso-medico", "Aviso Médico", "Limites do conteúdo educativo publicado pelo EcoMed."],
+      ["metodologia-impacto", "Metodologia de Impacto", "Hipóteses, versão e limites das estimativas ambientais."],
+    ].map(([path, title, description]) => ({
+      url: `${base}/${path}`,
+      lastmod: now,
+      changefreq: "yearly",
+      priority: "0.5",
+      title,
+      description,
+    })),
   ];
 
   const articlePages = articles.map((a) => ({
     url: `${base}/blog/${a.slug}`,
-    lastmod: a.updatedAt.toISOString(),
+    lastmod: a._updatedAt,
     changefreq: "monthly",
     priority: "0.6",
-    title: a.slug,
+    title: a.title,
     description: "Artigo educativo sobre descarte de medicamentos — EcoMed Blog.",
   }));
 
@@ -88,12 +108,12 @@ export async function GET() {
 ${allPages
   .map(
     (p) => `  <url>
-    <loc>${p.url}</loc>
+    <loc>${escapeXml(p.url)}</loc>
     <lastmod>${p.lastmod}</lastmod>
     <changefreq>${p.changefreq}</changefreq>
     <priority>${p.priority}</priority>
-    <geo:title>${p.title}</geo:title>
-    <geo:description>${p.description}</geo:description>
+    <geo:title>${escapeXml(p.title)}</geo:title>
+    <geo:description>${escapeXml(p.description)}</geo:description>
   </url>`
   )
   .join("\n")}

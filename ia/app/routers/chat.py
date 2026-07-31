@@ -1,4 +1,5 @@
 import os
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
@@ -10,6 +11,9 @@ security = HTTPBearer()
 
 # Instância global injetada pelo main.py via set_rag()
 _rag: RAGService | None = None
+_max_concurrency = max(1, int(os.getenv("ECOBOT_MAX_CONCURRENCY", "8")))
+_timeout_seconds = max(1.0, float(os.getenv("ECOBOT_REQUEST_TIMEOUT_SECONDS", "50")))
+_semaphore = asyncio.Semaphore(_max_concurrency)
 
 
 def set_rag(instance: RAGService) -> None:
@@ -48,7 +52,14 @@ async def chat(
     rag: RAGService = Depends(get_rag),
 ):
     """Recebe uma pergunta sobre descarte de medicamentos e retorna resposta do RAG."""
-    result = rag.perguntar(body.pergunta, session_id=body.session_id)
+    try:
+        async with _semaphore:
+            result = await asyncio.wait_for(
+                asyncio.to_thread(rag.perguntar, body.pergunta, session_id=body.session_id),
+                timeout=_timeout_seconds,
+            )
+    except asyncio.TimeoutError as exc:
+        raise HTTPException(status_code=504, detail="Tempo limite do EcoBot excedido") from exc
     return ChatResponse(
         resposta=result["resposta"],
         model=result.get("model"),

@@ -15,10 +15,7 @@ const chatSchema = z.object({
 
 const feedbackSchema = z.object({
   messageId: z.string().min(1).max(36),
-  pergunta: z.string().min(1).max(1000),
-  resposta: z.string().min(1).max(5000),
   rating: z.enum(["positive", "negative"]),
-  comment: z.string().max(500).optional(),
 });
 
 // Persiste log de IA sem bloquear/derrubar a request principal.
@@ -35,7 +32,13 @@ async function logPrompt(input: {
   ip: string | null;
 }) {
   try {
-    await prisma.aiPromptLog.create({ data: input });
+    await prisma.aiPromptLog.create({
+      data: {
+        ...input,
+        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+        retentionPolicyVersion: "2026-07",
+      },
+    });
   } catch (e) {
     // Falha de log não pode quebrar o chat — apenas reporta no stderr.
     console.error("[ai-prompt-log] insert failed:", e);
@@ -120,7 +123,14 @@ app.post("/", zValidator("json", chatSchema), async (c) => {
     const latencyMs = Date.now() - startedAt;
 
     if (userId && pergunta.trim().length >= 10) {
-      const coinResult = await creditCoins(userId, "ECOBOT_QUESTION", messageId, undefined, "Pergunta ao EcoBot");
+      const coinResult = await creditCoins(
+        userId,
+        "ECOBOT_QUESTION",
+        messageId,
+        undefined,
+        "Pergunta ao EcoBot",
+        `ECOBOT_QUESTION:${messageId}`,
+      );
       if (coinResult.ok) {
         await aplicarProgressoMissoes(userId, "ECOBOT_QUESTION").catch(() => null);
       }
@@ -174,27 +184,45 @@ app.post("/feedback", zValidator("json", feedbackSchema), async (c) => {
   if (!success) return c.json({ error: "Muitas requisições. Tente em instantes." }, 429);
 
   const session = await auth();
-  const { messageId, pergunta, resposta, rating, comment } = c.req.valid("json");
+  const { messageId, rating } = c.req.valid("json");
 
-  // Impedir avaliação duplicada da mesma mensagem
-  const jaAvaliou = await prisma.chatFeedback.findFirst({ where: { messageId } });
-  if (jaAvaliou) return c.json({ ok: false, reason: "ja_avaliado" });
+  const userId = session?.user?.id ?? null;
+  const original = await prisma.aiPromptLog.findFirst({
+    where: userId
+      ? { messageId, userId }
+      : { messageId, userId: null, ip },
+    select: { prompt: true, response: true },
+  });
+  if (!original?.response) {
+    return c.json({ error: "Mensagem não encontrada ou não pertence a esta sessão." }, 404);
+  }
 
-  await prisma.chatFeedback.create({
+  const existingFeedback = await prisma.chatFeedback.findUnique({ where: { messageId } });
+  if (existingFeedback) return c.json({ ok: true, coinsEarned: 0, idempotent: true });
+
+  const feedback = await prisma.chatFeedback.create({
     data: {
-      userId: session?.user?.id ?? null,
+      userId,
       messageId,
-      pergunta,
-      resposta,
+      pergunta: original.prompt,
+      resposta: original.response,
       rating,
-      comment: comment ?? null,
+      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      retentionPolicyVersion: "2026-07",
     },
   });
 
   // Creditar ECOBOT_RATING apenas para usuários autenticados
   let coinsEarned = 0;
-  if (session?.user?.id) {
-    const result = await creditCoins(session.user.id, "ECOBOT_RATING", messageId, undefined, "Avaliação do EcoBot");
+  if (session?.user?.id && feedback.rating === rating) {
+    const result = await creditCoins(
+      session.user.id,
+      "ECOBOT_RATING",
+      messageId,
+      undefined,
+      "Avaliação do EcoBot",
+      `ECOBOT_RATING:${messageId}`,
+    );
     if (result.ok) {
       await aplicarProgressoMissoes(session.user.id, "ECOBOT_RATING").catch(() => null);
       coinsEarned = 1;

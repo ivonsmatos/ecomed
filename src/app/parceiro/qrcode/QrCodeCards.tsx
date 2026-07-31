@@ -12,6 +12,7 @@ interface Point {
   address: string
   city: string
   state: string
+  token: string
 }
 
 function downloadSvg(svgEl: SVGSVGElement | null, filename: string) {
@@ -27,7 +28,7 @@ function downloadSvg(svgEl: SVGSVGElement | null, filename: string) {
 
 function QrCard({ point }: { point: Point }) {
   const svgRef = useRef<SVGSVGElement>(null)
-  const url = `https://ecomed.eco.br/checkin?p=${encodeURIComponent(point.id)}`
+  const url = `https://ecomed.eco.br/checkin?token=${encodeURIComponent(point.token)}`
 
   return (
     <Card className="overflow-hidden">

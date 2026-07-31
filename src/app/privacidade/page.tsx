@@ -98,7 +98,10 @@ export default function PrivacidadePage() {
               <li>Solicitar anonimização, bloqueio ou eliminação de dados desnecessários.</li>
               <li>Solicitar portabilidade dos dados a outro fornecedor.</li>
               <li>Revogar o consentimento a qualquer momento, sem prejuízo.</li>
-              <li>Solicitar a exclusão completa da conta e de todos os dados pessoais.</li>
+              <li>
+                Solicitar exclusão ou anonimização, ressalvadas retenções obrigatórias devidamente
+                justificadas.
+              </li>
             </ul>
             <p>
               Para exercer qualquer desses direitos, entre em contato:{" "}
@@ -125,7 +128,25 @@ export default function PrivacidadePage() {
           </section>
 
           <section>
-            <h2>8. Contato e ANPD</h2>
+            <h2>8. Identificação do controlador</h2>
+            <p>
+              <strong>Responsável legal / razão social:</strong> [PREENCHER APÓS VALIDAÇÃO JURÍDICA]
+              <br />
+              <strong>CPF/CNPJ:</strong> [PREENCHER APÓS VALIDAÇÃO JURÍDICA]
+              <br />
+              <strong>Endereço de contato:</strong> [PREENCHER APÓS VALIDAÇÃO JURÍDICA]
+              <br />
+              <strong>Canal do encarregado:</strong>{" "}
+              <a href="mailto:privacidade@ecomed.eco.br">privacidade@ecomed.eco.br</a>
+            </p>
+            <p>
+              Os dados pendentes acima não foram inventados e devem ser preenchidos pelo responsável
+              antes da publicação definitiva desta versão da política.
+            </p>
+          </section>
+
+          <section>
+            <h2>9. Contato e ANPD</h2>
             <p>
               Dúvidas ou reclamações:{" "}
               <a href="mailto:privacidade@ecomed.eco.br">privacidade@ecomed.eco.br</a>.

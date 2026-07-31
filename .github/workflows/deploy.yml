@@ -10,11 +10,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  # ── Job 1: Testes unitários (rápido, sem dependências externas) ───────────
+  # ── Job 1: qualidade, segurança e builds ─────────────────────────────────
   test:
-    name: Unit Tests (Vitest)
+    name: Quality Gate
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     permissions:
       contents: read
 
@@ -38,6 +38,36 @@ jobs:
         env:
           NODE_ENV: test
 
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Python tests
+        run: |
+          python -m pip install -r ia/requirements.txt
+          python -m pip install -r ia/requirements-dev.txt
+          python -m pytest ia/tests
+
+      - name: Build
+        run: pnpm build
+        env:
+          DATABASE_URL: postgresql://build:build@127.0.0.1:5432/build
+          AUTH_SECRET: ci-auth-secret-with-at-least-thirty-two-characters
+          QR_HMAC_SECRET: ci-qr-secret-with-at-least-thirty-two-characters
+          GOOGLE_CLIENT_ID: ci
+          GOOGLE_CLIENT_SECRET: ci
+
+      - name: Dependency audit (review signal)
+        continue-on-error: true
+        run: pnpm audit --audit-level high
+
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # ── Job 2: Deploy no VPS (só roda se testes passarem) ────────────────────
   deploy:
     name: Deploy → VPS
@@ -57,11 +87,13 @@ jobs:
           command_timeout: 18m
           script: |
             set -e
+            exec 9>/var/lock/ecomed-deploy.lock
+            flock -n 9 || { echo "Outro deploy está em andamento"; exit 1; }
             cd /opt/ecomed
 
-            echo "📥 Atualizando código..."
-            git fetch origin
-            git reset --hard origin/master
+            echo "📥 Selecionando commit imutável..."
+            git fetch origin "${{ github.sha }}"
+            git checkout --detach "${{ github.sha }}"
 
             set -a; source /opt/ecomed/.env; set +a
 
@@ -73,19 +105,20 @@ jobs:
               --target builder \
               --secret "id=DATABASE_URL,env=DATABASE_URL" \
               --secret "id=AUTH_SECRET,env=AUTH_SECRET" \
+              --secret "id=QR_HMAC_SECRET,env=QR_HMAC_SECRET" \
               --secret "id=GOOGLE_CLIENT_SECRET,env=GOOGLE_CLIENT_SECRET" \
               --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
               --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
               --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
-              -t ecomed-builder:latest .
+              -t "ecomed-builder:${{ github.sha }}" .
 
             echo "🗃️  Aplicando migrações Prisma (prisma migrate deploy)..."
             docker run --rm \
               -e DATABASE_URL="${MIGRATION_URL}" \
               -e DIRECT_URL="${MIGRATION_URL}" \
-              ecomed-builder:latest \
+              "ecomed-builder:${{ github.sha }}" \
               pnpm exec prisma migrate deploy
 
             echo "♻️  Sincronizando scripts de manutenção..."
@@ -125,15 +158,18 @@ jobs:
             docker build \
               --secret "id=DATABASE_URL,env=DATABASE_URL" \
               --secret "id=AUTH_SECRET,env=AUTH_SECRET" \
+              --secret "id=QR_HMAC_SECRET,env=QR_HMAC_SECRET" \
               --secret "id=GOOGLE_CLIENT_SECRET,env=GOOGLE_CLIENT_SECRET" \
               --build-arg "AUTH_URL=${AUTH_URL}" \
               --build-arg "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}" \
               --build-arg "NEXT_PUBLIC_VAPID_PUBLIC_KEY=${NEXT_PUBLIC_VAPID_PUBLIC_KEY}" \
               --build-arg "NEXT_PUBLIC_SANITY_PROJECT_ID=${NEXT_PUBLIC_SANITY_PROJECT_ID:-q9uk6qff}" \
               --build-arg "NEXT_PUBLIC_SANITY_DATASET=${NEXT_PUBLIC_SANITY_DATASET:-production}" \
-              -t ecomed-app:latest .
+              -t "ecomed-app:${{ github.sha }}" .
 
             echo "🔄 Reiniciando container ecomed-web..."
+            docker image inspect ecomed-app:current >/dev/null 2>&1 \
+              && docker image tag ecomed-app:current ecomed-app:previous || true
             docker stop ecomed-web 2>/dev/null || true
             docker rm   ecomed-web 2>/dev/null || true
             docker run -d \
@@ -142,17 +178,34 @@ jobs:
               --network ia_default \
               -p 3010:3010 \
               --env-file /opt/ecomed/.env \
-              ecomed-app:latest
+              "ecomed-app:${{ github.sha }}"
 
             echo "⏳ Aguardando healthcheck..."
+            healthy=false
             for i in $(seq 1 20); do
               status=$(docker inspect ecomed-web --format '{{.State.Health.Status}}' 2>/dev/null || echo "starting")
               if [ "$status" = "healthy" ]; then
                 echo "✅ Container saudável"
+                healthy=true
                 break
               fi
               sleep 3
             done
+            if [ "$healthy" != "true" ]; then
+              echo "❌ Healthcheck falhou; iniciando rollback"
+              docker logs --tail 100 ecomed-web || true
+              docker stop ecomed-web || true
+              docker rm ecomed-web || true
+              docker run -d \
+                --name ecomed-web \
+                --restart unless-stopped \
+                --network ia_default \
+                -p 3010:3010 \
+                --env-file /opt/ecomed/.env \
+                ecomed-app:previous
+              exit 1
+            fi
+            docker image tag "ecomed-app:${{ github.sha }}" ecomed-app:current
 
             echo "✅ Deploy concluído!"
             docker ps --filter name=ecomed-web

@@ -75,8 +75,8 @@ export default async function ImpactoPage() {
             <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-4">
               {[
                 { v: fmt(stats.checkins), l: "descartes corretos registrados", i: "✅" },
-                { v: fmt(impacto.litrosAguaProtegidos), l: "litros de água protegidos", i: "💧" },
-                { v: `${impacto.kgResiduoDescartado} kg`, l: "de resíduos destinados corretamente", i: "⚖️" },
+                { v: fmt(impacto.litrosAguaProtegidos), l: "litros de proteção hídrica potencial", i: "💧" },
+                { v: "Não estimado", l: "massa — aguardando medição", i: "⚖️" },
                 { v: fmt(stats.usuarios), l: "cidadãos na comunidade", i: "🤝" },
               ].map((s, i) => (
                 <div key={i} className="rounded-2xl border border-gray-200 p-6">
@@ -89,8 +89,8 @@ export default async function ImpactoPage() {
               ))}
             </div>
             <p className="mt-6 text-center text-xs text-gray-400">
-              Coeficientes de impacto: 1 descarte ≈ 450 L de água protegidos e 150 g de
-              resíduo farmacêutico (referências: ANVISA, PNRS, estudos de ecotoxicologia).
+              Estimativa de potencial, não medição direta. Metodologia versão{" "}
+              {impacto.methodologyVersion}; CO₂ e massa ainda não são estimados.
             </p>
           </div>
         </section>

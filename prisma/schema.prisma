@@ -104,6 +104,7 @@ model User {
   referrals         User[]              @relation("Referrals")
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
+  adultConfirmedAt  DateTime?
   accounts          Account[]
   sessions          Session[]
   favorites         Favorite[]
@@ -287,7 +288,7 @@ model PointViewDaily {
 
 model PasswordResetToken {
   id        String   @id @default(cuid())
-  token     String   @unique
+  tokenHash String   @unique
   userId    String
   expiresAt DateTime
   used      Boolean  @default(false)
@@ -320,6 +321,7 @@ model CoinTransaction {
   event     CoinEvent
   reference String?
   note      String?
+  idempotencyKey String? @unique
   createdAt DateTime  @default(now())
   wallet    Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
 }
@@ -379,12 +381,16 @@ model Checkin {
   pointId     String
   coinsEarned Int      @default(10)
   hasGps      Boolean  @default(false)
+  checkinDay  DateTime @default(now())
+  qrNonce     String?
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   point       Point    @relation(fields: [pointId], references: [id], onDelete: Cascade)
 
   // Anti-abuso: 1 check-in por usuário por ponto por dia (usando date truncation na query)
   @@index([userId, pointId, createdAt])
+  @@unique([userId, pointId, checkinDay])
+  @@unique([userId, qrNonce])
 }
 
 // Controle de limites diários por categoria (anti-fraude)
@@ -486,9 +492,14 @@ model ChatFeedback {
   reviewed    Boolean  @default(false) // equipe já revisou?
   actionTaken String? // o que foi feito após revisão
   createdAt   DateTime @default(now())
+  anonymizedAt DateTime?
+  expiresAt DateTime?
+  retentionPolicyVersion String @default("2026-07")
   user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  @@unique([messageId])
   @@index([createdAt])
+  @@index([expiresAt])
   @@index([rating, reviewed])
 }
 
@@ -507,11 +518,15 @@ model AiPromptLog {
   errorCode String?
   ip        String?
   createdAt DateTime @default(now())
+  anonymizedAt DateTime?
+  expiresAt DateTime?
+  retentionPolicyVersion String @default("2026-07")
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([createdAt])
   @@index([userId])
   @@index([status, createdAt])
+  @@index([expiresAt])
 }
 
 // ---- Publicidade — Campanhas de banner de parceiros ----

@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   // Esses esquemas não são suportados pelo bundler webpack — o pacote deve ser
   // tratado como externo (require em runtime, não bundled).
   serverExternalPackages: ["@prisma/client", "prisma"],
-  // instrumentation.ts é auto-detectado no Next.js 15 (stable).
+  // instrumentation.ts é auto-detectado no Next.js 16.
   // Não requer flag experimental — apenas ter o arquivo na raiz do projeto é suficiente.
   images: {
     remotePatterns: [

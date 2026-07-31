@@ -26,29 +26,40 @@ import {
 
 type FormData = z.infer<typeof registerSchema>;
 
+function setShortLivedCookie(name: string, value: string, secure = false) {
+  document.cookie = `${name}=${encodeURIComponent(value)};path=/;max-age=600;SameSite=Lax${secure ? ";Secure" : ""}`;
+}
+
 export function CadastrarForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleGoogle() {
+    if (!getValues("adultConfirmed")) {
+      toast.error("Confirme que você tem 18 anos ou mais.");
+      return;
+    }
     setGoogleLoading(true);
+    setShortLivedCookie("ecomed_adult_confirmed", "1", window.location.protocol === "https:");
     // Salva o código de indicação em cookie antes do redirect OAuth
     const ref = searchParams.get("ref");
     if (ref) {
-      document.cookie = `ecomed_ref=${encodeURIComponent(ref)};path=/;max-age=600;SameSite=Lax`;
+      setShortLivedCookie("ecomed_ref", ref);
     }
     await signIn("google", { callbackUrl: "/app" });
   }
 
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       referralCode: searchParams.get("ref") ?? "",
+      adultConfirmed: false,
     },
   });
 
@@ -113,6 +124,23 @@ export function CadastrarForm() {
             <Label htmlFor="name">Nome completo</Label>
             <Input id="name" autoComplete="name" placeholder="Seu nome" {...register("name")} />
             {errors.name && <p className="text-xs text-red-600">{errors.name.message}</p>}
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="flex items-start gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="mt-1 size-4"
+                {...register("adultConfirmed")}
+              />
+              <span>
+                Confirmo que tenho 18 anos ou mais e aceito os{" "}
+                <Link href="/termos" className="underline">Termos de Uso</Link>.
+              </span>
+            </label>
+            {errors.adultConfirmed && (
+              <p className="text-xs text-red-600">{errors.adultConfirmed.message}</p>
+            )}
           </div>
 
           <div className="space-y-1.5">

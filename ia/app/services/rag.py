@@ -27,6 +27,7 @@ from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 from langchain_core.documents import Document
 
 from app.services.guardrails import verificar_guardrails, filtrar_saida
+from app.services.session_store import TTLSessionStore
 
 logger = logging.getLogger(__name__)
 
@@ -96,8 +97,9 @@ class RAGService:
         self._vectorstore: PGVector | None = None
         self._embeddings: FastEmbedEmbeddings | None = None
         self._model: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
-        # Histórico de conversa por sessão: {session_id: [msg, ...]}
-        self._sessions: dict[str, list[dict]] = {}
+        self._session_ttl = max(60, int(os.getenv("ECOBOT_SESSION_TTL_SECONDS", "1800")))
+        self._max_sessions = max(1, int(os.getenv("ECOBOT_MAX_SESSIONS", "10000")))
+        self._sessions = TTLSessionStore(self._session_ttl, self._max_sessions)
 
     def initialize(self) -> None:
         """Inicializa Groq client e conecta ao PGVector."""
@@ -137,19 +139,17 @@ class RAGService:
     # ── Sessão ────────────────────────────────────────────────────────────────
 
     def _get_history(self, session_id: str) -> list[dict]:
-        return self._sessions.get(session_id, [])
+        return self._sessions.get(session_id)
 
     def _save_turn(self, session_id: str, pergunta: str, resposta: str) -> None:
-        if session_id not in self._sessions:
-            self._sessions[session_id] = []
-        self._sessions[session_id].append({"role": "user", "content": pergunta})
-        self._sessions[session_id].append({"role": "assistant", "content": resposta})
-        # Mantém apenas as últimas 8 trocas (16 mensagens)
-        if len(self._sessions[session_id]) > 16:
-            self._sessions[session_id] = self._sessions[session_id][-16:]
+        self._sessions.save_turn(session_id, pergunta, resposta)
 
     def clear_session(self, session_id: str) -> None:
-        self._sessions.pop(session_id, None)
+        self._sessions.clear(session_id)
+
+    @property
+    def active_session_count(self) -> int:
+        return len(self._sessions)
 
     # ── Pergunta ──────────────────────────────────────────────────────────────
 

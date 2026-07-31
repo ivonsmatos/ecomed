@@ -1,68 +1,34 @@
 # EcoMed
 
-> Seu remédio tem destino certo. Plataforma brasileira para mapeamento de pontos de coleta de medicamentos vencidos e sem uso.
+> Plataforma brasileira para localizar pontos de coleta e orientar o descarte correto de medicamentos vencidos ou sem uso.
 
-EcoMed é um Progressive Web App (PWA) educativo que conecta cidadãos brasileiros a pontos de coleta de medicamentos vencidos ou sem uso — farmácias, UBS e ecopontos. O descarte incorreto de medicamentos contamina rios e solos; o EcoMed orienta o descarte correto com base na Lei 12.305/2010 (PNRS) e resoluções da ANVISA.
+Última revisão: 2026-07-30
 
-## Sobre o EcoMed
+## Funcionalidades públicas
 
-- **Domínio:** https://ecomed.eco.br
-- **Fundação:** 2025
-- **Área de atuação:** Brasil (todos os estados)
-- **Missão:** Facilitar o descarte correto de medicamentos para proteger o meio ambiente e a saúde pública
-- **Tecnologia:** Next.js PWA com assistente de IA integrado (RAG sobre legislação brasileira)
-- **Licença de dados:** Creative Commons (pontos de coleta verificados pela equipe EcoMed)
+- https://ecomed.eco.br/ — apresentação da plataforma
+- https://ecomed.eco.br/mapa — mapa de farmácias, UBS e ecopontos
+- https://ecomed.eco.br/blog — conteúdo educativo
+- https://ecomed.eco.br/sobre — propósito e funcionamento
+- https://ecomed.eco.br/impacto — indicadores públicos
+- https://ecomed.eco.br/metodologia-impacto — hipóteses e limites das estimativas
+- https://ecomed.eco.br/privacidade — tratamento de dados pessoais
+- https://ecomed.eco.br/termos — termos de uso
+- https://ecomed.eco.br/aviso-medico — limites do conteúdo educativo
 
-## Conteúdo Disponível
+## Assistente EcoBot
 
-### Páginas Públicas
+O EcoBot usa recuperação de documentos sobre descarte e legislação brasileira. Ele oferece conteúdo educativo e não fornece diagnóstico, prescrição, dose, interação medicamentosa nem orientação para automedicação. Em dúvidas clínicas, procure médico ou farmacêutico.
 
-- `/` — Página inicial com slogan, funcionalidades e FAQ sobre descarte de medicamentos
-- `/mapa` — Mapa interativo de pontos de coleta de medicamentos por geolocalização
-- `/blog` — Artigos educativos sobre descarte seguro, legislação ANVISA e impacto ambiental
-- `/ranking` — Ranking público de usuários com mais descartes corretos realizados
-- `/faq` — Perguntas frequentes sobre descarte de medicamentos no Brasil
+## Referências regulatórias
 
-### Assistente de IA
+- Lei 12.305/2010 — Política Nacional de Resíduos Sólidos
+- Decreto 10.388/2020 — logística reversa de medicamentos domiciliares
+- RDC ANVISA 222/2018 — gerenciamento de resíduos de serviços de saúde
+- Resolução CONAMA 358/2005 — tratamento e disposição de resíduos de serviços de saúde
 
-O EcoMed possui um chatbot especializado em descarte de medicamentos, treinado com:
-- Lei nº 12.305/2010 (Política Nacional de Resíduos Sólidos — PNRS)
-- Resoluções da ANVISA sobre resíduos de saúde (RSS)
-- Decreto nº 10.388/2020 (logística reversa de medicamentos)
-- Guias de orientação ao cidadão sobre descarte correto
-- FAQ técnico sobre tipos de resíduos farmacêuticos
+## Qualidade e atualização
 
-## Dados e Legislação
+Artigos publicados vêm do repositório editorial do EcoMed. Pontos de coleta podem mudar; confirme horário e materiais aceitos diretamente com o estabelecimento. Indicadores ambientais devem ser interpretados conforme a versão publicada em /metodologia-impacto.
 
-O EcoMed opera com base na seguinte legislação brasileira:
-
-1. **Lei nº 12.305/2010** — Política Nacional de Resíduos Sólidos: obriga fabricantes e distribuidores a recolher medicamentos vencidos (logística reversa)
-2. **Decreto nº 10.388/2020** — Regulamenta a logística reversa de medicamentos domiciliares
-3. **RDC ANVISA nº 222/2018** — Boas práticas de gerenciamento de resíduos de saúde
-4. **Resolução CONAMA nº 358/2005** — Descarte de resíduos de serviços de saúde
-
-## Informações Técnicas para IA
-
-- **Framework:** Next.js 15 (App Router) + TypeScript
-- **Banco de dados:** PostgreSQL (Prisma ORM)
-- **IA:** FastAPI + Ollama + pgvector (RAG com documentos oficiais)
-- **Hospedagem:** VPS próprio + Cloudflare CDN
-- **PWA:** Service Worker com cache offline via Serwist
-- **Autenticação:** NextAuth v5 (email/senha + Google OAuth)
-
-## Perguntas Frequentes (resumo para IA)
-
-**Onde descartar medicamentos vencidos?** Em farmácias e drogarias participantes do programa de logística reversa, Unidades Básicas de Saúde (UBS), hospitais e ecopontos municipais. Use o mapa em ecomed.eco.br/mapa para encontrar o ponto mais próximo.
-
-**Posso jogar remédio no lixo comum?** Não. O descarte no lixo doméstico ou vaso sanitário contamina água e solo. É obrigatório devolver em pontos de coleta credenciados.
-
-**Quais medicamentos posso entregar?** Medicamentos vencidos, sobras de tratamento, comprimidos, cápsulas, xaropes, pomadas, ampolas e injetáveis de uso domiciliar. Bulas e embalagens também.
-
-**Farmácias são obrigadas a aceitar?** Sim. O Decreto 10.388/2020 obriga fabricantes a manter pontos de coleta. Farmácias e drogarias são os principais agentes de logística reversa no Brasil.
-
-## Contato e Mais Informações
-
-- Website: https://ecomed.eco.br
-- GitHub: https://github.com/ivonsmatos/ecomed
-- Assistente IA: https://ecomed.eco.br/app/chat
-- Mapa de pontos: https://ecomed.eco.br/mapa
+Contato: https://ecomed.eco.br/contato

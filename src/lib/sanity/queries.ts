@@ -26,6 +26,13 @@ export interface ArticleListItem {
   };
 }
 
+export interface SitemapArticle {
+  slug: string;
+  title: string;
+  publishedAt: string;
+  _updatedAt: string;
+}
+
 export interface ArticleFull extends ArticleListItem {
   author?: string;
   body: PortableTextBlock[];
@@ -61,6 +68,21 @@ export async function getArticles(): Promise<ArticleListItem[]> {
     }`,
     {},
     { next: { revalidate: 60 } }, // 1 minuto
+  );
+}
+
+export async function getSitemapArticles(): Promise<SitemapArticle[]> {
+  if (!sanityClient) return [];
+  return sanityClient.fetch(
+    groq`*[_type == "article" && defined(publishedAt) && defined(slug.current)]
+      | order(publishedAt desc) {
+        "slug": slug.current,
+        title,
+        publishedAt,
+        _updatedAt
+      }`,
+    {},
+    { next: { revalidate: 3600 } },
   );
 }
 

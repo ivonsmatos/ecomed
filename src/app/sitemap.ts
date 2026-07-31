@@ -1,19 +1,15 @@
 import type { MetadataRoute } from "next";
-import { prisma } from "@/lib/db/prisma";
 import { getCidades, cidadeSlug } from "@/lib/geo/cidades";
+import { getSitemapArticles } from "@/lib/sanity/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://ecomed.eco.br";
 
-  let articles: { slug: string; updatedAt: Date }[] = [];
+  let articles: Awaited<ReturnType<typeof getSitemapArticles>> = [];
   try {
-    articles = await prisma.article.findMany({
-      where: { published: true },
-      select: { slug: true, updatedAt: true },
-      orderBy: { publishedAt: "desc" },
-    });
+    articles = await getSitemapArticles();
   } catch {
     // DB unavailable at build time — return static routes only
   }
@@ -48,11 +44,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/ranking`, lastModified: new Date(), changeFrequency: "daily", priority: 0.6 },
     { url: `${base}/entrar`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/cadastrar`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/contato`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.5 },
+    { url: `${base}/privacidade`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${base}/termos`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${base}/cookies`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${base}/aviso-medico`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${base}/metodologia-impacto`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
   ];
 
   const articleRoutes: MetadataRoute.Sitemap = articles.map((a) => ({
     url: `${base}/blog/${a.slug}`,
-    lastModified: a.updatedAt,
+    lastModified: new Date(a._updatedAt),
     changeFrequency: "monthly",
     priority: 0.6,
   }));

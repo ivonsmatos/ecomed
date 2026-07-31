@@ -37,7 +37,7 @@ const NIVEL_LABEL: Record<string, string> = {
   LENDA_ECO: "Lenda Eco ⭐",
 }
 
-export function CheckinClient({ point }: { point: Point }) {
+export function CheckinClient({ point, token }: { point: Point; token: string }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [result, setResult] = useState<CheckinResult | null>(null)
   const [errorMsg, setErrorMsg] = useState("")
@@ -66,7 +66,7 @@ export function CheckinClient({ point }: { point: Point }) {
       const res = await fetch("/api/checkin/store", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pointId: point.id, lat, lng }),
+        body: JSON.stringify({ token, lat, lng }),
       })
 
       const data = await res.json()
@@ -158,7 +158,7 @@ export function CheckinClient({ point }: { point: Point }) {
           <p className="font-medium text-amber-800 dark:text-amber-200">Como funciona:</p>
           <ul className="text-amber-700 dark:text-amber-300 space-y-0.5 text-xs list-disc list-inside">
             <li>Entregue seus medicamentos vencidos no balcão</li>
-            <li>Clique em "Confirmar" — usaremos seu GPS para garantir que você está aqui</li>
+            <li>Clique em &quot;Confirmar&quot; — usaremos seu GPS para garantir que você está aqui</li>
             <li>
               Ganhe <strong>15 EcoCoins com GPS</strong> ou 10 sem
             </li>

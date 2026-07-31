@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator"
 import { z } from "zod"
 import { auth } from "@/../auth"
 import { prisma } from "@/lib/db/prisma"
+import { debitCoinsInTransaction } from "@/lib/coins"
 
 const rewards = new Hono()
 
@@ -156,26 +157,21 @@ rewards.post(
           throw Object.assign(new Error("Saldo insuficiente."), { statusCode: 402 })
         }
 
-        const updatedWallet = await tx.wallet.update({
-          where: { userId },
-          data: { balance: { decrement: reward.cost } },
-          select: { balance: true, id: true },
-        })
-        newBalance = updatedWallet.balance
-
-        await tx.coinTransaction.create({
-          data: {
-            walletId: updatedWallet.id,
-            amount: -reward.cost,
-            event: "REDEMPTION" as never,
-            note: `Resgate: ${reward.name}`,
-          },
-        })
-
         const created = await tx.userReward.create({
           data: { userId, rewardId: id, status: "PENDING" },
         })
         userRewardId = created.id
+        const debit = await debitCoinsInTransaction(
+          tx,
+          userId,
+          reward.cost,
+          `Resgate: ${reward.name}`,
+          `REWARD:${created.id}`,
+        )
+        if (!debit.ok) {
+          throw Object.assign(new Error("Saldo insuficiente."), { statusCode: 402 })
+        }
+        newBalance = debit.newBalance!
 
         if (latestReward.stock !== null) {
           await tx.rewardCatalog.update({ where: { id }, data: { stock: { decrement: 1 } } })
