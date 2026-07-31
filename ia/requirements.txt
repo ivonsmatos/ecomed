@@ -3,7 +3,7 @@ uvicorn[standard]>=0.30.0
 python-dotenv>=1.0.0
 
 # LLM — Groq via API compatível com OpenAI
-openai>=1.40.0
+openai>=2.49.0
 
 # LangChain
 langchain>=0.3.0
