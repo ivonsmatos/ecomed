@@ -11,6 +11,7 @@
 # Restauração:
 #   docker run --rm -i postgres:17-alpine pg_restore -d "$DATABASE_URL" --clean --if-exists < arquivo.dump
 set -euo pipefail
+umask 077
 
 cd /opt/ecomed
 set -a; source .env; set +a
