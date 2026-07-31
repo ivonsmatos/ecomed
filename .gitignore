@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+playwright-report/
+test-results/
+blob-report/
 
 # next.js
 /.next/
@@ -32,6 +35,31 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# Claude Code — arquivos e estado local
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Pacotes e artefatos locais
+*.tar
+*.tar.gz
+*.zip
+full-app.tar.gz
+deploy-patch.tar.gz
+
+# Service worker gerado pelo Serwist (fonte: src/app/sw.ts)
+/public/sw.js
+
+# Temporários
+*.tmp
+*.bak
 
 # Claude Code — arquivos e estado local
 .claude/
