@@ -6,10 +6,8 @@
 
 PWA educativo com mapa inteligente, IA e gamificação para o descarte correto de medicamentos no Brasil.
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org)
-[![Groq](https://img.shields.io/badge/IA-Groq%20%2B%20Llama%204-1A736A.svg)](https://groq.com)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Groq](https://img.shields.io/badge/IA-RAG%20%2B%20Groq-1A736A.svg)](https://groq.com)
 
 [Acessar o EcoMed](https://ecomed.eco.br) · [Reportar Bug](https://github.com/ivonsmatos/ecomed/issues/new) · [Sugerir Feature](https://github.com/ivonsmatos/ecomed/issues/new)
 
@@ -19,17 +17,19 @@ PWA educativo com mapa inteligente, IA e gamificação para o descarte correto d
 
 ## 📋 Sobre o Projeto
 
-**91% dos brasileiros** descartam medicamentos de forma incorreta. **30 mil toneladas/ano** vão para o lixo comum ou esgoto. **1 comprimido** pode contaminar até **450 mil litros de água**. Existem **58 mil+ pontos de coleta** em farmácias credenciadas no sistema de logística reversa, mas quase ninguém sabe que eles existem.
+O descarte de medicamentos no lixo comum ou no esgoto representa um risco ambiental
+e de saúde pública. Ao mesmo tempo, informações sobre pontos de coleta e sobre a
+forma correta de descarte ainda estão dispersas.
 
 O EcoMed resolve isso com três pilares:
 
 | Funcionalidade | Descrição |
 |---|---|
 | 🗺️ **Mapa Inteligente** | 58 mil+ pontos (farmácias LogMed + UBS DATASUS). Busca por cidade ou CEP, filtro por tipo de resíduo (medicamentos / agulhas e seringas), rotas e selo de validação comunitária. |
-| 🤖 **EcoBot (Chat com IA)** | Tire dúvidas sobre descarte 24h. RAG com base de conhecimento local (310 Q&As), guardrails de 5 camadas e LLM via Groq. |
+| 🤖 **EcoBot (Chat com IA)** | Tire dúvidas sobre descarte 24h. RAG com base de conhecimento local, guardrails de 5 camadas e LLM via Groq. |
 | 🪙 **EcoCoins (Gamificação)** | Ganhe EcoCoins por cada ação sustentável. Suba de nível, complete missões e troque por recompensas. |
 
-> Plataforma open source para descarte correto de medicamentos no Brasil.
+> Plataforma de código-fonte público para descarte correto de medicamentos no Brasil.
 
 ---
 
@@ -41,20 +41,20 @@ O EcoMed resolve isso com três pilares:
 - ✅ **Busca por cidade ou CEP** — autocomplete de municípios + resolução de CEP via ViaCEP (server-side)
 - ✅ **Filtro por tipo de resíduo** — medicamentos vs. agulhas/seringas (farmácia vs. UBS)
 - ✅ **Selo de validação comunitária** — "descarte confirmado há X dias" + alerta de reportes em aberto
-- ✅ **Chat com IA educativa** — Groq (Llama 4 Scout) + RAG local, guardrails de 5 camadas
-- ✅ **Sistema de EcoCoins** — ledger imutável, 5 níveis (🌱→⭐), missões diárias, streaks, anti-fraude
+- ✅ **Chat com IA educativa** — Groq (`llama-3.1-8b-instant` por padrão) + RAG local, guardrails de 5 camadas
+- ✅ **Sistema de EcoCoins** — ledger auditável e idempotente, 5 níveis (🌱→⭐), missões diárias, streaks e limites anti-fraude
 - ✅ **Blog educativo** — CMS Sanity, busca de conteúdo, paginação, posts relacionados, prev/next com preview de imagem
 - ✅ **Quizzes educativos** — perguntas com score server-side e EcoCoins
 - ✅ **Indicações** — código pessoal ECOMED-XXXXX, +20 EcoCoins por amigo
 - ✅ **Ranking semanal** — top usuários por EcoCoins ganhos na semana
 - ✅ **Certificado Eco-Cidadão** — PDF gerado no servidor com QR Code de verificação
 - ✅ **Dashboard de impacto pessoal** — litros protegidos, descartes, pessoas educadas
-- ✅ **Página pública de impacto** (`/impacto`) — números reais da plataforma + cobertura nacional por município
+- ✅ **Página pública de impacto** (`/impacto`) — indicadores agregados da plataforma + cobertura por município
 - ✅ **API pública para parceiros** (`/api/public/v1`) — pontos de coleta via REST com X-API-Key ([docs](https://ecomed.eco.br/desenvolvedores))
 - ✅ **Widget embeddable** (`/embed/mapa`) — mapa via iframe para sites de terceiros, sem chave
 - ✅ **SEO programático** — páginas `/descarte/[cidade]-[uf]` para municípios com pontos de coleta
-- ✅ **Check-in por QR Code da loja** (`/checkin?p=`) — cidadão escaneia o QR no balcão, confirma com GPS e ganha EcoCoins na hora
-- ✅ **Relatório de Impacto ESG por parceiro** (`/parceiro/impacto`) — descartes, litros protegidos e CO₂ evitado por loja, com QR gerado no painel (`/parceiro/qrcode`)
+- ✅ **Check-in por QR Code da loja** (`/checkin?token=`) — token HMAC com validade configurável, confirmação por GPS e crédito idempotente de EcoCoins
+- ✅ **Relatório de impacto por parceiro** (`/parceiro/impacto`) — descartes e estimativas de impacto por loja, com QR gerado no painel (`/parceiro/qrcode`)
 - ✅ **Publicidade de parceiros** (`/admin/ads`, `/parceiro/publicidade`) — banners segmentados por cidade, UF ou raio hiperlocal ao redor da loja, com selo de transparência e métricas de impressões/cliques/CTR
 - ✅ **Notificações push (Web Push)** — engajamento e reativação
 - ✅ **Acessibilidade** — VLibras (tradução para Libras), skip-links, componentes acessíveis
@@ -75,10 +75,10 @@ O EcoMed resolve isso com três pilares:
 | **Autenticação** | Auth.js (NextAuth v5) | 5.x | Google OAuth + credentials |
 | **ORM** | Prisma | 7.x | Queries tipadas, migrações, seed |
 | **Banco de Dados** | PostgreSQL gerenciado | — | Dados principais; pgvector em container dedicado para o RAG |
-| **Cache / Rate Limit** | Upstash Redis | — | Rate limiting, sessões |
-| **CMS** | Sanity | v3 | Blog, artigos educativos |
+| **Cache / Rate Limit** | Upstash Redis | — | Rate limiting distribuído |
+| **CMS** | Sanity | 5.x | Blog, artigos educativos |
 | **Monitoramento** | Sentry | 10.x | Error tracking + performance |
-| **Analytics** | Google Analytics + Plausible | — | Métricas de uso |
+| **Analytics** | Google Analytics + Plausible | — | Métricas de uso condicionadas ao consentimento |
 | **Service Worker** | serwist | — | PWA offline, cache de assets |
 | **PDF** | @react-pdf/renderer | — | Certificados gerados no servidor |
 | **Push** | Web Push API | — | Notificações browser |
@@ -88,7 +88,7 @@ O EcoMed resolve isso com três pilares:
 | Camada | Tecnologia | Uso |
 |---|---|---|
 | **API** | FastAPI + uvicorn | Endpoint `/chat`, autenticação por token Bearer |
-| **LLM** | Groq — `meta-llama/llama-4-scout-17b-16e-instruct` | Inferência ultrarrápida (<2s) via API |
+| **LLM** | Groq — `llama-3.1-8b-instant` por padrão | Inferência via API; modelo configurável por `GROQ_MODEL` |
 | **Embeddings** | FastEmbed — `paraphrase-multilingual-MiniLM-L12-v2` | Geração local, sem API externa, multilingual |
 | **Vector Store** | PGVector (langchain-postgres) | Busca semântica nos documentos de treinamento |
 | **Orquestração RAG** | LangChain | Chunking, indexação e pipeline de recuperação |
@@ -102,8 +102,6 @@ O EcoMed resolve isso com três pilares:
 | **Cloudflare** | DNS, SSL/TLS, WAF, CDN, cache |
 | **Docker Network** `ia_default` | Comunicação interna entre web ↔ IA ↔ DB |
 | **Nginx / Reverse Proxy** | Roteamento de portas externas |
-
-**Custo operacional estimado: ~R$ 40–80/mês** (VPS + free tiers de serviços cloud).
 
 ---
 
@@ -134,7 +132,7 @@ Pergunta do usuário
                        │ contexto + histórico de sessão
                        ▼
 ┌──────────────────────────────────────────────┐
-│  LLM — Groq / Llama 4 Scout 17B             │
+│  LLM — Groq / modelo configurado             │
 │  system prompt + contexto + histórico + pergunta │
 │  max_tokens=512, temperature=0.2             │
 └──────────────────────┬───────────────────────┘
@@ -153,7 +151,7 @@ Pergunta do usuário
 ```
 
 **Base de conhecimento:** documentos `.txt` em `ia/docs/` indexados via `python -m app.ingest --reset`.  
-**Memória de sessão:** últimas 8 trocas (16 mensagens) por `session_id`, em memória.
+**Memória de sessão:** histórico recente por `session_id`, mantido em memória com TTL e limite LRU configuráveis.
 
 ---
 
@@ -162,115 +160,55 @@ Pergunta do usuário
 ```
 ecomed/
 ├── src/
-│   └── app/                        # Next.js App Router
-│       ├── (app)/                  # Rotas autenticadas
-│       │   ├── chat/               # Interface do EcoBot
-│       │   ├── missoes/            # Missões diárias
-│       │   ├── conquistas/         # Badges e conquistas
-│       │   ├── impacto/            # Dashboard de impacto
-│       │   ├── ranking/            # Ranking semanal
-│       │   ├── recompensas/        # Catálogo de resgates
-│       │   ├── quiz/               # Quizzes educativos
-│       │   ├── perfil/             # Perfil + EcoCoins
-│       │   ├── favoritos/          # Pontos favoritos
-│       │   └── notificacoes/       # Push notifications
-│       ├── (public)/               # Rotas públicas
-│       │   ├── blog/               # Listagem e artigos do blog
-│       │   ├── mapa/               # Mapa + detalhe de ponto
-│       │   ├── sobre/, parceiros/  # Páginas institucionais
-│       │   └── ...
-│       ├── admin/                  # Painel administrativo
-│       │   └── ads/                # Gestão de campanhas de publicidade
-│       ├── parceiro/               # Dashboard de parceiros
-│       │   ├── qrcode/             # Gerador de QR Code por loja
-│       │   ├── impacto/            # Relatório ESG (descartes, litros, CO₂)
-│       │   └── publicidade/        # Métricas das campanhas do parceiro
-│       ├── checkin/                # Check-in do cidadão via QR da loja
-│       ├── impacto/                # Página pública de impacto + cobertura
-│       ├── desenvolvedores/        # Docs da API pública + widget
-│       ├── descarte/[slug]/        # SEO programático por cidade
-│       ├── embed/mapa/             # Widget iframe para terceiros
-│       ├── api/[[...route]]/       # API routes (Hono)
-│       │   └── routes/
-│       │       ├── chat.ts         # Proxy para o microserviço IA
-│       │       ├── pontos.ts       # Pontos de coleta (+ filtro ?tipo=)
-│       │       ├── geo.ts          # Busca por cidade (autocomplete) e CEP
-│       │       ├── public.ts       # API pública v1 (X-API-Key + CORS por origin)
-│       │       ├── checkin.ts      # Check-in por QR (parceiro e cidadão)
-│       │       ├── ads.ts          # Serving/impressão/clique de publicidade
-│       │       ├── coins.ts        # Crédito de EcoCoins
-│       │       ├── quiz.ts         # Score de quizzes
-│       │       ├── user.ts         # Perfil e dados do usuário
-│       │       └── ...
-│       ├── api/cron/               # Crons HTTP (Bearer CRON_SECRET)
-│       │   ├── reset-missoes/      # 03:00 UTC
-│       │   ├── ensure-missoes/     # 03:15 UTC
-│       │   └── aggregate-views/    # 03:45 UTC — agrega PointView em PointViewDaily
-│       ├── layout.tsx              # Layout global + JSON-LD schemas
-│       ├── manifest.ts             # PWA manifest
-│       ├── sitemap.xml/            # Sitemap dinâmico
-│       └── robots.txt/             # Robots + referência ao llms.txt
-│
-├── src/components/                 # Componentes React
-│   ├── layout/                     # Header, Footer
-│   ├── blog/                       # ArticleCard, FaqAccordion, ArticleReadTracker, BlogSearch
-│   ├── ads/                        # AdSlot — banner com selo de transparência
-│   ├── shared/                     # CookieBanner, etc.
-│   └── ui/                         # shadcn/ui components
-│
-├── src/lib/                        # Lógica de negócio
-│   ├── coins/                      # creditCoins, missions, limits, streak
-│   ├── ads/                        # Serving de campanhas (segmentação geo/raio)
-│   ├── geo/                        # haversine, autocomplete de cidades
-│   ├── sanity/                     # Client, queries GROQ, urlFor
-│   ├── db/                         # Prisma client
-│   ├── ratelimit.ts                # Upstash Redis rate limiting
-│   └── ...
+│   ├── app/                        # Next.js App Router
+│   │   ├── (auth)/                 # Grupo de rotas de autenticação
+│   │   ├── app/                    # Área autenticada: perfil, missões, quiz, chat...
+│   │   ├── admin/                  # Painel administrativo e campanhas
+│   │   ├── parceiro/               # Painel, QR, impacto e publicidade
+│   │   ├── api/[[...route]]/       # API composta com Hono
+│   │   ├── api/cron/               # Rotinas HTTP protegidas por CRON_SECRET
+│   │   ├── blog/, mapa/, ranking/  # Rotas públicas
+│   │   ├── checkin/                # Check-in por token QR assinado
+│   │   ├── descarte/[slug]/        # SEO programático por cidade
+│   │   ├── impacto/                # Indicadores públicos
+│   │   ├── metodologia-impacto/    # Premissas e limites dos indicadores
+│   │   ├── embed/mapa/             # Widget para terceiros
+│   │   ├── layout.tsx              # Layout global e dados estruturados
+│   │   ├── manifest.ts             # Manifesto PWA
+│   │   ├── robots.ts               # Robots dinâmico
+│   │   └── sitemap.ts              # Sitemap dinâmico
+│   ├── components/                 # Componentes React por domínio + UI
+│   └── lib/                        # Regras e integrações
+│       ├── auth/, db/, sanity/     # Autenticação, Prisma e CMS
+│       ├── coins/, goals/          # Gamificação
+│       ├── ads/, geo/              # Publicidade e geolocalização
+│       ├── consent/, lgpd/         # Consentimento e privacidade
+│       ├── impacto/                # Cálculos e apresentação de impacto
+│       ├── qr/                     # Assinatura e validação de tokens QR
+│       └── ratelimit/              # Rate limiting com Upstash
 │
 ├── ia/                             # Microserviço de IA (Python / FastAPI)
 │   ├── app/
-│   │   ├── main.py                 # App FastAPI + lifespan (RAGService)
-│   │   ├── ingest.py               # CLI de indexação da base de conhecimento
-│   │   ├── routers/
-│   │   │   ├── chat.py             # POST /chat (Bearer token auth)
-│   │   │   ├── embed.py            # POST /embed (debug)
-│   │   │   └── health.py           # GET /health
-│   │   └── services/
-│   │       ├── rag.py              # RAGService: embeddings + PGVector + Groq
-│   │       └── guardrails.py       # Filtros de entrada e saída
-│   ├── docs/                       # Base de conhecimento (.txt)
-│   │   └── treinamento_ecobot.txt  # Q&A sobre descarte de medicamentos
-│   ├── Dockerfile                  # Python 3.12-slim + FastEmbed pré-baixado
-│   ├── requirements.txt            # Dependências Python
-│   └── .env.example                # Variáveis necessárias (sem valores)
+│   │   ├── routers/                # Chat, embeddings e healthcheck
+│   │   └── services/               # RAG, guardrails e sessões TTL/LRU
+│   ├── docs/                       # Base de conhecimento
+│   └── tests/                      # Testes do serviço e guardrails
 │
 ├── prisma/
-│   ├── schema.prisma               # Modelos: User, Point, Partner, CoinTransaction, Quiz, AdCampaign...
+│   ├── schema.prisma               # Modelo de dados
 │   ├── migrations/                 # Histórico de migrações SQL
-│   └── seed.ts                     # Seed: pontos de coleta + quizzes
+│   └── seed*.ts                    # Seeds da aplicação e pontos LogMed
 │
-├── public/
-│   ├── icons/
-│   │   ├── icon-192.png            # PWA icon (any)
-│   │   ├── icon-512.png            # PWA icon (any)
-│   │   └── icon-512-maskable.png   # PWA icon (maskable, safe zone)
-│   ├── apple-touch-icon.png        # iOS home screen (180x180)
-│   └── favicon.svg                 # Favicon vetorial
-│
-├── scripts/
-│   ├── deploy.sh                   # Deploy completo (git pull → build → migrate → restart)
-│   ├── geocode_cep_logmed.py       # Refina coordenadas LogMed por CEP (resumível, --apply)
-│   └── generate-icons.mjs          # Gera PNGs de ícones PWA a partir do favicon.svg
-│
-├── ops/maintenance/                # Scripts instalados como cron no servidor
-│   ├── healthcheck.sh              # */2 min — vigia o container web
-│   ├── cron-missoes.sh             # Dispara crons HTTP (reset|ensure|views)
-│   └── backup-db.sh                # 02:30 UTC — pg_dump diário, retenção 14 dias
-│
+├── tests/e2e/                      # Testes Playwright
+├── public/                         # Assets, ícones PWA e llms.txt
+├── scripts/                        # Seeds, geocodificação e utilitários
+├── ops/
+│   ├── maintenance/                # Healthcheck, crons e backup
+│   └── security/                   # Auditoria e endurecimento operacional
+├── .github/workflows/              # Deploy, CodeQL e automações
 ├── docs/                           # Documentação estratégica e de negócio
-├── Dockerfile                      # Build do ecomed-web (Next.js)
-├── .env.example                    # Variáveis necessárias (sem valores)
-├── AGENTS.md / CLAUDE.md           # Instruções para agentes de IA
+├── Dockerfile                      # Imagem multi-stage do Next.js
+├── .env.example                    # Exemplo mínimo, sem segredos reais
 └── README.md                       # Este arquivo
 ```
 
@@ -280,8 +218,8 @@ ecomed/
 
 ### Pré-requisitos
 
-- [Node.js](https://nodejs.org) 20+
-- [pnpm](https://pnpm.io) 9+
+- [Node.js](https://nodejs.org) 22.x
+- [pnpm](https://pnpm.io) 10.15.0
 - [Docker](https://docker.com) (para o microserviço de IA)
 - Uma conta [Groq](https://console.groq.com) (gratuita, para o LLM)
 - Uma conta [Sanity](https://sanity.io) (gratuita, para o blog)
@@ -309,7 +247,11 @@ DATABASE_URL=postgresql://user:senha@host:5432/ecomed
 
 # Auth.js
 AUTH_SECRET=<string aleatória, mínimo 32 chars>
-AUTH_URL=http://localhost:3010
+AUTH_URL=http://localhost:3000
+
+# Tokens assinados dos QR Codes (não reutilize AUTH_SECRET)
+QR_HMAC_SECRET=<string aleatória exclusiva, mínimo 32 chars>
+QR_POINT_TOKEN_TTL_SECONDS=2592000
 
 # Google OAuth (opcional, para login social)
 GOOGLE_CLIENT_ID=...
@@ -326,17 +268,26 @@ UPSTASH_REDIS_REST_TOKEN=...
 # Microserviço de IA
 IA_SERVICE_URL=http://localhost:8002
 IA_SERVICE_TOKEN=<token secreto compartilhado>
+
+# Crons HTTP internos
+CRON_SECRET=<token secreto>
 ```
+
+Use valores diferentes para `AUTH_SECRET`, `QR_HMAC_SECRET`, `IA_SERVICE_TOKEN` e
+`CRON_SECRET`. Nunca envie arquivos `.env` ou credenciais reais ao Git.
 
 ### 3. Banco de dados
 
 ```bash
-# Criar tabelas
-pnpm db:push
+# Aplicar/criar migrações no ambiente de desenvolvimento
+pnpm db:migrate
 
 # Seed inicial (pontos de coleta + quizzes)
 pnpm db:seed
 ```
+
+`pnpm db:push` fica disponível para bancos locais descartáveis. Em produção, o
+workflow usa `prisma migrate deploy`.
 
 ### 4. Microserviço de IA
 
@@ -371,30 +322,30 @@ Acesse [http://localhost:3000](http://localhost:3000) 🎉
 
 ## 📦 Deploy em Produção
 
-O deploy é feito via Docker em uma VPS Linux. Todos os containers compartilham a rede `ia_default`.
+O deploy é feito via GitHub Actions e Docker em uma VPS Linux. O banco principal é
+PostgreSQL gerenciado; o armazenamento vetorial do RAG pode permanecer em um
+PostgreSQL com `pgvector` na rede privada `ia_default`.
 
 ### Containers em produção
 
 | Container | Imagem | Porta interna | Função |
 |---|---|---|---|
-| `ecomed-web` | `ecomed-web:latest` | 3010 | Next.js (build multi-stage) |
+| `ecomed-web` | `ecomed-app:<commit-sha>` | 3010 | Next.js (build multi-stage) |
 | `ecomed-ia` | `ia-api:latest` | 8000 (→ 8002 localhost) | FastAPI RAG microserviço |
-| `ecomed-pgvector` | `pgvector/pgvector:pg16` | 5432 (interno) | Vetores para o RAG |
-| `ecomed-ollama` | `ollama/ollama:latest` | 11434 | Reservado (embeddings migrados para FastEmbed) |
+| `ecomed-pgvector` | `pgvector/pgvector:pg16` | 5432 (interno) | Armazenamento vetorial do RAG, quando usado localmente |
 
 ### Caminhos de deploy
 
-1. **GitHub Actions (preferido):** push em `master` dispara `.github/workflows/deploy.yml`
-   — vitest → build → `prisma migrate deploy` → restart → crons idempotentes
-2. **Manual:** `bash scripts/deploy.sh` no servidor (espelha o Actions)
+1. Um push de código em `master` dispara `.github/workflows/deploy.yml`; alterações
+   apenas em Markdown ou `docs/` não fazem deploy.
+2. O quality gate executa Vitest, ESLint, TypeScript, pytest, build e Gitleaks.
+3. A VPS seleciona exatamente o commit do workflow, com trava contra deploys concorrentes.
+4. Segredos de build entram via BuildKit secrets e as migrações usam `prisma migrate deploy`.
+5. O container é substituído, verificado pelo healthcheck e revertido para a imagem anterior
+   se não ficar saudável.
 
-O `deploy.sh` executa:
-1. `git fetch origin && git reset --hard origin/master` — atualiza o código
-2. Build do estágio `builder` com **BuildKit secrets** (segredos nunca entram nas camadas da imagem)
-3. `prisma migrate deploy` — aplica migrações pendentes antes do restart
-4. Build da imagem final + re-indexação do EcoBot (`app.ingest --reset`)
-5. Substitui o container `ecomed-web` (janela de ~20s) e registra crons de backup/agregação
-6. Health check em loop até HTTP 200 em `/api/health`
+CodeQL e Dependabot complementam as verificações do pipeline. O script
+`scripts/deploy.sh` existe como caminho operacional manual; o Actions é a referência.
 
 ### Rotinas automáticas no servidor (cron)
 
@@ -458,10 +409,14 @@ docker run -d --name ecomed-ia --restart unless-stopped \
 
 ## 🏪 Check-in por QR Code e Publicidade de Parceiros
 
-Cada loja parceira recebe um **QR Code fixo** (`/parceiro/qrcode`) para o balcão. O cidadão escaneia,
-confirma o descarte com GPS (`/checkin?p=`) e ganha EcoCoins na hora — o registro fica vinculado à loja
-e alimenta o **relatório de impacto ESG** do parceiro (`/parceiro/impacto`): descartes, litros de água
-protegidos e CO₂ evitado por período.
+Cada loja parceira gera um QR Code em `/parceiro/qrcode`. O endereço contém um
+token assinado (`/checkin?token=`), com validade configurável. O cidadão confirma
+o descarte com GPS; o processamento idempotente evita crédito duplicado e vincula
+o registro à loja.
+
+O painel `/parceiro/impacto` apresenta descartes e estimativas locais de impacto.
+Essas estimativas não equivalem a medição ambiental direta; premissas e limitações
+devem ser consultadas em `/metodologia-impacto`.
 
 Parceiros também podem anunciar dentro da plataforma: banners segmentados por **cidade, UF ou raio
 hiperlocal** ao redor da loja, geridos em `/admin/ads` e com métricas próprias em `/parceiro/publicidade`
@@ -496,7 +451,7 @@ O EcoMed é otimizado para ser citado e indexado por assistentes de IA (Google A
 | `faq.json` | `/ai/faq.json` | FAQs em JSON estruturado |
 | `service.json` | `/ai/service.json` | Descrição do serviço para LLMs |
 | `summary.json` | `/ai/summary.json` | Resumo executivo do projeto |
-| `sitemap-llm` | `/sitemap-llm` | Sitemap textual para crawlers de IA |
+| `sitemap-llm` | `/sitemap-llm.xml` | Sitemap textual para crawlers de IA |
 | JSON-LD global | `layout.tsx` | `Organization` + `WebSite` + `SearchAction` |
 | JSON-LD artigos | `blog/[slug]/page.tsx` | `Article` + `FAQPage` + `BreadcrumbList` |
 
@@ -518,13 +473,14 @@ pnpm test:e2e
 # Lint
 pnpm lint
 
-# Type check
-pnpm build  # o build do Next.js faz type check automaticamente
+# Type check e build
+pnpm typecheck
+pnpm build
 ```
 
-Cobertura atual: **71 testes vitest** (quiz + gamificação) e **51 testes pytest**
-(guardrails: emergência, injection, automedicação, falsos positivos e filtro de saída).
-O CI bloqueia o deploy se os testes vitest falharem.
+As suítes cobrem regras de gamificação, QR/check-in, consentimento, impacto,
+guardrails, sessões e rotas críticas. O CI bloqueia o deploy se testes, lint,
+typecheck, testes Python, build ou varredura de segredos falharem.
 
 ---
 
@@ -550,10 +506,10 @@ O EcoMed está alinhado com **6 Objetivos de Desenvolvimento Sustentável** da O
 
 | ODS | Contribuição |
 |---|---|
-| **3** Saúde e Bem-Estar | Reduz contaminação farmacêutica na água → menos doenças |
+| **3** Saúde e Bem-Estar | Orienta sobre descarte seguro e evita exposição indevida |
 | **4** Educação de Qualidade | Artigos + quizzes + IA educativa acessível |
-| **6** Água Limpa | Cada descarte correto evita a contaminação de até 450.000L |
-| **9** Inovação e Infraestrutura | IA local + PWA open source + arquitetura moderna |
+| **6** Água Limpa | Apoia o descarte correto; estimativas de potencial seguem `/metodologia-impacto` |
+| **9** Inovação e Infraestrutura | Assistente RAG + PWA de código-fonte público + arquitetura moderna |
 | **12** Consumo Responsável | Logística reversa de resíduos farmacêuticos |
 | **17** Parcerias | Farmácias + UBS + escolas + governo + ONGs |
 
@@ -572,13 +528,17 @@ Construído por uma equipe multidisciplinar apaixonada por tecnologia e meio amb
 3. Commit usando Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`)
 4. Push e abra um Pull Request
 
-Leia o [Guia de Contribuição](CONTRIBUTING.md) para mais detalhes.
+Antes de iniciar uma alteração grande, abra uma issue para alinhar escopo e critérios
+de aceite.
 
 ---
 
 ## 📄 Licença
 
-Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações.
+O repositório ainda não contém um arquivo de licença. Até que uma licença seja
+formalmente adicionada, o código permanece protegido pelos direitos autorais de
+seus autores; tornar o repositório público não concede automaticamente permissão
+de uso, cópia ou redistribuição.
 
 ---
 
