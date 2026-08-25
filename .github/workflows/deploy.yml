@@ -26,7 +26,7 @@ jobs:
           # no runner e o scan falha com "unknown revision", sem ler nada.
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v4
         with:
