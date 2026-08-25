@@ -10,6 +10,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --webpack",
     "start": "next start",
+    "postinstall": "prisma generate",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "lint:fix": "eslint --fix",
