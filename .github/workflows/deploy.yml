@@ -20,6 +20,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # O gitleaks varre o intervalo de commits do push. Com clone raso
+          # (fetch-depth padrao = 1) o ponto inicial do intervalo nao existe
+          # no runner e o scan falha com "unknown revision", sem ler nada.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
 
